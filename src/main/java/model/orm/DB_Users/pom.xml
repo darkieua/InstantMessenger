@@ -6,6 +6,7 @@
         <artifactId>InstantMessenger</artifactId>
         <groupId>Netcracker</groupId>
         <version>1.0-SNAPSHOT</version>
+		<relativePath>../../../../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -40,35 +41,5 @@
             <version>4.3.0</version>
         </dependency>
     </dependencies>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <configLocation>../../../../../../config/google_checks.xml</configLocation>
-                    <consoleOutput>false</consoleOutput>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <configuration>
-                    <threshold>Low</threshold><!-- High|Normal|Low|Exp|Ignore -->
-                    <effort>Default</effort><!-- Min|Default|Max -->
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
 
 </project>
