@@ -4,12 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Netcracker</groupId>
-    <artifactId>InstantMessenger</artifactId>
+    <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+    <artifactId>InstantMessenger_main</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-
+        <module>model</module>
+        <module>view</module>
+        <module>controller</module>
     </modules>
 
     <dependencies>
@@ -20,7 +23,8 @@
         </dependency>
     </dependencies>
 
-    <reporting>
+    <build>
+		<pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -37,23 +41,49 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.17</version>
                 <configuration>
-                    <configLocation>src/main/resources/google_checks.xml</configLocation>
-                    <consoleOutput>false</consoleOutput>
+                    <configLocation>checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.4</version>
                 <configuration>
-                    <threshold>Low</threshold><!-- High|Normal|Low|Exp|Ignore -->
-                    <effort>Default</effort><!-- Min|Default|Max -->
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>noFailOnError</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>failOnError</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
@@ -63,6 +93,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
-    </reporting>
+		</pluginManagement>
+    </build>
 
 </project>
