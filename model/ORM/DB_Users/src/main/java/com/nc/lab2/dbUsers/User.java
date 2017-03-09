@@ -51,4 +51,8 @@ public class User {
         this.ip = ip;
         return this;
     }
+
+    public User update(String category, String username, String email, String ip, int port) {
+        return this.setCategory(category).setUsername(username).setEmail(email).setIp(ip).setPort(port);
+    }
 }
