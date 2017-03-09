@@ -5,13 +5,10 @@ import java.util.Map;
 
 
 public abstract class GroupMap {
-    private Map<String, UserMap> groupMap;
 
-    public GroupMap() {
-        groupMap = new HashMap<String, UserMap>();
-    }
+    Map<String, UserMap> groupMap;
 
-    abstract boolean add(String chatName, User user);
+    abstract boolean addUser(String chatName, User user);
 
     abstract boolean deleteUser(String chatName, User user);
 
