@@ -5,7 +5,7 @@ public class User {
     private String username;
     private String email;
     private int port;
-    private String IPAddress;
+    private String ipAddress;
 
     public String getCategory() {
         return category;
@@ -44,15 +44,16 @@ public class User {
     }
 
     public User update(String category, String username, String email, String ipAddress, int port) {
-        return this.setCategory(category).setUsername(username).setEmail(email).setIPAddress(ipAddress).setPort(port);
+        return this.setCategory(category).setUsername(username).setEmail(email).setIpAddress(ipAddress).setPort(port);
     }
 
-    public String getIPAddress() {
-        return IPAddress;
+
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public User setIPAddress(String IPAddress) {
-        this.IPAddress = IPAddress;
+    public User setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
         return this;
     }
 }
