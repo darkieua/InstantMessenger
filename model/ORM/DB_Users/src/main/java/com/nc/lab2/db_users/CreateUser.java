@@ -1,4 +1,4 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 public interface CreateUser {
 
@@ -8,7 +8,7 @@ public interface CreateUser {
 
     Boolean validatePort(int port);
 
-    Boolean validateIP(String ip);
+    Boolean validateIPAddress(String ipAddress);
 
     User createUser(String category, String username, String email, String ip, int port);
 

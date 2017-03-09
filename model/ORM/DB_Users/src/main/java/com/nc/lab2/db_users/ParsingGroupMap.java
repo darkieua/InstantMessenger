@@ -1,10 +1,10 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 public interface ParsingGroupMap {
 
     String userMapToJSonString(User user);
 
-    GroupMap jsonStringToGroupMap(String jsonString);
+    AbstractGroupMap jsonStringToGroupMap(String jsonString);
 
     Boolean writeGroupMapToFile(String jsonString);
 }

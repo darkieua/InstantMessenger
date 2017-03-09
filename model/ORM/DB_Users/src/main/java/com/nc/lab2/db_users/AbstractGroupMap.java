@@ -1,12 +1,11 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
-public abstract class GroupMap {
+public abstract class AbstractGroupMap {
 
-    Map<String, UserMap> groupMap;
+    Map<String, AbstractUserMap> map;
 
     abstract boolean addUser(String chatName, User user);
 

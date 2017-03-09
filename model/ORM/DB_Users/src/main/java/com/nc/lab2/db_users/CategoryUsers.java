@@ -1,4 +1,4 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 public enum CategoryUsers {
     ADMIN,

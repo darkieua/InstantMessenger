@@ -1,11 +1,11 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 public class User {
     private String category;
     private String username;
     private String email;
     private int port;
-    private String ip;
+    private String IPAddress;
 
     public String getCategory() {
         return category;
@@ -43,16 +43,16 @@ public class User {
         return this;
     }
 
-    public String getIp() {
-        return ip;
+    public User update(String category, String username, String email, String ipAddress, int port) {
+        return this.setCategory(category).setUsername(username).setEmail(email).setIPAddress(ipAddress).setPort(port);
     }
 
-    public User setIp(String ip) {
-        this.ip = ip;
+    public String getIPAddress() {
+        return IPAddress;
+    }
+
+    public User setIPAddress(String IPAddress) {
+        this.IPAddress = IPAddress;
         return this;
-    }
-
-    public User update(String category, String username, String email, String ip, int port) {
-        return this.setCategory(category).setUsername(username).setEmail(email).setIp(ip).setPort(port);
     }
 }

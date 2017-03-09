@@ -1,10 +1,10 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 public interface ParsingUserMap {
 
     String userMapToJSonString(User user);
 
-    UserMap jsonStringToUserMap(String jsonString);
+    AbstractUserMap jsonStringToUserMap(String jsonString);
 
     Boolean writeUserMapToFile(String jsonString);
 }

@@ -1,12 +1,12 @@
-package com.nc.lab2.dbUsers;
+package com.nc.lab2.db_users;
 
 import java.util.Map;
 
-public abstract class UserMap {
-    private Map<String, User> userMap;
+public abstract class AbstractUserMap {
+    private Map<String, User> map;
 
     public Map<String, User> getUserMap() {
-        return userMap;
+        return map;
     }
 
     public abstract boolean addUser(User user);
