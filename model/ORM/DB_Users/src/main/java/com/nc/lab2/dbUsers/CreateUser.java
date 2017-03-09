@@ -1,6 +1,6 @@
 package com.nc.lab2.dbUsers;
 
-public interface CreateNewUser {
+public interface CreateUser {
 
     Boolean validateUsername(String username);
 
