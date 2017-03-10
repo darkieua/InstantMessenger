@@ -10,6 +10,6 @@ NetCracker Java courses lab #2
 
 [![Build Status: master](https://semaphoreci.com/api/v1/darkie/instantmessenger/branches/master/badge.svg)](https://semaphoreci.com/darkie/instantmessenger) _**master**_
 
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/83c232def6f24d888611769369754a61)](https://www.codacy.com/app/YuliaShevchenko137/InstantMessenger?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=darkieua/InstantMessenger&amp;utm_campaign=Badge_Grade)
 
 [![GitHub watchers](https://img.shields.io/github/watchers/badges/shields.svg?style=social&label=Watch)]()
