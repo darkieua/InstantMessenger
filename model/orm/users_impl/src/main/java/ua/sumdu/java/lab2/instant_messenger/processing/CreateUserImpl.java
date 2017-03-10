@@ -1,6 +1,7 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
 import ua.sumdu.java.lab2.instant_messenger.api.CreateUser;
+import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
 import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 public class CreateUserImpl implements CreateUser {
@@ -33,7 +34,7 @@ public class CreateUserImpl implements CreateUser {
     }
 
     @Override
-    public User createUser(String category, String username, String email, String ipAddress, int port) {
+    public User createUser(CategoryUsers category, String username, String email, String ipAddress, int port) {
         return null;
     }
 }

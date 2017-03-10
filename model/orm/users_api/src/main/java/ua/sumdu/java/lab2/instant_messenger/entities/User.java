@@ -56,4 +56,14 @@ public class User {
         this.ipAddress = ipAddress;
         return this;
     }
+
+    public boolean equals(User user1) {
+        if (this.getEmail().equals(user1.getEmail()) && this.getUsername().equals(user1.getUsername())
+                && this.getCategory().equals(user1.getCategory()) && this.getPort() == user1.getPort()
+                && this.getIpAddress().equals(user1.getIpAddress())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
