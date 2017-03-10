@@ -14,8 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>users_api</module>
         <module>users_impl</module>
+        <module>users_api</module>
     </modules>
 
 </project>

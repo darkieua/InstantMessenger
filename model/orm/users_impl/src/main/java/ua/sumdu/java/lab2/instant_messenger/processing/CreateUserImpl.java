@@ -4,6 +4,19 @@ import ua.sumdu.java.lab2.instant_messenger.api.CreateUser;
 import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 public class CreateUserImpl implements CreateUser {
+
+    private static CreateUserImpl instance;
+
+    private CreateUserImpl() {
+    }
+
+    public static CreateUserImpl getInstance() {
+        if (instance == null) {
+            instance = new CreateUserImpl();
+        }
+        return instance;
+    }
+
     @Override
     public Boolean validateUsername(String username) {
         return false;
