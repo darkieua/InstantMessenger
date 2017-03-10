@@ -1,4 +1,4 @@
-package com.nc.lab2.db_users;
+package ua.sumdu.java.lab2.instant_messenger;
 
 import java.util.Map;
 

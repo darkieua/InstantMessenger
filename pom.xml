@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-    <artifactId>InstantMessenger_main</artifactId>
+    <artifactId>InstantMessenger</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -15,11 +15,26 @@
         <module>controller</module>
     </modules>
 
+    <properties>
+        <slf4j.version>1.7.24</slf4j.version>
+        <log4j.version>1.2.17</log4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.24</version>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
