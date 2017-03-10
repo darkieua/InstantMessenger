@@ -1,17 +1,17 @@
 package com.nc.lab2.db_users;
 
 public class User {
-    private String category;
+    private CategoryUsers category;
     private String username;
     private String email;
     private int port;
     private String ipAddress;
 
-    public String getCategory() {
+    public CategoryUsers getCategory() {
         return category;
     }
 
-    public User setCategory(String category) {
+    public User setCategory(CategoryUsers category) {
         this.category = category;
         return this;
     }
@@ -43,7 +43,7 @@ public class User {
         return this;
     }
 
-    public User update(String category, String username, String email, String ipAddress, int port) {
+    public User update(CategoryUsers category, String username, String email, String ipAddress, int port) {
         return this.setCategory(category).setUsername(username).setEmail(email).setIpAddress(ipAddress).setPort(port);
     }
 

@@ -8,8 +8,6 @@ public interface CreateUser {
 
     Boolean validatePort(int port);
 
-    Boolean validateIPAddress(String ipAddress);
-
-    User createUser(String category, String username, String email, String ip, int port);
+    User createUser(String category, String username, String email, String ipAddress, int port);
 
 }
