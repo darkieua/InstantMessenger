@@ -1,7 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
-import org.junit.Assert;
-import org.junit.Test;
 import ua.sumdu.java.lab2.instant_messenger.api.CreateUser;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
@@ -9,7 +7,8 @@ import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import java.util.Map;
 import java.util.TreeMap;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 public class UserMapImplTest {
     @Test
