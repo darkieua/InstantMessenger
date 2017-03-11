@@ -1,6 +1,6 @@
 package ua.sumdu.java.lab2.instant_messenger.entities;
 
-public class User {
+public class User implements Cloneable{
     private CategoryUsers category;
     private String username;
     private String email;
@@ -58,7 +58,9 @@ public class User {
     }
 
     public boolean equals(Object user) {
-        if (user.getClass() == this.getClass()) {
+        if (user == null) {
+            return false;
+        } else if (user.getClass() == this.getClass()) {
             User user1 = (User) user;
             return this.getEmail().equals(user1.getEmail()) && this.getUsername().equals(user1.getUsername())
                     && this.getCategory().equals(user1.getCategory()) && this.getPort() == user1.getPort()
@@ -69,6 +71,11 @@ public class User {
     }
 
     public int hashCode() {
-        return 0;
+        return 13*(category.hashCode() + 2*username.hashCode() + 3*email.hashCode()
+                + 4*port + 5 * ipAddress.hashCode());
+    }
+
+    public User clone() throws CloneNotSupportedException{
+        return (User) super.clone();
     }
 }

@@ -72,4 +72,25 @@ public class GroupMapImplTest {
         Assert.assertEquals(map, mapForGroup);
     }
 
+    @Test
+    public void equals() {
+        GroupMap mapForGroup = new GroupMapImpl();
+        Assert.assertFalse(mapForGroup.equals(null));
+        Assert.assertTrue(mapForGroup.equals(mapForGroup));
+        Map<String, UserMap> map = new TreeMap<>();
+        User user1 = new User();
+        user1.update(CategoryUsers.FRIEND, "user1", "user1@ex.so", "193.168.1.1", 8080);
+        UserMap usmap = new UserMapImpl();
+        usmap.addUser(user1);
+        map.put(user1.getUsername(), usmap);
+        mapForGroup.addUser(user1.getUsername(), user1);
+        Assert.assertTrue(mapForGroup.equals(map));
+        User user2 = new User();
+        user2.update(CategoryUsers.BLACKLIST, "user2", "user2@ex.so", "193.168.1.1", 8080);
+        User user3 = new User();
+        user3.update(CategoryUsers.BLACKLIST, "user3", "user3@ex.so", "193.168.1.1", 8080);
+        map.get(user1.getUsername()).addUser(user2);
+        mapForGroup.addUser(user1.getUsername(), user3);
+        Assert.assertFalse(mapForGroup.equals(map));
+    }
 }

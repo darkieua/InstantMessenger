@@ -1,7 +1,6 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
 import ua.sumdu.java.lab2.instant_messenger.entities.User;

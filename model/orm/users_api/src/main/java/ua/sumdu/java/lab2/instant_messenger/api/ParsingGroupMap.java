@@ -1,10 +1,8 @@
 package ua.sumdu.java.lab2.instant_messenger.api;
 
-import ua.sumdu.java.lab2.instant_messenger.entities.User;
-
 public interface ParsingGroupMap {
 
-    String userMapToJSonString(User user);
+    String groupMapToJSonString(GroupMap groupMap);
 
     GroupMap jsonStringToGroupMap(String jsonString);
 
