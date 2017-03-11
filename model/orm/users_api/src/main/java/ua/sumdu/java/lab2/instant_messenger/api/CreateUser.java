@@ -9,8 +9,6 @@ public interface CreateUser {
 
     Boolean validateEmail(String email);
 
-    Boolean validatePort(int port);
-
     User createUser(CategoryUsers category, String username, String email, String ipAddress, int port);
 
 }

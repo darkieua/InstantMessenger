@@ -7,6 +7,18 @@ public class User implements Cloneable{
     private int port;
     private String ipAddress;
 
+    public User(CategoryUsers category, String username, String email, int port, String ipAddress) {
+        this.category = category;
+        this.username = username;
+        this.email = email;
+        this.port = port;
+        this.ipAddress = ipAddress;
+    }
+
+    public User() {
+        this.category = CategoryUsers.BLACKLIST;
+    }
+
     public CategoryUsers getCategory() {
         return category;
     }

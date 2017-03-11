@@ -1,13 +1,19 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
 import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 public class CreateUserImplTest {
 
-    CreateUserImpl currentCreator = CreateUserImpl.getInstance();
+    private static CreateUserImpl currentCreator;
+
+    @Before
+    public void set() {
+        currentCreator = CreateUserImpl.getInstance();
+    }
 
     @Test
     public void validateUsername() throws Exception {
@@ -35,8 +41,7 @@ public class CreateUserImplTest {
 
     @Test
     public void createUser() throws Exception {
-        User user1 = new User();
-        user1.update(CategoryUsers.FRIEND, "user1", "user1@ex.so", "193.168.1.1", 8080);
+        User user1= new User(CategoryUsers.FRIEND, "user1", "user1@ex.so", 8080, "193.168.1.1");
         User result = currentCreator.createUser(CategoryUsers.FRIEND, "user1", "user1@ex.so", "193.168.1.1", 8080);
         Assert.assertEquals(user1, result);
         Assert.assertNull(currentCreator.createUser(CategoryUsers.FRIEND, "user1", "user1", "193.168.1.1", 8080));
