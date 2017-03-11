@@ -23,10 +23,10 @@ public class GroupMapImplTest {
         String nameChat = "main1";
         userMap.addUser(user2);
         map.put(nameChat, userMap);
-        GroupMap mapForGroup = new GroupMapImpl();
+        GroupMapImpl mapForGroup = new GroupMapImpl();
         mapForGroup.addUser(nameChat, user1);
         mapForGroup.addUser(nameChat, user2);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
     }
 
     @Test
@@ -56,20 +56,20 @@ public class GroupMapImplTest {
         mapForGroup.addUser(nameChat, user4);
         mapForGroup.addUser(nameChat, user5);
         mapForGroup.deleteUser(nameChat, user1);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
         map.get(nameChat).removeUser(user5);
         mapForGroup.deleteUser(nameChat, user5);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
         map.get(nameChat).removeUser(user3);
         mapForGroup.deleteUser(nameChat, user3);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
         map.get(nameChat).removeUser(user5);
         mapForGroup.deleteUser("sdf", user2);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
         User user6 = new User();
         user6.update(CategoryUsers.BLACKLIST, "user6", "user6@ex.so", "193.168.1.1", 8080);
         mapForGroup.deleteUser(nameChat, user6);
-        Assert.assertEquals(map, mapForGroup);
+        Assert.assertTrue(mapForGroup.equals(map));
     }
 
     @Test
