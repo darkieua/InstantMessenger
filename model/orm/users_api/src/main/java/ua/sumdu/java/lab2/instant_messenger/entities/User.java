@@ -60,15 +60,15 @@ public class User {
     public boolean equals(Object user) {
         if (user.getClass() == this.getClass()) {
             User user1 = (User) user;
-            if (this.getEmail().equals(user1.getEmail()) && this.getUsername().equals(user1.getUsername())
+            return this.getEmail().equals(user1.getEmail()) && this.getUsername().equals(user1.getUsername())
                     && this.getCategory().equals(user1.getCategory()) && this.getPort() == user1.getPort()
-                    && this.getIpAddress().equals(user1.getIpAddress())) {
-                return true;
-            } else {
-                return false;
-            }
+                    && this.getIpAddress().equals(user1.getIpAddress());
         } else {
             return false;
         }
+    }
+
+    public int hashCode() {
+        return 0;
     }
 }
