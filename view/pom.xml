@@ -12,5 +12,12 @@
 
     <artifactId>view</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>controller</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>
