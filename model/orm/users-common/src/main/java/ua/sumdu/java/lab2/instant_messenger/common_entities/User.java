@@ -1,13 +1,16 @@
 package ua.sumdu.java.lab2.instant_messenger.common_entities;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class User implements Cloneable{
     private CategoryUsers category;
-    private String username;
-    private String email;
-    private int port;
-    private String ipAddress;
+    private String username = "";
+    private String email = "";
+    private int port = -1;
+    private InetAddress ipAddress;
 
-    public User(CategoryUsers category, String username, String email, int port, String ipAddress) {
+    public User(CategoryUsers category, String username, String email, int port, InetAddress ipAddress) {
         this.category = category;
         this.username = username;
         this.email = email;
@@ -15,9 +18,10 @@ public class User implements Cloneable{
         this.ipAddress = ipAddress;
     }
 
-    public User() {
+    public User() throws UnknownHostException {
         this.category = CategoryUsers.BLACKLIST;
         this.port = -1;
+        this.ipAddress = InetAddress.getLocalHost();
     }
 
     public CategoryUsers getCategory() {
@@ -56,16 +60,16 @@ public class User implements Cloneable{
         return this;
     }
 
-    public User update(CategoryUsers category, String username, String email, String ipAddress, int port) {
+    public User update(CategoryUsers category, String username, String email, InetAddress ipAddress, int port) {
         return this.setCategory(category).setUsername(username).setEmail(email).setIpAddress(ipAddress).setPort(port);
     }
 
 
-    public String getIpAddress() {
+    public InetAddress getIpAddress() {
         return ipAddress;
     }
 
-    public User setIpAddress(String ipAddress) {
+    public User setIpAddress(InetAddress ipAddress) {
         this.ipAddress = ipAddress;
         return this;
     }
@@ -84,8 +88,13 @@ public class User implements Cloneable{
     }
 
     public int hashCode() {
-        return 13*(category.hashCode() + 2*username.hashCode() + 3*email.hashCode()
-                + 4*port + 5 * ipAddress.hashCode());
+        int res = 13;
+        res += category.hashCode();
+        res += 2*username.hashCode();
+        res += 3*email.hashCode();
+        res += 4*port;
+        res += 5*ipAddress.hashCode();
+        return res;
     }
 
     public User clone() throws CloneNotSupportedException{

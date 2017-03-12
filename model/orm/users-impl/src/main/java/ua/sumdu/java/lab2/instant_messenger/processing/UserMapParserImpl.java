@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-public class UserMapParserImpl implements UserMapParser{
+public final class UserMapParserImpl implements UserMapParser{
     private static UserMapParserImpl instance;
 
     private UserMapParserImpl() {

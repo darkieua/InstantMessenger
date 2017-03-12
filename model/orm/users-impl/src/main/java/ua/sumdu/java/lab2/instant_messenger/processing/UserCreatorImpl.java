@@ -4,6 +4,7 @@ import ua.sumdu.java.lab2.instant_messenger.api.UserCreator;
 import ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers;
 import ua.sumdu.java.lab2.instant_messenger.common_entities.User;;
 
+import java.net.InetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,8 +39,8 @@ public final class UserCreatorImpl implements UserCreator {
     }
 
     @Override
-    public User createUser(CategoryUsers category, String username, String email, String ipAddress, int port) {
-        if (validateUsername(username)&& validateEmail(email)) {
+    public User createUser(CategoryUsers category, String username, String email, InetAddress ipAddress, int port) {
+        if (this.validateUsername(username)&& this.validateEmail(email)) {
             return new User(category, username, email, port, ipAddress);
         } else {
             return null;

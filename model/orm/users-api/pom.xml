@@ -14,6 +14,7 @@
     <properties>
         <!--Testing-->
         <junit.version>4.12</junit.version>
+        <junit-dataprovider.version>1.12.0</junit-dataprovider.version>
     </properties>
 
     <build>
@@ -45,6 +46,11 @@
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
             <artifactId>users-common</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.java</groupId>
+            <artifactId>junit-dataprovider</artifactId>
+            <version>${junit-dataprovider.version}</version>
         </dependency>
     </dependencies>
 

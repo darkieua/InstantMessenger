@@ -6,10 +6,12 @@ import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMapParser;
-import ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers;
 import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.BLACKLIST;
@@ -21,12 +23,12 @@ public class ParsingTest {
     private GroupMap groupMap;
 
     @Before
-    public void set() {
-        User user1 = new User(FRIEND, "user1", "user1@ex.so", 8080, "193.168.1.1");
-        User user2 = new User(BLACKLIST, "user2", "user2@ex.so", 8080, "193.168.1.1");
-        User user3 = new User(BLACKLIST, "user3", "user3@ex.so", 8080, "193.168.1.1");
-        User user4 = new User(BLACKLIST, "user4", "user4@ex.so", 8080, "193.168.1.1");
-        User user5 = new User(BLACKLIST, "user5", "user5@ex.so", 8080, "193.168.1.1");
+    public void set() throws UnknownHostException {
+        User user1 = new User(FRIEND, "user1", "user1@ex.so", 8080, InetAddress.getLocalHost());
+        User user2 = new User(BLACKLIST, "user2", "user2@ex.so", 8080, InetAddress.getLocalHost());
+        User user3 = new User(BLACKLIST, "user3", "user3@ex.so", 8080, InetAddress.getLocalHost());
+        User user4 = new User(BLACKLIST, "user4", "user4@ex.so", 8080, InetAddress.getLocalHost());
+        User user5 = new User(BLACKLIST, "user5", "user5@ex.so", 8080, InetAddress.getLocalHost());
         userMap = new UserMapImpl();
         groupMap = new GroupMapImpl();
         userMap.addUser(user1);
@@ -40,7 +42,7 @@ public class ParsingTest {
     }
 
     @Test
-    public void userMapToJSonAndBack() throws Exception {
+    public void userMapToJSonAndBack(){
         UserMapParser parser = UserMapParserImpl.getInstance();
         String str = parser.userMapToJSonString(userMap);
         UserMapImpl newUserMap = (UserMapImpl) parser.jsonStringToUserMap(str);
@@ -49,7 +51,7 @@ public class ParsingTest {
     }
 
     @Test
-    public void groupMapToJSonAndBack() throws Exception {
+    public void groupMapToJSonAndBack(){
         GroupMapParser parser = GroupMapParserImpl.getInstance();
         String str = parser.groupMapToJSonString(groupMap);
         GroupMapImpl newGroupMap = (GroupMapImpl) parser.jsonStringToGroupMap(str);

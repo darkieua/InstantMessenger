@@ -75,6 +75,10 @@ public class GroupMapImpl implements GroupMap {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        int res = 0;
+        for (Map.Entry<String, UserMapImpl> entry:map.entrySet()) {
+            res = 13*res + entry.getKey().hashCode() + entry.getValue().hashCode();
+        }
+        return res;
     }
 }

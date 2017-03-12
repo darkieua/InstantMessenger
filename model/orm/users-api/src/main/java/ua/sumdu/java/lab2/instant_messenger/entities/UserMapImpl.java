@@ -9,9 +9,10 @@ import java.util.TreeMap;
 
 public class UserMapImpl implements UserMap {
 
-    private Map<String, User> map = new TreeMap<>();
+    private Map<String, User> map;
 
     public UserMapImpl() {
+        map = new TreeMap<>();
     }
 
     public Map<String, User> getMap() {
@@ -38,7 +39,6 @@ public class UserMapImpl implements UserMap {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
-            System.out.println(this.getClass().toGenericString());
             return false;
         } else {
             Map<String, User> current;
@@ -48,7 +48,7 @@ public class UserMapImpl implements UserMap {
             } else {
                 try {
                     current = (Map<String, User>) obj;
-                } catch (Exception e) {
+                } catch (ClassCastException e) {
                     return false;
                 }
             }
@@ -67,4 +67,12 @@ public class UserMapImpl implements UserMap {
         }
     }
 
+    @Override
+    public int hashCode() {
+        int res = 0;
+        for (Map.Entry<String, User> entry:map.entrySet()) {
+            res = 13*res + entry.getKey().hashCode() + entry.getValue().hashCode();
+        }
+        return res;
+    }
 }
