@@ -2,13 +2,13 @@ package ua.sumdu.java.lab2.instant_messenger.processing;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 
 public final class GroupMapParserImpl implements GroupMapParser{
     private static GroupMapParserImpl instance;
@@ -42,14 +42,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
     }
 
     @Override
-    public void writeGroupMapToFile(String jsonString) {
-        try {
-            Writer writer = new FileWriter("src/main/java/resources/friends.json");
-            writer.write(jsonString);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void writeGroupMapToFile(String jsonString) throws IOException {
+        FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
     }
 }

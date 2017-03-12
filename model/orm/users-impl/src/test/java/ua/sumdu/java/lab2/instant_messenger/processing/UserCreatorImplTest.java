@@ -9,7 +9,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -51,6 +50,7 @@ public class UserCreatorImplTest {
         User user1= new User(FRIEND, "user1", "user1@ex.so", 8080, InetAddress.getLocalHost());
         User result = currentCreator.createUser(FRIEND, "user1", "user1@ex.so", InetAddress.getLocalHost(), 8080);
         assertTrue(user1.equals(result));
-        assertNull(currentCreator.createUser(FRIEND, "user2", "user3", InetAddress.getLocalHost(), 8080));
+        User emptyUser = currentCreator.createUser(FRIEND, "user2", "user3", InetAddress.getLocalHost(), 8080);
+        assertTrue(new User().equals(emptyUser));
     }
 }
