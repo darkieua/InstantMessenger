@@ -19,6 +19,7 @@
         <!--Build-->
         <java.version>1.8</java.version>
         <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
+        <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
         <!--Logging-->
         <slf4j.version>1.7.24</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -57,7 +58,7 @@
     </dependencyManagement>
 
     <build>
-
+        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -107,7 +108,7 @@
                     <configuration>
                         <effort>Max</effort>
                         <threshold>Low</threshold>
-                        <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+                        <findbugsXmlOutputDirectory>${project.build.directory}${file.separator}findbugs</findbugsXmlOutputDirectory>
                     </configuration>
                     <executions>
                         <execution>
@@ -132,23 +133,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-jxr-plugin.version}</version>
                 </plugin>
             </plugins>
-
+        </pluginManagement>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-            </plugin>
-        </plugins>
-    </reporting>
 
 </project>
