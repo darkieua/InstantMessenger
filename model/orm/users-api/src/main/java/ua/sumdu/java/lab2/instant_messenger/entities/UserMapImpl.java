@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class UserMapImpl implements UserMap {
+public class UserMapImpl implements UserMap, Cloneable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMapImpl.class);
 

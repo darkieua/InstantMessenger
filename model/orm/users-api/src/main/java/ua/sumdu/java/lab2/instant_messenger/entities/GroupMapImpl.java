@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class GroupMapImpl implements GroupMap {
+public class GroupMapImpl implements GroupMap, Cloneable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupMapImpl.class);
 
