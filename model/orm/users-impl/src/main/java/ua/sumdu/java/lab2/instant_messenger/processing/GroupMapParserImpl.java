@@ -3,6 +3,8 @@ package ua.sumdu.java.lab2.instant_messenger.processing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
@@ -11,6 +13,9 @@ import java.io.File;
 import java.io.IOException;
 
 public final class GroupMapParserImpl implements GroupMapParser{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroupMapParserImpl.class);
+
     private static GroupMapParserImpl instance;
 
     private GroupMapParserImpl() {
@@ -18,6 +23,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     public static GroupMapParserImpl getInstance() {
         synchronized (GroupMapParserImpl.class) {
+            LOGGER.info("Create a new GroupMap Parser");
             if (instance == null) {
                 instance = new GroupMapParserImpl();
             }
@@ -28,6 +34,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     @Override
     public String groupMapToJSonString(GroupMap groupMap) {
+        LOGGER.info("Converting a GroupMap to a Json String");
         GroupMapImpl newGroup = (GroupMapImpl) groupMap;
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
@@ -36,13 +43,18 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     @Override
     public GroupMap jsonStringToGroupMap(String jsonString) {
+        LOGGER.info("Converting a Json String to a GroupMap");
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         return gson.fromJson(jsonString, GroupMapImpl.class);
     }
 
     @Override
-    public void writeGroupMapToFile(String jsonString) throws IOException {
-        FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
+    public void writeGroupMapToFile(String jsonString) {
+        try {
+            FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
+        } catch (IOException e) {
+            LOGGER.error("writeGroupMapToFile: IOException");
+        }
     }
 }
