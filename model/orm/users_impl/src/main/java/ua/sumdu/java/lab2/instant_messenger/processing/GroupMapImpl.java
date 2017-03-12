@@ -10,13 +10,17 @@ import java.util.TreeMap;
 
 public class GroupMapImpl implements GroupMap {
 
-    private Map<String, UserMap> map = new TreeMap<>();
+    private Map<String, UserMapImpl> map;
+
+    public GroupMapImpl() {
+        map = new TreeMap<>();
+    }
 
     @Override
     public void addUser(String chatName, User user) {
         if (!map.containsKey(chatName)) {
             UserMap users = new UserMapImpl();
-            map.put(chatName, users);
+            map.put(chatName, (UserMapImpl) users);
         }
         map.get(chatName).addUser(user);
     }
@@ -28,11 +32,11 @@ public class GroupMapImpl implements GroupMap {
         }
     }
 
-    public Map<String, UserMap> getMap() {
+    public Map<String, UserMapImpl> getMap() {
         return map;
     }
 
-    public GroupMapImpl setMap(Map<String, UserMap> map) {
+    public GroupMapImpl setMap(Map<String, UserMapImpl> map) {
         this.map = map;
         return this;
     }
@@ -49,7 +53,7 @@ public class GroupMapImpl implements GroupMap {
                 current = groupMap.getMap();
             } else {
                 try {
-                    current = (Map<String, UserMap>) obj;
+                    current = (Map<String, UserMapImpl>) obj;
 
                 } catch (ClassCastException e) {
                     return false;
@@ -68,5 +72,10 @@ public class GroupMapImpl implements GroupMap {
             }
             return true;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -9,6 +9,11 @@ import java.util.TreeMap;
 
 public class UserMapImpl implements UserMap {
 
+    Map<String, User> map = new TreeMap<>();
+
+    public UserMapImpl() {
+    }
+
     public Map<String, User> getMap() {
         return map;
     }
@@ -17,8 +22,6 @@ public class UserMapImpl implements UserMap {
         this.map = map;
         return this;
     }
-
-    Map<String, User> map = new TreeMap<>();
 
     @Override
     public void addUser(User user) {

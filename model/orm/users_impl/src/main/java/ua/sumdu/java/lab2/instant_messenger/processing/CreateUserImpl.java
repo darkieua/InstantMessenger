@@ -7,7 +7,7 @@ import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CreateUserImpl implements CreateUser {
+public final class CreateUserImpl implements CreateUser {
 
     private static CreateUserImpl instance;
 
@@ -15,24 +15,26 @@ public class CreateUserImpl implements CreateUser {
     }
 
     public static CreateUserImpl getInstance() {
-        if (instance == null) {
-            instance = new CreateUserImpl();
+        synchronized (CreateUserImpl.class) {
+            if (instance == null) {
+                instance = new CreateUserImpl();
+            }
+            return instance;
         }
-        return instance;
     }
 
     @Override
     public Boolean validateUsername(String username) {
-        Pattern p = Pattern.compile("^[a-z0-9_-]{3,16}$");
-        Matcher m = p.matcher(username);
-        return m.matches();
+        Pattern pattern = Pattern.compile("^[a-z0-9_-]{3,16}$");
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
     }
 
     @Override
     public Boolean validateEmail(String email) {
-        Pattern p = Pattern.compile("^([a-z0-9_\\.-]+)@([a-z0-9_\\.-]+)\\.([a-z\\.]{2,6})$");
-        Matcher m = p.matcher(email);
-        return m.matches();
+        Pattern pattern = Pattern.compile("^([a-z0-9_\\.-]+)@([a-z0-9_\\.-]+)\\.([a-z\\.]{2,6})$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     @Override
