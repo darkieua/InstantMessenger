@@ -83,15 +83,8 @@
                         </rulesets>
                         <targetJdk>${java.version}</targetJdk>
                         <includeTests>true</includeTests>
-                        <outputEncoding>UTF-8</outputEncoding>
                         <verbose>true</verbose>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals><goal>check</goal></goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
