@@ -79,7 +79,7 @@
                     <version>${pmd.version}</version>
                     <configuration>
                         <rulesets>
-                            <ruleset>${project.basedir}${file.separator}ruleset.xml</ruleset>
+                            <ruleset>${session.executionRootDirectory}${file.separator}ruleset.xml</ruleset>
                         </rulesets>
                         <targetJdk>${java.version}</targetJdk>
                         <includeTests>true</includeTests>
@@ -98,7 +98,7 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${checkstyle.version}</version>
                     <configuration>
-                        <configLocation>checkstyle.xml</configLocation>
+                        <configLocation>${session.executionRootDirectory}${file.separator}checkstyle.xml</configLocation>
                     </configuration>
                 </plugin>
                 <plugin>
