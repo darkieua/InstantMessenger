@@ -1,7 +1,7 @@
 package ua.sumdu.java.lab2.instant_messenger.api;
 
-import ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers;
-import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
+import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

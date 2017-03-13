@@ -1,7 +1,7 @@
 package ua.sumdu.java.lab2.instant_messenger.tests;
 
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
-import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
 import java.net.InetAddress;
@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Test;
 
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.BLACKLIST;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.BLACKLIST;
 import static org.junit.Assert.assertTrue;
 
 public class UserMapImplTest {

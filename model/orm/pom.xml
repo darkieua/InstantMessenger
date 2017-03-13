@@ -16,7 +16,6 @@
     <modules>
         <module>users-impl</module>
         <module>users-api</module>
-        <module>users-common</module>
     </modules>
 
 

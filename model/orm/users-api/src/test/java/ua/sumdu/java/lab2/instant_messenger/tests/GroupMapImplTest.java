@@ -4,7 +4,7 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
-import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
@@ -16,8 +16,8 @@ import java.util.TreeMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.BLACKLIST;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.BLACKLIST;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 

@@ -1,16 +1,15 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
-import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
-
 import org.junit.Before;
 import org.junit.Test;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
 
 public class UserCreatorImplTest {
 
