@@ -3,6 +3,7 @@ package ua.sumdu.java.lab2.instant_messenger.entities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
+import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
 
 import java.util.Map;
 import java.util.Set;

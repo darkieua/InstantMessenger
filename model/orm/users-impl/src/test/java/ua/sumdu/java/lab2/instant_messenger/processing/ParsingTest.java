@@ -6,16 +6,16 @@ import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMapParser;
+import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
-import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
+import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.BLACKLIST;
 import static org.junit.Assert.assertTrue;
-import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.BLACKLIST;
-import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
 
 public class ParsingTest {
 

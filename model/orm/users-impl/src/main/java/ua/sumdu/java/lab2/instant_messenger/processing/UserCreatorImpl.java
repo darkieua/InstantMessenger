@@ -3,8 +3,8 @@ package ua.sumdu.java.lab2.instant_messenger.processing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.UserCreator;
-import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
-import ua.sumdu.java.lab2.instant_messenger.entities.User;
+import ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers;
+import ua.sumdu.java.lab2.instant_messenger.common_entities.User;;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

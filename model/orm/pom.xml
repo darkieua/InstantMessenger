@@ -5,7 +5,7 @@
     <parent>
         <artifactId>model</artifactId>
         <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -16,6 +16,7 @@
     <modules>
         <module>users-impl</module>
         <module>users-api</module>
+        <module>users-common</module>
     </modules>
 
 

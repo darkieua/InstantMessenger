@@ -1,4 +1,4 @@
-package ua.sumdu.java.lab2.instant_messenger.entities;
+package ua.sumdu.java.lab2.instant_messenger.common_entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
