@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public final class UserMapParserImpl implements UserMapParser{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserMapParserImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserMapParserImpl.class);
 
     private static UserMapParserImpl instance;
 
@@ -23,7 +23,7 @@ public final class UserMapParserImpl implements UserMapParser{
 
     public static UserMapParserImpl getInstance() {
         synchronized (UserMapParserImpl.class) {
-            LOGGER.info("Create a new UserMap Parser");
+            LOG.debug("Create a new UserMap Parser");
             if (instance == null) {
                 instance = new UserMapParserImpl();
             }
@@ -33,7 +33,7 @@ public final class UserMapParserImpl implements UserMapParser{
 
     @Override
     public String userMapToJSonString(UserMap userMap) {
-        LOGGER.info("Converting a UserMap to a Json String");
+        LOG.info("Converting a UserMap to a Json String");
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         UserMapImpl newUsers = (UserMapImpl) userMap;
@@ -42,18 +42,20 @@ public final class UserMapParserImpl implements UserMapParser{
 
     @Override
     public UserMap jsonStringToUserMap(String jsonString) {
-        LOGGER.info("Converting a Json String to a UserMap");
+        LOG.info("Converting a Json String to a UserMap");
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         return gson.fromJson(jsonString, UserMapImpl.class);
     }
 
     @Override
-    public void writeUserMapToFile(String jsonString) {
+    public boolean writeUserMapToFile(String jsonString) {
         try {
             FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
+            return true;
         } catch (IOException e) {
-            LOGGER.error("writeUserMapToFile: IOException");
+            LOG.error("writeUserMapToFile: IOException");
+            return false;
         }
     }
 }

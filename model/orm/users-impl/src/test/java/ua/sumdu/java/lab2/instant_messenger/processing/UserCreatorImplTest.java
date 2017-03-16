@@ -1,6 +1,6 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
-import ua.sumdu.java.lab2.instant_messenger.common_entities.User;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static ua.sumdu.java.lab2.instant_messenger.common_entities.CategoryUsers.FRIEND;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 

@@ -8,5 +8,5 @@ public interface GroupMapParser {
 
     GroupMap jsonStringToGroupMap(String jsonString);
 
-    void writeGroupMapToFile(String jsonString) throws IOException;
+    boolean writeGroupMapToFile(String jsonString) throws IOException;
 }

@@ -1,4 +1,4 @@
-package ua.sumdu.java.lab2.instant_messenger.common_entities;
+package ua.sumdu.java.lab2.instant_messenger.entities;
 
 public enum CategoryUsers {
     ADMIN,

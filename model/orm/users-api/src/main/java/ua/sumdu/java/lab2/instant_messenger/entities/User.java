@@ -1,14 +1,15 @@
-package ua.sumdu.java.lab2.instant_messenger.common_entities;
+package ua.sumdu.java.lab2.instant_messenger.entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 public class User implements Cloneable{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(User.class);
+    private static final Logger LOG = LoggerFactory.getLogger(User.class);
 
     private CategoryUsers category;
     private String username = "";
@@ -17,7 +18,7 @@ public class User implements Cloneable{
     private InetAddress ipAddress;
 
     public User(CategoryUsers category, String username, String email, int port, InetAddress ipAddress) {
-        LOGGER.info("Creating a new user");
+        LOG.debug("Creating a new user");
         this.category = category;
         this.username = username;
         this.email = email;
@@ -26,7 +27,7 @@ public class User implements Cloneable{
     }
 
     public User() throws UnknownHostException {
-        LOGGER.info("Creating an empty user");
+        LOG.debug("Creating an empty user");
         this.category = CategoryUsers.BLACKLIST;
         this.port = -1;
         this.ipAddress = InetAddress.getLocalHost();
@@ -69,7 +70,7 @@ public class User implements Cloneable{
     }
 
     public User update(CategoryUsers category, String username, String email, InetAddress ipAddress, int port) {
-        LOGGER.info("Update user");
+        LOG.info("Update user");
         return this.setCategory(category).setUsername(username).setEmail(email).setIpAddress(ipAddress).setPort(port);
     }
 
@@ -83,35 +84,31 @@ public class User implements Cloneable{
         return this;
     }
 
-    public boolean equals(Object user) {
-        if (user == null) {
-            LOGGER.warn("Comparison GroupMapImpl with null");
-            return false;
-        } else if (user.getClass() == this.getClass()) {
-            LOGGER.info("Object types are the same");
-            User user1 = (User) user;
-            return this.getEmail().equals(user1.getEmail()) && this.getUsername().equals(user1.getUsername())
-                    && this.getCategory().equals(user1.getCategory()) && this.getPort() == user1.getPort()
-                    && this.getIpAddress().equals(user1.getIpAddress());
-        } else {
-            LOGGER.warn("Comparing objects are different");
-            return false;
-        }
+    @Override
+    public String toString() {
+        return "User{" +
+                "category=" + category +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", port=" + port +
+                ", ipAddress=" + ipAddress +
+                '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return port == user.port &&
+                category == user.category &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(ipAddress, user.ipAddress);
+    }
+
+    @Override
     public int hashCode() {
-        LOGGER.info("Using hashCode function");
-        int res = 13;
-        res += category.hashCode();
-        res += 2*username.hashCode();
-        res += 3*email.hashCode();
-        res += 4*port;
-        res += 5*ipAddress.hashCode();
-        return res;
-    }
-
-    public User clone() throws CloneNotSupportedException{
-        LOGGER.info("Clone object");
-        return (User) super.clone();
+        return Objects.hash(category, username, email, port, ipAddress);
     }
 }

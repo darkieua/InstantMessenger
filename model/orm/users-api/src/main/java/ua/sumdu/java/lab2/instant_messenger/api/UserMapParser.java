@@ -8,5 +8,5 @@ public interface UserMapParser {
 
     UserMap jsonStringToUserMap(String jsonString);
 
-    void writeUserMapToFile(String jsonString) throws IOException;
+    boolean writeUserMapToFile(String jsonString) throws IOException;
 }

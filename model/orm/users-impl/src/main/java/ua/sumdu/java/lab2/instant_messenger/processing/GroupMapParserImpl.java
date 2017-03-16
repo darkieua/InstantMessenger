@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public final class GroupMapParserImpl implements GroupMapParser{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupMapParserImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GroupMapParserImpl.class);
 
     private static GroupMapParserImpl instance;
 
@@ -23,7 +23,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     public static GroupMapParserImpl getInstance() {
         synchronized (GroupMapParserImpl.class) {
-            LOGGER.info("Create a new GroupMap Parser");
+            LOG.debug("Create a new GroupMap Parser");
             if (instance == null) {
                 instance = new GroupMapParserImpl();
             }
@@ -34,7 +34,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     @Override
     public String groupMapToJSonString(GroupMap groupMap) {
-        LOGGER.info("Converting a GroupMap to a Json String");
+        LOG.info("Converting a GroupMap to a Json String");
         GroupMapImpl newGroup = (GroupMapImpl) groupMap;
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
@@ -43,18 +43,20 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     @Override
     public GroupMap jsonStringToGroupMap(String jsonString) {
-        LOGGER.info("Converting a Json String to a GroupMap");
+        LOG.info("Converting a Json String to a GroupMap");
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         return gson.fromJson(jsonString, GroupMapImpl.class);
     }
 
     @Override
-    public void writeGroupMapToFile(String jsonString) {
+    public boolean writeGroupMapToFile(String jsonString) {
         try {
             FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
+            return true;
         } catch (IOException e) {
-            LOGGER.error("writeGroupMapToFile: IOException");
+            LOG.error("writeGroupMapToFile: IOException");
+            return false;
         }
     }
 }
