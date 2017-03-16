@@ -29,10 +29,10 @@ public class UserMapImpl implements UserMap, Cloneable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserMapImpl userMap = (UserMapImpl) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        UserMapImpl userMap = (UserMapImpl) obj;
         return Objects.equals(map, userMap.map);
     }
 

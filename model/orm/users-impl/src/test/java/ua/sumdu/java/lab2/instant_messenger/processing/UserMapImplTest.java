@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
-import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
