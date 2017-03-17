@@ -3,21 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>model</artifactId>
+        <artifactId>orm</artifactId>
         <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
         <version>1.0</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>orm</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>messages-api</artifactId>
 
-    <modules>
-        <module>users-impl</module>
-        <module>users-api</module>
-        <module>messages-api</module>
-    </modules>
-
+    <dependencies>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>users-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 
 </project>
