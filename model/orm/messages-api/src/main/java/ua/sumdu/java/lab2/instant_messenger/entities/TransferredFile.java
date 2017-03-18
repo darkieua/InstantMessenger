@@ -11,7 +11,7 @@ public class TransferredFile {
     public TransferredFile(String type, Byte[] file, String name) {
 
         this.type = type;
-        this.file = file;
+        this.file = file.clone();
         this.name = name;
     }
 
@@ -25,11 +25,11 @@ public class TransferredFile {
     }
 
     public Byte[] getFile() {
-        return file;
+        return file.clone();
     }
 
     public TransferredFile setFile(Byte[] file) {
-        this.file = file;
+        this.file = file.clone();
         return this;
     }
 
@@ -43,10 +43,10 @@ public class TransferredFile {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TransferredFile that = (TransferredFile) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        TransferredFile that = (TransferredFile) obj;
         return Objects.equals(type, that.type) &&
                 Arrays.equals(file, that.file) &&
                 Objects.equals(name, that.name);
