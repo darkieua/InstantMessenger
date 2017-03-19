@@ -26,9 +26,9 @@
                 <version>1.0</version>
             </dependency>
             <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+            </dependency>
             <dependency>
                 <groupId>com.tngtech.java</groupId>
                 <artifactId>junit-dataprovider</artifactId>

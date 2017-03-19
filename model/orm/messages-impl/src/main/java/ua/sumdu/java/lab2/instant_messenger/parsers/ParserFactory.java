@@ -6,7 +6,7 @@ import ua.sumdu.java.lab2.instant_messenger.api.MessageMapParser;
 
 import java.io.File;
 
-public class ParserFactory {
+public final class ParserFactory {
     private static final Logger LOG = LoggerFactory.getLogger(ParserFactory.class);
 
     private static ParserFactory instance;
@@ -36,6 +36,6 @@ public class ParserFactory {
     }
 
     private String getFileExtension(File file) {
-        return "";
+        return file.getName();
     }
 }
