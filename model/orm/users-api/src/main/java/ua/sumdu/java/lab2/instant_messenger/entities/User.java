@@ -3,11 +3,12 @@ package ua.sumdu.java.lab2.instant_messenger.entities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
 
-public class User implements Cloneable{
+public class User implements Cloneable, Serializable{
 
     private static final Logger LOG = LoggerFactory.getLogger(User.class);
 

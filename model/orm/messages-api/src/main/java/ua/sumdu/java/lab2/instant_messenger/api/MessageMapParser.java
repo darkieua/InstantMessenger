@@ -4,7 +4,7 @@ import java.io.File;
 
 public interface MessageMapParser {
 
-    boolean messageMapToXML(MessageMap map);
+    boolean write(MessageMap map, File file);
 
-    MessageMap xmlToMessageMap(File file);
+    MessageMap read(File file);
 }

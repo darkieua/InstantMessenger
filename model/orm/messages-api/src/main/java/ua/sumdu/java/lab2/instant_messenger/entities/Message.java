@@ -1,9 +1,11 @@
 package ua.sumdu.java.lab2.instant_messenger.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Message {
+public class Message implements Serializable {
+
     private User sender;
     private User receiver;
     private String test;
