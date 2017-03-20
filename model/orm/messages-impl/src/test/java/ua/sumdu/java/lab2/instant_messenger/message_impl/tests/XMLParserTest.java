@@ -9,7 +9,7 @@ import ua.sumdu.java.lab2.instant_messenger.entities.MessageMapImpl;
 import ua.sumdu.java.lab2.instant_messenger.parsers.XMLParser;
 
 import java.io.File;
-import java.net.UnknownHostException;
+import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class XMLParserTest {
 
     @DataProvider
-    public static Object[][] data() throws UnknownHostException {
+    public static Object[][] data() throws IOException {
         return JsonParserTest.data();
     }
 

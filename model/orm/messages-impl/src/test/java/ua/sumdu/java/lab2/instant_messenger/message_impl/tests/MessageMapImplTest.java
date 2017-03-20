@@ -42,7 +42,6 @@ public class MessageMapImplTest {
     @Test
     @UseDataProvider("data")
     public void addMessage(Message message) throws IOException {
-        ByteOutputStream bos = new ByteOutputStream();
         File tempFile = File.createTempFile("message"+message.getTest(), "temp");
         String str = "";
         final ObjectOutputStream oos = new ObjectOutputStream(
@@ -68,7 +67,7 @@ public class MessageMapImplTest {
 
     @Test
     @UseDataProvider("dataForDelete")
-    public void deleteMessage(Message message) {
+    public void deleteMessage(Message message) throws IOException {
         messageMap.deleteMessage(message);
         correctMap.getMapForMails().remove(message.getTimeSending());
         assertTrue(correctMap.equals(messageMap));

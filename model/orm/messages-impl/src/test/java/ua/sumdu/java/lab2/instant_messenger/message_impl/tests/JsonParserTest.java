@@ -11,6 +11,7 @@ import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.parsers.JsonParser;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND
 public class JsonParserTest {
 
     @DataProvider
-    public static Object[][] data() throws UnknownHostException {
+    public static Object[][] data() throws IOException {
         User[] users = {new User(FRIEND, "user1", "user1@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user2", "user2@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user3", "user3@ex.so", 8080, InetAddress.getLocalHost()),
