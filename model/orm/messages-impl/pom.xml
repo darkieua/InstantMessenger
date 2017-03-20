@@ -12,13 +12,34 @@
     <artifactId>messages-impl</artifactId>
 
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-                <artifactId>messages-api</artifactId>
-                <version>1.0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>messages-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.java</groupId>
+            <artifactId>junit-dataprovider</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+    </dependencies>
 </project>
