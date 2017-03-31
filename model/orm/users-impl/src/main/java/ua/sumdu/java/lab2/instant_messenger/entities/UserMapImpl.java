@@ -12,18 +12,18 @@ public class UserMapImpl implements UserMap, Cloneable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserMapImpl.class);
 
-    private Map<String, ua.sumdu.java.lab2.instant_messenger.entities.User> map;
+    private Map<String, User> map;
 
     public UserMapImpl() {
         LOG.debug("Creating an object of class UserMapImpl");
         map = new TreeMap<>();
     }
 
-    public Map<String, ua.sumdu.java.lab2.instant_messenger.entities.User> getMap() {
+    public Map<String, User> getMap() {
         return map;
     }
 
-    public UserMap setMap(Map<String, ua.sumdu.java.lab2.instant_messenger.entities.User> map) {
+    public UserMap setMap(Map<String, User> map) {
         this.map = map;
         return this;
     }

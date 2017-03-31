@@ -31,10 +31,10 @@ public class JsonParserTest {
                 new User(BLACKLIST, "user3", "user3@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user4", "user4@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user5", "user5@ex.so", 8080, InetAddress.getLocalHost())};
-        Message[] messages = {new Message(users[0], users[1], "text1", LocalDateTime.now()),
-                new Message(users[1], users[2], "text2", LocalDateTime.now()),
-                new Message(users[2], users[3], "text3", LocalDateTime.now()),
-                new Message(users[3], users[4], "text4", LocalDateTime.now())};
+        Message[] messages = {new Message(users[0].getUsername(), users[1].getUsername(), "text1", LocalDateTime.now()),
+                new Message(users[1].getUsername(), users[2].getUsername(), "text2", LocalDateTime.now()),
+                new Message(users[2].getUsername(), users[3].getUsername(), "text3", LocalDateTime.now()),
+                new Message(users[3].getUsername(), users[4].getUsername(), "text4", LocalDateTime.now())};
         MessageMapImpl map = new MessageMapImpl();
         for (Message mess : messages) {
             map.addMessage(mess);
@@ -47,7 +47,7 @@ public class JsonParserTest {
     @UseDataProvider("data")
     public void writeAndReadFile(MessageMapImpl map) throws Exception {
         JsonParser jsonParser = JsonParser.getInstance();
-        File file = File.createTempFile("file","test");
+        File file = new File("temp.json");
         jsonParser.write(map, file);
         MessageMapImpl newMap = (MessageMapImpl) jsonParser.read(file);
         assertTrue(map.equals(newMap));

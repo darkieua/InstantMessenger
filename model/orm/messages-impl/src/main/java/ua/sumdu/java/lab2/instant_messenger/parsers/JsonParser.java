@@ -1,11 +1,15 @@
 package ua.sumdu.java.lab2.instant_messenger.parsers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.MessageMap;
 import ua.sumdu.java.lab2.instant_messenger.api.MessageMapParser;
+import ua.sumdu.java.lab2.instant_messenger.entities.MessageMapImpl;
 
-import java.io.File;
+import java.io.*;
 
 public final class JsonParser implements MessageMapParser{
     private static final Logger LOG = LoggerFactory.getLogger(JsonParser.class);
@@ -27,11 +31,30 @@ public final class JsonParser implements MessageMapParser{
 
     @Override
     public boolean write(MessageMap map, File file) {
-        return false;
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setLenient().create();
+        try {
+            FileUtils.writeStringToFile(file, gson.toJson(map), "UTF-8");
+            return true;
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+            return false;
+        }
     }
 
     @Override
     public MessageMap read(File file) {
-        return null;
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setLenient().create();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String jsonString = reader.readLine();
+            System.out.println(jsonString);
+            MessageMapImpl messageMap = gson.fromJson(jsonString, MessageMapImpl.class);
+            return messageMap;
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+            return null;
+        }
     }
 }

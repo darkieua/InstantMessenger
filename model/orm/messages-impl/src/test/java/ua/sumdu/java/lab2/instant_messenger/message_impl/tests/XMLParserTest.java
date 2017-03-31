@@ -25,7 +25,7 @@ public class XMLParserTest {
     @Test
     @UseDataProvider("data")
     public void writeAndReadFile(MessageMapImpl map) throws Exception {
-        XMLParser XML_Parser = XMLParser.getInstance();
+        XMLParser XML_Parser = XMLParser.INSTANCE;
         File file = File.createTempFile("file","test");
         XML_Parser.write(map, file);
         MessageMapImpl newMap = (MessageMapImpl) XML_Parser.read(file);

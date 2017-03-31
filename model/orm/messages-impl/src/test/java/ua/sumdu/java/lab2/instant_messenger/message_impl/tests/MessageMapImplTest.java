@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.message_impl.tests;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
@@ -32,30 +31,19 @@ public class MessageMapImplTest {
                 new User(BLACKLIST, "user3", "user3@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user4", "user4@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(BLACKLIST, "user5", "user5@ex.so", 8080, InetAddress.getLocalHost())};
-        Message[][] messages = {{new Message(users[0], users[1], "text1", LocalDateTime.now()),
-                new Message(users[1], users[2], "text2", LocalDateTime.now()),
-                new Message(users[2], users[3], "text3", LocalDateTime.now()),
-                new Message(users[3], users[4], "text4", LocalDateTime.now())}};
+        Message[][] messages = {{new Message(users[0].getUsername(), users[1].getUsername(), "text1", LocalDateTime.now()),
+                new Message(users[1].getUsername(), users[2].getUsername(), "text2", LocalDateTime.now()),
+                new Message(users[2].getUsername(), users[3].getUsername(), "text3", LocalDateTime.now()),
+                new Message(users[3].getUsername(), users[4].getUsername(), "text4", LocalDateTime.now())}};
         return messages;
     }
 
     @Test
     @UseDataProvider("data")
     public void addMessage(Message message) throws IOException {
-        File tempFile = File.createTempFile("message"+message.getTest(), "temp");
-        String str = "";
-        final ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(tempFile));
-        oos.writeObject(message);
-        final DataInputStream dis = new DataInputStream(
-                new FileInputStream(tempFile));
-        final byte[] bytes = new byte[dis.available()];
-        dis.readFully(bytes);
-        str = new String(bytes, 0, bytes.length);
-        correctMap.getMapForMails().put(message.getTimeSending(), str);
+        correctMap.getMapForMails().put(message.getTimeSending(), message);
         messageMap.addMessage(message);
         assertTrue(correctMap.equals(messageMap));
-        tempFile.deleteOnExit();
     }
 
     @DataProvider

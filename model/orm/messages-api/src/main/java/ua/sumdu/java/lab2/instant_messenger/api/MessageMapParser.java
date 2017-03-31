@@ -1,10 +1,11 @@
 package ua.sumdu.java.lab2.instant_messenger.api;
 
 import java.io.File;
+import java.io.IOException;
 
 public interface MessageMapParser {
 
-    boolean write(MessageMap map, File file);
+    boolean write(MessageMap map, File file) throws IOException;
 
-    MessageMap read(File file);
+    MessageMap read(File file) throws IOException;
 }

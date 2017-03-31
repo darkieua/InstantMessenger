@@ -1,55 +1,63 @@
 package ua.sumdu.java.lab2.instant_messenger.entities;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class Message implements Serializable {
+public class Message {
 
-    private User sender;
-    private User receiver;
-    private String test;
+    private String sender;
+    private String receiver;
+    private String text;
     private LocalDateTime timeSending;
-    private List<TransferredFile> fileList;
+    private Map<String, byte[]> fileMap;
 
-    public Message(User sender, User receiver, String test, LocalDateTime timeSending, List<TransferredFile> fileList) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.test = test;
-        this.timeSending = timeSending;
-        this.fileList = fileList;
+    public Map<String, byte[]> getFileMap() {
+        return fileMap;
     }
 
-    public Message(User sender, User receiver, String test, LocalDateTime timeSending) {
+    public Message setFileMap(Map<String, byte[]> fileMap) {
+        this.fileMap = fileMap;
+        return this;
+    }
 
+    public Message(String sender, String receiver, String text, LocalDateTime timeSending, Map<String, byte[]> fileMap) {
         this.sender = sender;
         this.receiver = receiver;
-        this.test = test;
+        this.text = text;
+        this.timeSending = timeSending;
+        this.fileMap = fileMap;
+    }
+
+    public Message(String sender, String receiver, String text, LocalDateTime timeSending) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.text = text;
         this.timeSending = timeSending;
     }
 
-    public User getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
-    public User getReceiver() {
+    public String getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(User receiver) {
+    public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
 
-    public String getTest() {
-        return test;
+    public String getText() {
+        return text;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public LocalDateTime getTimeSending() {
@@ -60,11 +68,20 @@ public class Message implements Serializable {
         this.timeSending = timeSending;
     }
 
-    public List<TransferredFile> getFileList() {
-        return fileList;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return Objects.equals(sender, message.sender) &&
+                Objects.equals(receiver, message.receiver) &&
+                Objects.equals(text, message.text) &&
+                Objects.equals(timeSending, message.timeSending) &&
+                Objects.equals(fileMap, message.fileMap);
     }
 
-    public void setFileList(List<TransferredFile> fileList) {
-        this.fileList = fileList;
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender, receiver, text, timeSending, fileMap);
     }
 }

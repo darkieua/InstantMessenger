@@ -30,7 +30,7 @@ public final class ParserFactory {
         if ("json".equals(str)) {
             parser = JsonParser.getInstance();
         } else if ("xml".equals(str)) {
-            parser = XMLParser.getInstance();
+            parser = XMLParser.INSTANCE;
         }
         return parser;
     }
