@@ -21,8 +21,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(DataProviderRunner.class)
 public class MessageMapImplTest {
 
-    private static final MessageMapImpl correctMap = new MessageMapImpl();
-    private static final MessageMapImpl messageMap = new MessageMapImpl();
+    private static final MessageMapImpl CORRECT_MAP = new MessageMapImpl();
+    private static final MessageMapImpl MESSAGE_MAP = new MessageMapImpl();
 
     @DataProvider
     public static Object[][] data() throws UnknownHostException {
@@ -41,24 +41,24 @@ public class MessageMapImplTest {
     @Test
     @UseDataProvider("data")
     public void addMessage(Message message) throws IOException {
-        correctMap.getMapForMails().put(message.getTimeSending(), message);
-        messageMap.addMessage(message);
-        assertTrue(correctMap.equals(messageMap));
+        CORRECT_MAP.getMapForMails().put(message.getTimeSending(), message);
+        MESSAGE_MAP.addMessage(message);
+        assertTrue(CORRECT_MAP.equals(MESSAGE_MAP));
     }
 
     @DataProvider
     public static Object[][] dataForDelete() throws UnknownHostException {
         Message[] messages = (Message[])data()[0];
         Message[][] messagesForDeleting = {{messages[0], messages[messages.length-1], messages[3]}};
-        return messagesForDeleting;
+        return new Message[][]{{messages[0], messages[messages.length-1], messages[3]}};
     }
 
     @Test
     @UseDataProvider("dataForDelete")
     public void deleteMessage(Message message) throws IOException {
-        messageMap.deleteMessage(message);
-        correctMap.getMapForMails().remove(message.getTimeSending());
-        assertTrue(correctMap.equals(messageMap));
+        MESSAGE_MAP.deleteMessage(message);
+        CORRECT_MAP.getMapForMails().remove(message.getTimeSending());
+        assertTrue(CORRECT_MAP.equals(MESSAGE_MAP));
     }
 
 }

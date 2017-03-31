@@ -27,9 +27,7 @@ public final class ParserFactory {
     public MessageMapParser getParser(File file) {
         MessageMapParser parser = null;
         String str = getFileExtension(file);
-        if ("json".equals(str)) {
-            parser = JsonParser.getInstance();
-        } else if ("xml".equals(str)) {
+        if ("xml".equals(str)) {
             parser = XMLParser.INSTANCE;
         }
         return parser;

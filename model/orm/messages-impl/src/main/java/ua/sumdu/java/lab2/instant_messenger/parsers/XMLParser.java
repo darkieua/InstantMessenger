@@ -63,13 +63,13 @@ public enum XMLParser implements MessageMapParser {
         if (Objects.nonNull(fileMap)) {
             Element files = doc.createElement("files");
             mes.appendChild(files);
-            for (Map.Entry<String, byte[]> f : fileMap.entrySet()) {
+            for (Map.Entry<String, byte[]> currentfile : fileMap.entrySet()) {
                 Element fileObj = doc.createElement("file");
                 files.appendChild(fileObj);
                 Element fileName = doc.createElement("fileName");
                 fileObj.appendChild(fileName);
-                fileName.setTextContent(f.getKey());
-                String data = new BigInteger(1, f.getValue()).toString(16);
+                fileName.setTextContent(currentfile.getKey());
+                String data = new BigInteger(1, currentfile.getValue()).toString(16);
                 Element fileData = doc.createElement("fileData");
                 fileObj.appendChild(fileData);
                 fileData.setTextContent(data);
@@ -176,7 +176,8 @@ public enum XMLParser implements MessageMapParser {
             serializer.serialize(document);
             return out.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOG.error(e.getMessage(), e);
+            return null;
         }
     }
 

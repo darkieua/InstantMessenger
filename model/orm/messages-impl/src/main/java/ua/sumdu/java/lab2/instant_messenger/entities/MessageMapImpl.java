@@ -6,7 +6,6 @@ import ua.sumdu.java.lab2.instant_messenger.api.MessageMap;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -14,7 +13,11 @@ import java.util.TreeMap;
 public class MessageMapImpl implements MessageMap, Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageMapImpl.class);
-    private Map<LocalDateTime, Message> mapForMails = new TreeMap<>();
+    private Map<LocalDateTime, Message> mapForMails = null;
+
+    public MessageMapImpl() {
+        mapForMails = new TreeMap<>();
+    }
 
     public Map<LocalDateTime, Message> getMapForMails() {
         return mapForMails;
@@ -23,10 +26,6 @@ public class MessageMapImpl implements MessageMap, Serializable {
     public MessageMapImpl setMapForMails(Map<LocalDateTime, Message> mapForMails) {
         this.mapForMails = mapForMails;
         return this;
-    }
-
-
-    public MessageMapImpl() {
     }
 
     public MessageMapImpl(Map<LocalDateTime, Message> mapForMails) {

@@ -19,14 +19,15 @@
     </properties>
 
     <dependencyManagement>
-
+        <dependencies>
+            <dependency>
+                <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+                <artifactId>users-api</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>users-api</artifactId>
-            <version>1.0</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

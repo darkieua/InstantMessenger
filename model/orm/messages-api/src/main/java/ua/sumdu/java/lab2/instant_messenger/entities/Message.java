@@ -69,10 +69,10 @@ public class Message {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Message message = (Message) obj;
         return Objects.equals(sender, message.sender) &&
                 Objects.equals(receiver, message.receiver) &&
                 Objects.equals(text, message.text) &&
