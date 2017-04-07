@@ -30,7 +30,7 @@ public class User implements Cloneable, Serializable{
 
     }
 
-    public static User getEmptyUser() throws UnknownHostException {
+    public static User getEmptyUser() {
         LOG.debug("Creating an empty user");
         return new User().setCategory(CategoryUsers.EMPTY_USER);
     }
