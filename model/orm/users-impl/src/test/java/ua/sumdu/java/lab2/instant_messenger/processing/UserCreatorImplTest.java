@@ -14,11 +14,11 @@ import static org.junit.Assert.assertFalse;
 
 public class UserCreatorImplTest {
 
-    private static UserCreatorImpl currentCreator;
+    private static UserCreatorImpl2 currentCreator;
 
     @Before
     public void set() {
-        currentCreator = UserCreatorImpl.getInstance();
+        currentCreator = UserCreatorImpl2.getInstance();
     }
 
     @Test

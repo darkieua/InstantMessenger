@@ -4,5 +4,7 @@ public enum CategoryUsers {
     ADMIN,
     FRIEND,
     BLACKLIST,
-    VISITOR
+    VISITOR,
+    EMPTY_USER,
+    CURRENT_USER
 }

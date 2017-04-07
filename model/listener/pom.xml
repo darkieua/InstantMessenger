@@ -3,19 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>InstantMessenger</artifactId>
+        <artifactId>model</artifactId>
         <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
         <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>model</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>listener</artifactId>
 
-    <modules>
-        <module>orm</module>
-        <module>listener</module>
-    </modules>
 
 </project>

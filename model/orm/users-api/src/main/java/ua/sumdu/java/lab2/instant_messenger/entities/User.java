@@ -26,12 +26,13 @@ public class User implements Cloneable, Serializable{
         this.port = port;
         this.ipAddress = ipAddress;
     }
+    private User() {
 
-    public User() throws UnknownHostException {
+    }
+
+    public static User getEmptyUser() throws UnknownHostException {
         LOG.debug("Creating an empty user");
-        this.category = CategoryUsers.BLACKLIST;
-        this.port = -1;
-        this.ipAddress = InetAddress.getLocalHost();
+        return new User().setCategory(CategoryUsers.EMPTY_USER);
     }
 
     public CategoryUsers getCategory() {
