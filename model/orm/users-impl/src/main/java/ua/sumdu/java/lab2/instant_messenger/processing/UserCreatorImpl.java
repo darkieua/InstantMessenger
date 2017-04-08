@@ -1,5 +1,7 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.UserCreator;
@@ -43,6 +45,12 @@ public enum UserCreatorImpl implements UserCreator {
             LOG.warn("Validation error");
             return User.getEmptyUser();
         }
+    }
 
+    public User toUser(String jsonString) {
+        LOG.info("Converting a Json String to a UserMap");
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        return gson.fromJson(jsonString, User.class);
     }
 }

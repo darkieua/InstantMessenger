@@ -1,11 +1,12 @@
 package ua.sumdu.java.lab2.instant_messenger.entities;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Objects;
 
 public class User implements Cloneable, Serializable{
@@ -112,5 +113,12 @@ public class User implements Cloneable, Serializable{
     @Override
     public int hashCode() {
         return Objects.hash(category, username, email, port, ipAddress);
+    }
+
+    public String toJSonString() {
+        LOG.info("Converting a User to a Json String");
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        return gson.toJson(this);
     }
 }

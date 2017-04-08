@@ -71,7 +71,7 @@ public class GroupMapImplTest {
         group2.setMap(map2);
         res[1] = new Object[]{group, group1, name, user5};
         res[2] = new Object[]{group1, group2, name, user3};
-        res[3] = new Object[]{group2, group2, name, new User()};
+        res[3] = new Object[]{group2, group2, name, User.getEmptyUser()};
         return res;
     }
 

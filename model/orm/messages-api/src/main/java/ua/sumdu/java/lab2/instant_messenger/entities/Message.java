@@ -10,7 +10,7 @@ public class Message {
     private String receiver;
     private String text;
     private LocalDateTime timeSending;
-    private Map<String, byte[]> fileMap;
+    private Map<String, byte[]> fileMap = null;
 
     public Map<String, byte[]> getFileMap() {
         return fileMap;

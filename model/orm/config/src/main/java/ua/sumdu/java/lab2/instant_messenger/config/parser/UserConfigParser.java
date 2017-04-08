@@ -18,9 +18,9 @@ public final class UserConfigParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserConfigParser.class);
 
-    public static User getCurrentUser(File configFile ){
+    public static User getCurrentUser(){
         try {
-            String genreJson = IOUtils.toString(new FileReader(configFile));
+            String genreJson = IOUtils.toString(new FileReader(getUserConfigFile()));
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(genreJson);
             String username = node.get("username").asText();
@@ -34,6 +34,19 @@ public final class UserConfigParser {
         }
     }
 
+    public static File getFriendsFile() {
+        return new File("model/orm/users_impl/src/test/resources/friends.json");
+    }
 
+    public static File getGroupsFile() {
+        return new File("model/orm/users_impl/src/test/resources/groups.json");
+    }
 
+    public static File getUserConfigFile() {
+        return new File("model/orm/config/src/main/resources/user_config.json");
+    }
+
+    public static String getURLMessageDirectory() {
+        return "";
+    }
 }

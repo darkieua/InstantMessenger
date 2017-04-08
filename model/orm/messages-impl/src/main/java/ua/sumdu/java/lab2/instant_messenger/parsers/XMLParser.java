@@ -44,9 +44,13 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
-    private void addMessage (Element messages, Message mess, Document doc) {
+    public void addMessage (Element messages, Message mess, Document doc) {
         Element mes = doc.createElement("message");
-        messages.appendChild(mes);
+        if (Objects.isNull(messages)) {
+            doc.appendChild(mes);
+        } else {
+            messages.appendChild(mes);
+        }
         Date out = Date.from(mess.getTimeSending().atZone(ZoneId.systemDefault()).toInstant());
         long longTime = out.getTime();
         mes.setAttribute("date", String.valueOf(longTime));
@@ -77,7 +81,7 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
-    private Message parseMessage (Node node) {
+    public Message parseMessage (Node node, boolean bool) {
         if (node.getNodeType() == node.ELEMENT_NODE) {
             Element elem = (Element) node;
             long countMilliSeconds = Long.parseLong(elem.getAttribute("date"));
@@ -87,7 +91,7 @@ public enum XMLParser implements MessageMapParser {
             String senderUsername = elem.getElementsByTagName("senderUsername").item(0).getTextContent();
             String receiverUsername = elem.getElementsByTagName("receiverUsername").item(0).getTextContent();
             Message thisMessage = new Message(senderUsername, receiverUsername, text, date);
-            if (Objects.nonNull(elem.getElementsByTagName("files").item(0))) {
+            if (bool && Objects.nonNull(elem.getElementsByTagName("files").item(0))) {
                 thisMessage.setFileMap(new TreeMap<>());
                 Node files = elem.getElementsByTagName("files").item(0);
                 NodeList fileNode = ((Element)files).getElementsByTagName("file");
@@ -144,28 +148,32 @@ public enum XMLParser implements MessageMapParser {
     @Override
     public MessageMap read(File file) {
         Document doc = getDocument(file);
+        long date = Date.from(LocalDateTime.now().minusMonths(2).atZone(ZoneId.systemDefault()).toInstant()).getTime();
+        return getMessagesFromSpecificDate(doc, date);
+    }
+
+    public MessageMap getMessagesFromSpecificDate(Document doc, long date) {
         XPathFactory pathFactory = XPathFactory.newInstance();
         XPath xpath = pathFactory.newXPath();
         XPathExpression expr = null;
         MessageMapImpl map = null;
         try {
             expr = xpath.compile("messages/message[@date>"
-                    + Date.from(LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault()).toInstant()).getTime()
-                    + "]");
+                    + date + "]");
             NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             map = new MessageMapImpl();
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
-                map.addMessage(parseMessage(node));
+                map.addMessage(parseMessage(node, true));
             }
+            return map;
         } catch (XPathExpressionException e) {
             LOG.error(e.getMessage(), e);
             return null;
         }
-        return map;
     }
 
-    private String toXML(Document document) throws TransformerException, IOException {
+    public String toXML(Document document) throws TransformerException, IOException {
         try {
             OutputFormat format = new OutputFormat(document);
             format.setLineWidth(65);
