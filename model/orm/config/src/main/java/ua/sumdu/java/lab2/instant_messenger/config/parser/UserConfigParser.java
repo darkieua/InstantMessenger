@@ -47,6 +47,6 @@ public final class UserConfigParser {
     }
 
     public static String getURLMessageDirectory() {
-        return "";
+        return ".\\";
     }
 }

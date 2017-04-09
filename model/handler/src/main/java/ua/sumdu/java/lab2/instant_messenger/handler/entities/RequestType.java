@@ -1,4 +1,4 @@
-package ua.sumdu.java.lab2.instant_messenger.listener.entities;
+package ua.sumdu.java.lab2.instant_messenger.handler.entities;
 
 public enum RequestType {
     ADD_TO_FRIENDS(10),

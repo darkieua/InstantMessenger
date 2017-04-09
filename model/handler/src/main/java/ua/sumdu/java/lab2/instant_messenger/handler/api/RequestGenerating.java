@@ -1,4 +1,4 @@
-package ua.sumdu.java.lab2.instant_messenger.listener.api;
+package ua.sumdu.java.lab2.instant_messenger.handler.api;
 
 import ua.sumdu.java.lab2.instant_messenger.entities.Message;
 

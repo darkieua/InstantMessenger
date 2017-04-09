@@ -1,24 +1,21 @@
-package ua.sumdu.java.lab2.instant_messenger.listener.processing;
+package ua.sumdu.java.lab2.instant_messenger.handler.processing;
 
+
+import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
+import ua.sumdu.java.lab2.instant_messenger.entities.*;
+import ua.sumdu.java.lab2.instant_messenger.handler.api.RequestGenerating;
+import ua.sumdu.java.lab2.instant_messenger.handler.entities.RequestType;
+import ua.sumdu.java.lab2.instant_messenger.parsers.XMLParser;
+import ua.sumdu.java.lab2.instant_messenger.processing.GroupMapParserImpl;
+
+import java.util.Objects;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
-import ua.sumdu.java.lab2.instant_messenger.entities.*;
-import ua.sumdu.java.lab2.instant_messenger.listener.api.RequestGenerating;
-import ua.sumdu.java.lab2.instant_messenger.listener.entities.RequestType;
-
-
-import java.io.IOException;
-import java.util.Objects;
-import ua.sumdu.java.lab2.instant_messenger.parsers.XMLParser;
-import ua.sumdu.java.lab2.instant_messenger.processing.GroupMapParserImpl;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 public class RequestGeneratingImpl implements RequestGenerating {
     private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);
@@ -94,7 +91,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     public String messagesFromSpecificDate(long date) {
         StringBuilder str = new StringBuilder();
         str.append(RequestType.MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
-                .append('=').append(date);
+                .append('=').append(date).append('=').append(UserConfigParser.getCurrentUser().getUsername());
         return str.toString();
     }
 
@@ -109,12 +106,6 @@ public class RequestGeneratingImpl implements RequestGenerating {
         DOMImplementation impl = builder.getDOMImplementation();
         Document doc = impl.createDocument(null, null, null);
         XMLParser.INSTANCE.addMessage(null, message, doc);
-        try {
-            return XMLParser.INSTANCE.toXML(doc);
-        } catch (TransformerException | IOException  e) {
-            LOG.error(e.getMessage(), e);
-            return null;
-        }
+        return XMLParser.INSTANCE.toXML(doc);
     }
-
 }

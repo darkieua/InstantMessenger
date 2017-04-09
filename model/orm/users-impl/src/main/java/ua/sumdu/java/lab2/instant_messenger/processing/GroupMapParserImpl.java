@@ -10,10 +10,8 @@ import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
-import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -70,7 +68,6 @@ public final class GroupMapParserImpl implements GroupMapParser{
     }
 
     public GroupMap getGroupMap() {
-        GroupMapImpl currentGroups = null;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(UserConfigParser.getGroupsFile()));
             StringBuilder result = new StringBuilder();
@@ -78,7 +75,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
             while((temp=reader.readLine())!=null) {
                 result.append(temp);
             }
-            return (GroupMapImpl) jsonStringToGroupMap(result.toString());
+            return jsonStringToGroupMap(result.toString());
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             return new GroupMapImpl();

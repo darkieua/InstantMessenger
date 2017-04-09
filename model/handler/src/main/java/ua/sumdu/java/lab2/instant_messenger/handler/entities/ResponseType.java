@@ -1,15 +1,17 @@
-package ua.sumdu.java.lab2.instant_messenger.listener.entities;
+package ua.sumdu.java.lab2.instant_messenger.handler.entities;
 
 
 public enum ResponseType {
     SUCCESSFUL(100),
     USER_IS_OFFLINE(201),
-    ADMIN_IS_OFFLINE(202),
     REQUEST_HAS_BEEN_DECLINED(301),
-    RECEIVING_FILES_REJECTED(302),
-    CURRENT_USER_IS_BLOCKED(303);
+    UPDATED_GROUP_LIST(401),
+    REQUESTED_MESSAGES(402),
+    ADDED_TO_FRIENDS(501),
+    ADDED_TO_GROUP(502),
+    UNIDENTIFIED_REQUEST(666);
 
-    public int getRequestNumber() {
+    public int getResponseNumber() {
         return responseNumber;
     }
 

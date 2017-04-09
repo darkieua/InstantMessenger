@@ -14,7 +14,6 @@ import ua.sumdu.java.lab2.instant_messenger.entities.MessageMapImpl;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
 import java.io.*;
 import java.math.BigInteger;
@@ -111,16 +110,29 @@ public enum XMLParser implements MessageMapParser {
 
     @Override
     public boolean write(MessageMap map, File file) {
-        Document doc = getDocument(file);
+        Document doc = writeMessageToDocument((MessageMapImpl) map, getDocument(file));
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(toXML(doc));
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            return false;
+        }
+        return true;
+    }
+
+    public Document writeMessageToDocument(MessageMapImpl messageMap, Document thisDoc) {
+        Document doc = thisDoc;
         Element root;
-        if (doc == null) {
+        if (Objects.isNull(doc)) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = null;
             try {
                 builder = factory.newDocumentBuilder();
             } catch (ParserConfigurationException e) {
                 LOG.error(e.getMessage(), e);
-                return false;
             }
             DOMImplementation impl = builder.getDOMImplementation();
             doc = impl.createDocument(null, null, null);
@@ -129,20 +141,11 @@ public enum XMLParser implements MessageMapParser {
         } else {
             root = (Element)doc.getFirstChild();
         }
-        MessageMapImpl newMap = (MessageMapImpl) map;
+        MessageMapImpl newMap = (MessageMapImpl) messageMap;
         for (Map.Entry<LocalDateTime, Message> messages : newMap.getMapForMails().entrySet()) {
             addMessage(root, messages.getValue(), doc);
         }
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(toXML(doc));
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException | TransformerException e) {
-            LOG.error(e.getMessage(), e);
-            return false;
-        }
-        return true;
+        return doc;
     }
 
     @Override
@@ -173,7 +176,7 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
-    public String toXML(Document document) throws TransformerException, IOException {
+    public String toXML(Document document) {
         try {
             OutputFormat format = new OutputFormat(document);
             format.setLineWidth(65);
