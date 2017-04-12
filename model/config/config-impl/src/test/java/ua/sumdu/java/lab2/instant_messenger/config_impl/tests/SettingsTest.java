@@ -30,8 +30,8 @@ public class SettingsTest {
     @UseDataProvider("data")
     public void writeAndReadJsonString(Settings settings) throws IOException {
         SettingsParser parser = new SettingsParserImpl();
-        String json = parser.SettingsToJson(settings);
-        Settings parsed_settings = parser.JsonToSettings(json);
+        String json = parser.settingsToJson(settings);
+        Settings parsed_settings = parser.jsonToSettings(json);
         assertTrue(parsed_settings.equals(settings));
     }
 }

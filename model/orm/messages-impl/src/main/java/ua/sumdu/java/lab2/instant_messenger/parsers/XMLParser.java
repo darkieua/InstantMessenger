@@ -24,7 +24,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public enum XMLParser implements MessageMapParser {
 
@@ -89,8 +88,7 @@ public enum XMLParser implements MessageMapParser {
             String text = elem.getElementsByTagName("text").item(0).getTextContent();
             String senderUsername = elem.getElementsByTagName("senderUsername").item(0).getTextContent();
             String receiverUsername = elem.getElementsByTagName("receiverUsername").item(0).getTextContent();
-            Message thisMessage = new Message(senderUsername, receiverUsername, text, date);
-            return thisMessage;
+            return new Message(senderUsername, receiverUsername, text, date);
         } else {
             return null;
         }
@@ -118,9 +116,9 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
-    public Document writeMessageToDocument(MessageMapImpl messageMap, Document thisDoc) {
-        Document doc = thisDoc;
+    public Document writeMessageToDocument(MessageMapImpl messageMap, Document doc) {
         Element root;
+        Document document;
         if (Objects.isNull(doc)) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = null;
@@ -130,17 +128,18 @@ public enum XMLParser implements MessageMapParser {
                 LOG.error(e.getMessage(), e);
             }
             DOMImplementation impl = builder.getDOMImplementation();
-            doc = impl.createDocument(null, null, null);
-            root = doc.createElement("messages");
-            doc.appendChild(root);
+            document = impl.createDocument(null, null, null);
+            root = document.createElement("messages");
+            document.appendChild(root);
         } else {
-            root = (Element)doc.getFirstChild();
+            document = doc;
+            root = (Element)document.getFirstChild();
         }
-        MessageMapImpl newMap = (MessageMapImpl) messageMap;
+        MessageMapImpl newMap = messageMap;
         for (Map.Entry<LocalDateTime, Message> messages : newMap.getMapForMails().entrySet()) {
-            addMessage(root, messages.getValue(), doc);
+            addMessage(root, messages.getValue(), document);
         }
-        return doc;
+        return document;
     }
 
     @Override
@@ -154,13 +153,12 @@ public enum XMLParser implements MessageMapParser {
         XPathFactory pathFactory = XPathFactory.newInstance();
         XPath xpath = pathFactory.newXPath();
         XPathExpression expr;
-        MessageMapImpl map;
         try {
             expr = xpath.compile("messages/message[@date>"
                     + date + "]");
-            if (!Objects.isNull(doc)) {
+            if (Objects.nonNull(doc)) {
                 NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                map = new MessageMapImpl();
+                MessageMapImpl map = new MessageMapImpl();
                 for (int i = 0; i < nodes.getLength(); i++) {
                     Node node = nodes.item(i);
                     map.addMessage(parseMessage(node));
@@ -193,13 +191,13 @@ public enum XMLParser implements MessageMapParser {
 
     public static Document loadXMLFromString(String xml) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
-            InputSource is = new InputSource(new StringReader(xml));
-            return builder.parse(is);
+            InputSource inputSource = new InputSource(new StringReader(xml));
+            return builder.parse(inputSource);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            //e.printStackTrace();
+            LOG.error(e.getMessage(), e);
             return null;
         }
 

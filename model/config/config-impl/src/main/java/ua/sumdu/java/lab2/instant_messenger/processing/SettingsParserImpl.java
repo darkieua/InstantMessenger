@@ -11,7 +11,7 @@ import java.util.Map;
 public class SettingsParserImpl implements SettingsParser {
     public static final Logger LOG = LoggerFactory.getLogger(SettingsParserImpl.class);
 
-    public String SettingsToJson(Settings settings) {
+    public String settingsToJson(Settings settings) {
         Map<String, String> settingsMap = settings.getSettingsMap();
 
         JSONObject jsonObject = new JSONObject();
@@ -22,7 +22,7 @@ public class SettingsParserImpl implements SettingsParser {
         return jsonObject.toString();
     }
 
-    public Settings JsonToSettings(String json) {
+    public Settings jsonToSettings(String json) {
         Settings settings = new SettingsImpl();
         JSONObject jsonObject = new JSONObject(json);
 

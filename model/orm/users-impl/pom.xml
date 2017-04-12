@@ -25,15 +25,12 @@
                 <version>1.0</version>
             </dependency>
         </dependencies>
+
     </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
             <artifactId>users-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>config</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
