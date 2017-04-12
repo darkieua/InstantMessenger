@@ -7,6 +7,8 @@ import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -58,4 +60,18 @@ public final class UserMapParserImpl implements UserMapParser{
             return false;
         }
     }
+
+    @Override
+    public UserMap getFriends() {
+        File friends = User.getFriendsFile();
+        try {
+            String jsonString = FileUtils.readFileToString(friends, "UTF-8");
+            return jsonStringToUserMap(jsonString);
+        } catch (IOException e) {
+            //e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }

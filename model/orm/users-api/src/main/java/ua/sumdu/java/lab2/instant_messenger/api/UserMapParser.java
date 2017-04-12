@@ -9,4 +9,6 @@ public interface UserMapParser {
     UserMap jsonStringToUserMap(String jsonString);
 
     boolean writeUserMapToFile(String jsonString) throws IOException;
+
+    UserMap getFriends();
 }

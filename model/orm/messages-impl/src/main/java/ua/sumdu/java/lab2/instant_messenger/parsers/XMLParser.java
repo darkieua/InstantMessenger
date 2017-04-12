@@ -80,7 +80,7 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
-    public Message parseMessage (Node node, boolean bool) {
+    public Message parseMessage (Node node) {
         if (node.getNodeType() == node.ELEMENT_NODE) {
             Element elem = (Element) node;
             long countMilliSeconds = Long.parseLong(elem.getAttribute("date"));
@@ -90,18 +90,6 @@ public enum XMLParser implements MessageMapParser {
             String senderUsername = elem.getElementsByTagName("senderUsername").item(0).getTextContent();
             String receiverUsername = elem.getElementsByTagName("receiverUsername").item(0).getTextContent();
             Message thisMessage = new Message(senderUsername, receiverUsername, text, date);
-            if (bool && Objects.nonNull(elem.getElementsByTagName("files").item(0))) {
-                thisMessage.setFileMap(new TreeMap<>());
-                Node files = elem.getElementsByTagName("files").item(0);
-                NodeList fileNode = ((Element)files).getElementsByTagName("file");
-                for (int j = 0; j < fileNode.getLength(); j++) {
-                    Element currentFile = (Element) fileNode.item(j);
-                    String fileName = currentFile.getElementsByTagName("fileName").item(0).getTextContent();
-                    String fileData = currentFile.getElementsByTagName("fileData").item(0).getTextContent();
-                    byte[] data = new BigInteger(fileData, 16).toByteArray();
-                    thisMessage.getFileMap().put(fileName, data);
-                }
-            }
             return thisMessage;
         } else {
             return null;
@@ -110,17 +98,24 @@ public enum XMLParser implements MessageMapParser {
 
     @Override
     public boolean write(MessageMap map, File file) {
-        Document doc = writeMessageToDocument((MessageMapImpl) map, getDocument(file));
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(toXML(doc));
+        Document doc = writeMessageToDocument((MessageMapImpl) map, null);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+                return false;
+            }
+        }
+        try (FileOutputStream fileWriter = new FileOutputStream(file)) {
+            fileWriter.write(toXML(doc).getBytes());
             fileWriter.flush();
             fileWriter.close();
+            return true;
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             return false;
         }
-        return true;
     }
 
     public Document writeMessageToDocument(MessageMapImpl messageMap, Document thisDoc) {
@@ -158,21 +153,25 @@ public enum XMLParser implements MessageMapParser {
     public MessageMap getMessagesFromSpecificDate(Document doc, long date) {
         XPathFactory pathFactory = XPathFactory.newInstance();
         XPath xpath = pathFactory.newXPath();
-        XPathExpression expr = null;
-        MessageMapImpl map = null;
+        XPathExpression expr;
+        MessageMapImpl map;
         try {
             expr = xpath.compile("messages/message[@date>"
                     + date + "]");
-            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-            map = new MessageMapImpl();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                map.addMessage(parseMessage(node, true));
+            if (!Objects.isNull(doc)) {
+                NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                map = new MessageMapImpl();
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Node node = nodes.item(i);
+                    map.addMessage(parseMessage(node));
+                }
+                return map;
+            } else {
+                return new MessageMapImpl();
             }
-            return map;
         } catch (XPathExpressionException e) {
             LOG.error(e.getMessage(), e);
-            return null;
+            return new MessageMapImpl();
         }
     }
 

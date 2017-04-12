@@ -35,7 +35,7 @@ public class RequestGeneratingImplTest {
 
     @DataProvider
     public static Object[][] chatName() {
-        return new Object[][]{{"main"}, {"other"}};
+        return new Object[][]{{"main"}};
     }
 
     @DataProvider
@@ -45,11 +45,10 @@ public class RequestGeneratingImplTest {
                 new User(VISITOR, "user3", "user3@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(FRIEND, "user4", "user4@ex.so", 8080, InetAddress.getLocalHost()),
                 new User(FRIEND, "user5", "user5@ex.so", 8080, InetAddress.getLocalHost())};
-        Message[][] messages = {{new Message(users[0].getUsername(), users[1].getUsername(), "text1", LocalDateTime.now()),
-                new Message(users[1].getUsername(), users[2].getUsername(), "text2", LocalDateTime.now()),
-                new Message(users[2].getUsername(), users[3].getUsername(), "text3", LocalDateTime.now()),
-                new Message(users[3].getUsername(), users[4].getUsername(), "text4", LocalDateTime.now())}};
-        return messages;
+        return new Object[][] {{new Message(users[0].getUsername(), users[1].getUsername(), "text1", LocalDateTime.now())},
+                {new Message(users[1].getUsername(), users[2].getUsername(), "text2", LocalDateTime.now())},
+                {new Message(users[2].getUsername(), users[3].getUsername(), "text3", LocalDateTime.now())},
+                {new Message(users[3].getUsername(), users[4].getUsername(), "text4", LocalDateTime.now())}};
     }
 
     @Test

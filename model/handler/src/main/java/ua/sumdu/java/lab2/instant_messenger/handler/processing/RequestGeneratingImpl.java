@@ -8,7 +8,6 @@ import ua.sumdu.java.lab2.instant_messenger.handler.api.RequestGenerating;
 import ua.sumdu.java.lab2.instant_messenger.parsers.XMLParser;
 import ua.sumdu.java.lab2.instant_messenger.processing.GroupMapParserImpl;
 
-import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

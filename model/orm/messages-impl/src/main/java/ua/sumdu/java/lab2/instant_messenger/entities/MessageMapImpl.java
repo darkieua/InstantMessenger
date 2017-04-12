@@ -33,6 +33,13 @@ public class MessageMapImpl implements MessageMap, Serializable {
     }
 
     @Override
+    public String toString() {
+        return "MessageMapImpl{" +
+                "mapForMails=" + mapForMails +
+                '}';
+    }
+
+    @Override
     public void addMessage(Message message) {
         LOG.debug("Add message");
         mapForMails.put(message.getTimeSending(), message);
