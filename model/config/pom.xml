@@ -14,8 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>config-impl</module>
         <module>config-api</module>
+        <module>config-impl</module>
     </modules>
 
 
