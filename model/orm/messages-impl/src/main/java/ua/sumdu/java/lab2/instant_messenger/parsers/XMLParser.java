@@ -5,6 +5,7 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import ua.sumdu.java.lab2.instant_messenger.api.MessageMap;
 import ua.sumdu.java.lab2.instant_messenger.api.MessageMapParser;
@@ -33,12 +34,11 @@ public enum XMLParser implements MessageMapParser {
 
     public Document getDocument(File file) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
             return builder.parse(file);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-
             return null;
         }
     }
@@ -192,4 +192,17 @@ public enum XMLParser implements MessageMapParser {
         }
     }
 
+    public static Document loadXMLFromString(String xml) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(xml));
+            return builder.parse(is);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            //e.printStackTrace();
+            return null;
+        }
+
+    }
 }

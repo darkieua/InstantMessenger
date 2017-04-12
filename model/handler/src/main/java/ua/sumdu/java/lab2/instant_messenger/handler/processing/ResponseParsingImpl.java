@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.handler.processing;
 
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.*;
 import ua.sumdu.java.lab2.instant_messenger.handler.api.ResponseParsing;
 import ua.sumdu.java.lab2.instant_messenger.handler.entities.ResponseType;
@@ -10,6 +9,9 @@ import ua.sumdu.java.lab2.instant_messenger.processing.GroupMapParserImpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static ua.sumdu.java.lab2.instant_messenger.entities.User.CURRENT_USER;
+import static ua.sumdu.java.lab2.instant_messenger.entities.User.getURLMessageDirectory;
 
 public class ResponseParsingImpl implements ResponseParsing {
     @Override
@@ -59,7 +61,7 @@ public class ResponseParsingImpl implements ResponseParsing {
             }
             MessageMapImpl messages = (MessageMapImpl) XMLParser.INSTANCE.read(temp);
             String sender = ((Message)messages.getMapForMails().values().toArray()[0]).getSender();
-            File fileWithMails = new File(UserConfigParser.getURLMessageDirectory() + sender);
+            File fileWithMails = new File(getURLMessageDirectory() + sender);
             MessageMapImpl currentMessageMap = (MessageMapImpl) XMLParser.INSTANCE.read(fileWithMails);
             for (Message message : messages.getMapForMails().values()) {
                 currentMessageMap.addMessage(message);

@@ -2,7 +2,7 @@ package ua.sumdu.java.lab2.instant_messenger.processing;
 
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMapParser;
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 
 import com.google.gson.Gson;
@@ -51,7 +51,7 @@ public final class UserMapParserImpl implements UserMapParser{
     @Override
     public boolean writeUserMapToFile(String jsonString) {
         try {
-            FileUtils.writeStringToFile(UserConfigParser.getFriendsFile(), jsonString, "UTF-8");
+            FileUtils.writeStringToFile(User.getFriendsFile(), jsonString, "UTF-8");
             return true;
         } catch (IOException e) {
             LOG.error("writeUserMapToFile: IOException");

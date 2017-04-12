@@ -1,10 +1,16 @@
 package ua.sumdu.java.lab2.instant_messenger.entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Objects;
@@ -18,6 +24,8 @@ public class User implements Cloneable, Serializable{
     private String email = "";
     private int port = -1;
     private InetAddress ipAddress;
+
+    public static User CURRENT_USER = getCurrentUser();
 
     public User(CategoryUsers category, String username, String email, int port, InetAddress ipAddress) {
         LOG.debug("Creating a new user");
@@ -120,5 +128,41 @@ public class User implements Cloneable, Serializable{
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         return gson.toJson(this);
+    }
+
+    public static User getCurrentUser(){
+        try {
+            String genreJson = IOUtils.toString(new FileReader(getUserConfigFile()));
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(genreJson);
+            String username = node.get("username").asText();
+            String email = node.get("email").asText();
+            int port = node.get("port").asInt();
+            String host = node.get("ipAddress").asText();
+            return new User(CategoryUsers.CURRENT_USER, username, email, port, InetAddress.getByName(host));
+        } catch (IOException e) {
+            LOG.error("Config file not found",e);
+            return User.getEmptyUser();
+        }
+    }
+
+    public static File getFriendsFile() {
+        return new File(getUserHome() + "/InstantMessenger/friends.json");
+    }
+
+    public static File getGroupsFile() {
+        return new File(getUserHome() + "/InstantMessenger/groups.json");
+    }
+
+    public static File getUserConfigFile() {
+        return new File(getUserHome() + "/InstantMessenger/user_config.json");
+    }
+
+    public static String getURLMessageDirectory() {
+        return getUserHome() + "/InstantMessenger/messages/";
+    }
+
+    private static String getUserHome() {
+        return System.getProperty("user.home");
     }
 }

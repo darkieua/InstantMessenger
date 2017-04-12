@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.handler.processing;
 
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.*;
 import ua.sumdu.java.lab2.instant_messenger.handler.api.RequestParsing;
 import ua.sumdu.java.lab2.instant_messenger.handler.entities.RequestType;
@@ -15,6 +14,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import static ua.sumdu.java.lab2.instant_messenger.entities.User.CURRENT_USER;
 
 public class RequestParsingImpl implements RequestParsing {
     private static final Logger LOG = LoggerFactory.getLogger(RequestParsingImpl.class);
@@ -42,16 +43,8 @@ public class RequestParsingImpl implements RequestParsing {
         } else if (requestType == RequestType.NEW_MESSAGE.getRequestNumber()) {
             newMessage(context, false);
             return String.valueOf(ResponseType.SUCCESSFUL.getResponseNumber());
-        } else if (requestType == RequestType.NEW_MESSAGE_WITH_FILES_TO_FRIEND.getRequestNumber()) {
-            boolean bool = true;//Result of interaction with the user ???
-            newMessage(context, bool);
-            return String.valueOf(ResponseType.SUCCESSFUL.getResponseNumber());
         } else if (requestType == RequestType.NEW_MESSAGE_TO_GROUP.getRequestNumber()) { //???
             newMessage(context, false);
-            return String.valueOf(ResponseType.SUCCESSFUL.getResponseNumber());
-        } else if (requestType == RequestType.NEW_MESSAGE_WITH_FILES_TO_GROUP.getRequestNumber()) { //???
-            boolean bool = true;//Result of interaction with the user ???
-            newMessage(context, bool);
             return String.valueOf(ResponseType.SUCCESSFUL.getResponseNumber());
         } else if (requestType == RequestType.UPDATE_GROUP_LIST.getRequestNumber()) {
             updateGroup(context);
@@ -66,7 +59,7 @@ public class RequestParsingImpl implements RequestParsing {
     }
 
     public void addNewFriend(String str) {
-        File friends = UserConfigParser.getFriendsFile();
+        File friends = User.getFriendsFile();
         UserMapParserImpl userMapParser = UserMapParserImpl.getInstance();
         UserMapImpl currentFriends = null;
         try {
@@ -95,7 +88,7 @@ public class RequestParsingImpl implements RequestParsing {
         for (User user: userMap.getMap().values()) {
             groupMap.addUser(key, user);
         }
-        groupMap.addUser(key, UserConfigParser.getCurrentUser());
+        groupMap.addUser(key, CURRENT_USER);
         groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(currentGroups));
         return key;
     }
@@ -108,7 +101,7 @@ public class RequestParsingImpl implements RequestParsing {
             Message message = XMLParser.INSTANCE.parseMessage(doc.getFirstChild(), existFile);
             temp.delete();
             String sender = message.getSender();// ???
-            File file = new File(UserConfigParser.getURLMessageDirectory() +  sender);
+            File file = new File(User.getURLMessageDirectory() +  sender);
             MessageMapImpl messageMap = (MessageMapImpl) XMLParser.INSTANCE.read(file);
             messageMap.addMessage(message);
             XMLParser.INSTANCE.write(messageMap, file);

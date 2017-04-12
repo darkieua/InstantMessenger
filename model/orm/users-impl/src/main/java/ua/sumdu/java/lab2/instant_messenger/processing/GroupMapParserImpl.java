@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMap;
 import ua.sumdu.java.lab2.instant_messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
 import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -55,7 +55,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
     @Override
     public boolean writeGroupMapToFile(String jsonString) {
         try {
-            FileUtils.writeStringToFile(UserConfigParser.getGroupsFile(), jsonString, "UTF-8");
+            FileUtils.writeStringToFile(User.getGroupsFile(), jsonString, "UTF-8");
             return true;
         } catch (IOException e) {
             LOG.error("writeGroupMapToFile: IOException");
@@ -69,7 +69,7 @@ public final class GroupMapParserImpl implements GroupMapParser{
 
     public GroupMap getGroupMap() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(UserConfigParser.getGroupsFile()));
+            BufferedReader reader = new BufferedReader(new FileReader(User.getGroupsFile()));
             StringBuilder result = new StringBuilder();
             String temp;
             while((temp=reader.readLine())!=null) {

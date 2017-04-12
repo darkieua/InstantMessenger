@@ -18,8 +18,6 @@
         <module>users-api</module>
         <module>messages-api</module>
         <module>messages-impl</module>
-        <module>config</module>
     </modules>
-
 
 </project>

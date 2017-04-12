@@ -12,22 +12,13 @@
 
     <artifactId>messages-api</artifactId>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-                <artifactId>users-api</artifactId>
-                <version>1.0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <!--<dependencies>
+    <dependencies>
+        <!--inner import -->
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
             <artifactId>users-api</artifactId>
             <version>1.0</version>
         </dependency>
-    </dependencies>-->
+    </dependencies>
 
 </project>

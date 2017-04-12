@@ -13,11 +13,7 @@
     <artifactId>listener</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>config</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--inner import -->
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
             <artifactId>handler</artifactId>

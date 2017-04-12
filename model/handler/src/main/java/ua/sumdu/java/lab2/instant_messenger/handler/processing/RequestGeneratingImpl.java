@@ -1,10 +1,10 @@
 package ua.sumdu.java.lab2.instant_messenger.handler.processing;
 
-
-import ua.sumdu.java.lab2.instant_messenger.config.parser.UserConfigParser;
-import ua.sumdu.java.lab2.instant_messenger.entities.*;
+import ua.sumdu.java.lab2.instant_messenger.entities.GroupMapImpl;
+import ua.sumdu.java.lab2.instant_messenger.entities.Message;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
+import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.instant_messenger.handler.api.RequestGenerating;
-import ua.sumdu.java.lab2.instant_messenger.handler.entities.RequestType;
 import ua.sumdu.java.lab2.instant_messenger.parsers.XMLParser;
 import ua.sumdu.java.lab2.instant_messenger.processing.GroupMapParserImpl;
 
@@ -17,16 +17,17 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
+import static ua.sumdu.java.lab2.instant_messenger.entities.User.CURRENT_USER;
+import static ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers.FRIEND;
+import static ua.sumdu.java.lab2.instant_messenger.handler.entities.RequestType.*;
+
+
 public class RequestGeneratingImpl implements RequestGenerating {
     private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);
 
     @Override
     public String addToFriends() {
-        StringBuilder str = new StringBuilder();
-        str.append(RequestType.ADD_TO_FRIENDS.getRequestNumber()).append('=')
-                .append(UserConfigParser.getCurrentUser()
-                        .setCategory(CategoryUsers.FRIEND).toJSonString());
-        return str.toString();
+        return ADD_TO_FRIENDS.getRequestNumber() + "=" +  CURRENT_USER.setCategory(FRIEND).toJSonString();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
         for (User user: groupUsers.getMap().values()) {
             newGroup.addUser(groupName, user);
         }
-        str.append(RequestType.ADD_TO_GROUP.getRequestNumber()).append('=')
+        str.append(ADD_TO_GROUP.getRequestNumber()).append('=')
                 .append(groupMapParser.groupMapToJSonString(newGroup));
         return str.toString();
     }
@@ -46,43 +47,31 @@ public class RequestGeneratingImpl implements RequestGenerating {
     @Override
     public String newMessage(Message message) {
         StringBuilder str = new StringBuilder();
-        if (Objects.isNull(message.getFileMap())) {
-            str.append(RequestType.NEW_MESSAGE.getRequestNumber())
+        str.append(NEW_MESSAGE.getRequestNumber())
                     .append('=').append(createMessage(message));
-            return str.toString();
-        } else {
-            str.append(RequestType.NEW_MESSAGE_WITH_FILES_TO_FRIEND.getRequestNumber())
-                    .append('=').append(createMessage(message));
-            return str.toString();
-        }
+        return str.toString();
     }
 
     @Override
     public String newMessageToGroup(Message message) {
         StringBuilder str = new StringBuilder();
-        if (Objects.isNull(message.getFileMap())) {
-            str.append(RequestType.NEW_MESSAGE_TO_GROUP.getRequestNumber())
+        str.append(NEW_MESSAGE_TO_GROUP.getRequestNumber())
                     .append('=').append(createMessage(message));
-            return str.toString();
-        } else {
-            str.append(RequestType.NEW_MESSAGE_WITH_FILES_TO_GROUP.getRequestNumber())
-                    .append('=').append(createMessage(message));
-            return str.toString();
-        }
+        return str.toString();
     }
 
     @Override
     public String updateGroupList(String groupName) {
         String string = addToGroup(groupName);
         StringBuilder str = new StringBuilder();
-        str.append(RequestType.UPDATE_GROUP_LIST).append(string.substring(2));
+        str.append(UPDATE_GROUP_LIST.getRequestNumber()).append(string.substring(4));
         return str.toString();
     }
 
     @Override
     public String requestForUpdateGroupList(String groupName) {
         StringBuilder str = new StringBuilder();
-        str.append(RequestType.REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber())
+        str.append(REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber())
                 .append('=').append(groupName);
         return str.toString();
     }
@@ -90,12 +79,12 @@ public class RequestGeneratingImpl implements RequestGenerating {
     @Override
     public String messagesFromSpecificDate(long date) {
         StringBuilder str = new StringBuilder();
-        str.append(RequestType.MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
-                .append('=').append(date).append('=').append(UserConfigParser.getCurrentUser().getUsername());
+        str.append(MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
+                .append('=').append(date).append('=').append(CURRENT_USER.getUsername());
         return str.toString();
     }
 
-    private String createMessage(Message message) {
+    public String createMessage(Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
         try {
