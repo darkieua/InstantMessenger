@@ -171,7 +171,7 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${checkstyle.version}</version>
                     <configuration>
-                        <configLocation>checkstyle.xml</configLocation>
+                        <configLocation>${session.executionRootDirectory}${file.separator}checkstyle.xml</configLocation>
                     </configuration>
                 </plugin>
                 <plugin>
