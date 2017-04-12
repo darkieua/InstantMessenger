@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.instant_messenger.api;
 
-import java.io.IOException;
 
 public interface GroupMapParser {
 
@@ -8,5 +7,5 @@ public interface GroupMapParser {
 
     GroupMap jsonStringToGroupMap(String jsonString);
 
-    boolean writeGroupMapToFile(String jsonString) throws IOException;
+    boolean writeGroupMapToFile(String jsonString);
 }

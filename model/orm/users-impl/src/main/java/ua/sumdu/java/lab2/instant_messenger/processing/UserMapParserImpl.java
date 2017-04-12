@@ -1,16 +1,18 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMap;
 import ua.sumdu.java.lab2.instant_messenger.api.UserMapParser;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 import ua.sumdu.java.lab2.instant_messenger.entities.UserMapImpl;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class UserMapParserImpl implements UserMapParser{
 
@@ -51,11 +53,25 @@ public final class UserMapParserImpl implements UserMapParser{
     @Override
     public boolean writeUserMapToFile(String jsonString) {
         try {
-            FileUtils.writeStringToFile(new File("src/main/java/resources/friends.json"), jsonString, "UTF-8");
+            FileUtils.writeStringToFile(User.getFriendsFile(), jsonString, "UTF-8");
             return true;
         } catch (IOException e) {
             LOG.error("writeUserMapToFile: IOException");
             return false;
         }
     }
+
+    @Override
+    public UserMap getFriends() {
+        File friends = User.getFriendsFile();
+        try {
+            String jsonString = FileUtils.readFileToString(friends, "UTF-8");
+            return jsonStringToUserMap(jsonString);
+        } catch (IOException e) {
+            //e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }

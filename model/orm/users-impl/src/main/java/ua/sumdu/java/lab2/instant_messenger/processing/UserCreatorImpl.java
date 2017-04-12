@@ -1,36 +1,24 @@
 package ua.sumdu.java.lab2.instant_messenger.processing;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.api.UserCreator;
 import ua.sumdu.java.lab2.instant_messenger.entities.CategoryUsers;
-import ua.sumdu.java.lab2.instant_messenger.entities.User;;
+import ua.sumdu.java.lab2.instant_messenger.entities.User;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class UserCreatorImpl implements UserCreator {
+public enum UserCreatorImpl implements UserCreator {
+    INSTANCE;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserCreatorImpl.class);
     private static final String USERNAME_REG_EXP = "^[a-z0-9_-]{3,16}$";
     private static final String EMAIL_REG_EXP = "^([a-z0-9_\\.-]+)@([a-z0-9_\\.-]+)\\.([a-z\\.]{2,6})$";
-
-    private static UserCreatorImpl instance;
-
-    private UserCreatorImpl() {
-    }
-
-    public static UserCreatorImpl getInstance() {
-        synchronized (UserCreatorImpl.class) {
-            LOG.debug("Create a new UserCreator");
-            if (instance == null) {
-                instance = new UserCreatorImpl();
-            }
-            return instance;
-        }
-    }
 
     @Override
     public boolean validateUsername(String username) {
@@ -55,8 +43,14 @@ public final class UserCreatorImpl implements UserCreator {
             return new User(category, username, email, port, ipAddress);
         } else {
             LOG.warn("Validation error");
-            return new User();
+            return User.getEmptyUser();
         }
+    }
 
+    public User toUser(String jsonString) {
+        LOG.info("Converting a Json String to a UserMap");
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.setPrettyPrinting().create();
+        return gson.fromJson(jsonString, User.class);
     }
 }

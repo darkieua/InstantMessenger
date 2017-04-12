@@ -16,7 +16,8 @@
     <modules>
         <module>users-impl</module>
         <module>users-api</module>
+        <module>messages-api</module>
+        <module>messages-impl</module>
     </modules>
-
 
 </project>

@@ -15,6 +15,9 @@
 
     <modules>
         <module>orm</module>
+        <module>config</module>
+        <module>handler</module>
+        <module>listener</module>
     </modules>
 
 </project>
