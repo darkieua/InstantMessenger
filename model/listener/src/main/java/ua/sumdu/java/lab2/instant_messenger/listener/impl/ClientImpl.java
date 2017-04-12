@@ -2,6 +2,8 @@ package ua.sumdu.java.lab2.instant_messenger.listener.impl;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.instant_messenger.handler.processing.ResponseParsingImpl;
 import ua.sumdu.java.lab2.instant_messenger.listener.api.Client;
 
@@ -10,9 +12,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class ClientImpl extends Thread implements Client {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ClientImpl.class);
+
     private Socket socket;
-    private String request;
-    private String response;
+    private final String request;
 
     public ClientImpl(InetAddress adr, int port, String request) {
         socketInit(adr, port);
@@ -21,7 +25,7 @@ public class ClientImpl extends Thread implements Client {
 
     @Override
     public void run() {
-        this.response = interactionWithServer();
+        String response = interactionWithServer();
         ResponseParsingImpl responseParsing = new ResponseParsingImpl();
         responseParsing.parse(response);
 
@@ -33,7 +37,7 @@ public class ClientImpl extends Thread implements Client {
         try (Socket socket = new Socket(adr, port)) {
             this.socket = socket;
         } catch (IOException e) {
-            //e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -44,20 +48,19 @@ public class ClientImpl extends Thread implements Client {
             out.write(request.getBytes());
             out.flush();
             socket.shutdownOutput();
-            this.sleep(1000);
             InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
             BufferedReader in = new BufferedReader(inputStreamReader);
             StringBuilder response = new StringBuilder();
-            LineIterator it = IOUtils.lineIterator(in);
-            while (it.hasNext()) {
-                response.append(it.nextLine());
+            LineIterator iterator = IOUtils.lineIterator(in);
+            while (iterator.hasNext()) {
+                response.append(iterator.nextLine());
             }
             out.close();
             in.close();
             socket.close();
             return response.toString();
-        } catch (InterruptedException | IOException e) {
-            //e.printStackTrace();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
             return null;
         }
     }
