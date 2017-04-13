@@ -3,6 +3,7 @@ package ua.sumdu.java.lab2.messenger.handler.processing;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +17,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
-import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.ADMIN;
-import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;
-import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
-import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.VISITOR;
-import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
+import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.*;
 import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.REQUESTED_MESSAGES;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.UPDATED_GROUP_LIST;
@@ -72,11 +68,11 @@ public class RequestParsingImplTest {
     public void addToFriends() {
         UserMapParserImpl userMapParser = UserMapParserImpl.getInstance();
         UserMapImpl userMap = (UserMapImpl) userMapParser.getFriends();
-        userMap.addUser(CURRENT_USER);
+        userMap.addUser(User.CURRENT_USER);
         String request = requestGenerating.addToFriends();
         requestParsing.requestParser(request);
         UserMapImpl newMap = (UserMapImpl) userMapParser.getFriends();
-        assertEquals(getMessage(newMap.toString(), userMap.toString()), newMap, userMap);
+        Assert.assertEquals(getMessage(newMap.toString(), userMap.toString()), newMap, userMap);
     }
 
     @UseDataProvider("groupForTest")
@@ -90,7 +86,7 @@ public class RequestParsingImplTest {
         requestParsing.requestParser(request);
         GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
         groupMap.getMap().put(chatName, userMap);
-        assertEquals(getMessage(newGroups.toString(),  groupMap.toString()), newGroups, groupMap);
+        Assert.assertEquals(getMessage(newGroups.toString(),  groupMap.toString()), newGroups, groupMap);
         groupMap.getMap().remove(chatName);
         groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(groupMap));
     }
@@ -105,7 +101,7 @@ public class RequestParsingImplTest {
         messageMap.addMessage(mess);
         requestParsing.requestParser(request);
         MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
-        assertEquals(getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
+        Assert.assertEquals(getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
         messageMap.deleteMessage(mess);
         XmlParser.INSTANCE.write(messageMap, messageFile);
     }
@@ -122,7 +118,7 @@ public class RequestParsingImplTest {
         XmlParser.INSTANCE.write(messageMap, new File(path));
         requestParsing.requestParser(request);
         MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(new File(path));
-        assertEquals(getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
+        Assert.assertEquals(getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
         messageMap.deleteMessage(mess);
         XmlParser.INSTANCE.write(messageMap, new File(path));
     }
@@ -140,24 +136,39 @@ public class RequestParsingImplTest {
         String request = UPDATE_GROUP_LIST.getRequestNumber() + "=" + groupMapParser.groupMapToJSonString(groupMap);
         requestParsing.requestParser(request);
         GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
-        assertEquals(getMessage(newGroups.toString(), allGroups.toString()), newGroups, allGroups);
+        Assert.assertEquals(getMessage(newGroups.toString(), allGroups.toString()), newGroups, allGroups);
         groupMap.getMap().get(chatName).removeUser(user);
         groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(groupMap));
     }
 
     @Test
-    public void requestForUdateLists() {
+    public void requestForUpdateLists() {
         String request1 = REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber() + "=" + "main";
         String response1 = UPDATED_GROUP_LIST.getResponseNumber() + " " + "main";
         String newResponse1 = requestParsing.requestParser(request1);
-        assertEquals(getMessage(newResponse1, response1), newResponse1, response1);
+        Assert.assertEquals(getMessage(newResponse1, response1), newResponse1, response1);
         String request2 = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + 1;
         String response2 = REQUESTED_MESSAGES.getResponseNumber() + " " + 1;
         String newResponse2 = requestParsing.requestParser(request2);
-        assertEquals(getMessage(newResponse2, response2), newResponse2, response2);
+        Assert.assertEquals(getMessage(newResponse2, response2), newResponse2, response2);
     }
 
     public static String getMessage(String str1, String str2) {
         return "uncorrected result: <" + str1 + ">, but should be <" + str2 + ">";
     }
+
+  @Test
+  public void newBlackListMessage() throws UnknownHostException {
+    User user1 = new User(BLACKLIST, "user1", "user1@ex.so", 8080, InetAddress.getLocalHost());
+    Message mess = new Message(user1.getUsername(), User.CURRENT_USER.getUsername(), "text", LocalDateTime.now());
+    String request = requestGenerating.newMessage(mess);
+    String sender = mess.getSender();
+    File messageFile = new File(User.getUrlMessageDirectory() + sender + ".xml");
+    MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
+    requestParsing.requestParser(request);
+    MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
+    Assert.assertEquals(getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
+    messageMap.deleteMessage(mess);
+    XmlParser.INSTANCE.write(messageMap, messageFile);
+  }
 }

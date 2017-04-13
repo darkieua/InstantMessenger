@@ -2,13 +2,7 @@ package ua.sumdu.java.lab2.messenger.handler.processing;
 
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.ADD_TO_FRIENDS;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.ADD_TO_GROUP;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.MESSAGES_FROM_A_SPECIFIC_DATE;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.NEW_MESSAGE;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.NEW_MESSAGE_TO_GROUP;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.REQUEST_FOR_UPDATE_GROUP_LIST;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.UPDATE_GROUP_LIST;
+import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,8 +18,6 @@ import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.messenger.handler.api.RequestGenerating;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
-
-
 
 public class RequestGeneratingImpl implements RequestGenerating {
   private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);

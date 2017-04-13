@@ -3,8 +3,11 @@ package ua.sumdu.java.lab2.messenger.processing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +55,27 @@ public final class GroupMapParserImpl implements GroupMapParser {
     LOG.info("Converting a Json String to a GroupMap");
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.setPrettyPrinting().create();
-    return gson.fromJson(jsonString, GroupMapImpl.class);
+    GroupMapImpl groupMap = gson.fromJson(jsonString, GroupMapImpl.class);
+    if (Objects.isNull(groupMap)) {
+      return new GroupMapImpl();
+    } else {
+      return groupMap;
+    }
   }
 
   @Override
   public boolean writeGroupMapToFile(String jsonString) {
+    File groups = User.getGroupsFile();
+    if (!groups.exists()) {
+      try {
+        groups.createNewFile();
+      } catch (IOException e) {
+        LOG.error("writeGroupMapToFile: IOException");
+        return false;
+      }
+    }
     try {
-      FileUtils.writeStringToFile(User.getGroupsFile(), jsonString, "UTF-8");
+      FileUtils.writeStringToFile(groups, jsonString, "UTF-8");
       return true;
     } catch (IOException e) {
       LOG.error("writeGroupMapToFile: IOException");
@@ -76,7 +93,12 @@ public final class GroupMapParserImpl implements GroupMapParser {
 
   public GroupMap getGroupMap() {
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(User.getGroupsFile()));
+      File groups = User.getGroupsFile();
+      if (!groups.exists()) {
+        groups.createNewFile();
+        return new GroupMapImpl();
+      }
+      BufferedReader reader = new BufferedReader(new FileReader(groups));
       StringBuilder result = new StringBuilder();
       String temp;
       while ((temp = reader.readLine()) != null) {

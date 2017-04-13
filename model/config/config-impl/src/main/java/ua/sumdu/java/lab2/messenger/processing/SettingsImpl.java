@@ -2,6 +2,8 @@ package ua.sumdu.java.lab2.messenger.processing;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import ua.sumdu.java.lab2.messenger.api.Settings;
 
 public class SettingsImpl implements Settings {
@@ -33,11 +35,11 @@ public class SettingsImpl implements Settings {
       return false;
     }
     SettingsImpl settings = (SettingsImpl) obj;
-    if (settingsMap != null) {
-      return settingsMap.equals(settings.settingsMap);
-    } else {
-      return settings.settingsMap == null;
-    }
+    return Objects.equals(settingsMap, settings.settingsMap);
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(settingsMap);
+  }
 }

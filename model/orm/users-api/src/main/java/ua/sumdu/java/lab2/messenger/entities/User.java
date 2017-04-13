@@ -176,7 +176,11 @@ public class User implements Cloneable, Serializable {
   }
 
   public static String getUrlMessageDirectory() {
-    return getUserHome() + "/InstantMessenger/messages/";
+    File instant = new File(getUserHome() + "/InstantMessenger/messages/");
+    if (!instant.exists()) {
+      instant.mkdirs();
+    }
+    return instant.getPath();
   }
 
   private static String getUserHome() {

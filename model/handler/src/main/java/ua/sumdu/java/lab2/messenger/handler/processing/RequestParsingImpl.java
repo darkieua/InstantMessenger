@@ -1,30 +1,17 @@
 package ua.sumdu.java.lab2.messenger.handler.processing;
 
 import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.ADD_TO_FRIENDS;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.ADD_TO_GROUP;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.MESSAGES_FROM_A_SPECIFIC_DATE;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.NEW_MESSAGE;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.NEW_MESSAGE_TO_GROUP;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.REQUEST_FOR_UPDATE_GROUP_LIST;
-import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.UPDATE_GROUP_LIST;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.ADDED_TO_FRIENDS;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.ADDED_TO_GROUP;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.REQUESTED_MESSAGES;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.REQUEST_HAS_BEEN_DECLINED;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.SUCCESSFUL;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.UNIDENTIFIED_REQUEST;
-import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.UPDATED_GROUP_LIST;
+import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
+import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
+import java.util.Objects;
+
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
-import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
-import ua.sumdu.java.lab2.messenger.entities.Message;
-import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
-import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
+import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.api.RequestParsing;
+import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserCreatorImpl;
@@ -73,7 +60,7 @@ public class RequestParsingImpl implements RequestParsing {
       }
       if (usersReaction) {
         String groupName = addGroup(context);
-        return ADDED_TO_GROUP.getResponseNumber() + " " + groupName;
+        return ADDED_TO_GROUP.getResponseNumber() + "=" + groupName;
       } else {
         return String.valueOf(REQUEST_HAS_BEEN_DECLINED.getResponseNumber());
       }
@@ -99,9 +86,9 @@ public class RequestParsingImpl implements RequestParsing {
       updateGroup(context);
       return String.valueOf(SUCCESSFUL.getResponseNumber());
     } else if (requestType == REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber()) {
-      return UPDATED_GROUP_LIST.getResponseNumber() + " " + context;
+      return UPDATED_GROUP_LIST.getResponseNumber() + "=" + context;
     } else if (requestType == MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber()) {
-      return REQUESTED_MESSAGES.getResponseNumber() + " " + context;
+      return REQUESTED_MESSAGES.getResponseNumber() + "=" + context;
     } else {
       return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
     }
@@ -135,17 +122,23 @@ public class RequestParsingImpl implements RequestParsing {
 
   private void newMessage(String str, String type) {
     Document doc = XmlParser.loadXmlFromString(str);
-    Message message = XmlParser.INSTANCE.parseMessage(doc.getFirstChild());
+    Message message = ParsingMessages.parseMessage(doc.getFirstChild());
     String fileName;
     if ("user".equals(type)) {
       fileName = message.getSender();
     } else {
       fileName = message.getReceiver();
     }
-    File file = new File(User.getUrlMessageDirectory() + fileName + ".xml");
-    MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
-    messageMap.addMessage(message);
-    XmlParser.INSTANCE.write(messageMap, file);
+    UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
+    for (User user: friends.getMap().values()) {
+      if (Objects.equals(user.getUsername(), fileName)
+          && !CategoryUsers.BLACKLIST.name().equals(user.getCategory().name())) {
+        File file = new File(User.getUrlMessageDirectory() + fileName + ".xml");
+        MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
+        messageMap.addMessage(message);
+        XmlParser.INSTANCE.write(messageMap, file);
+      }
+    }
   }
 
   /**

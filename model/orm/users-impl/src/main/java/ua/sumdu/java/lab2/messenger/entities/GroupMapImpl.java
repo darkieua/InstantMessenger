@@ -25,6 +25,10 @@ public class GroupMapImpl implements GroupMap, Cloneable {
       UserMapImpl users = new UserMapImpl();
       map.put(chatName, users);
     }
+    UserMapImpl userMap = map.get(chatName);
+    if (Objects.isNull(userMap)) {
+      map.put(chatName, new UserMapImpl());
+    }
     map.get(chatName).addUser(user);
   }
 

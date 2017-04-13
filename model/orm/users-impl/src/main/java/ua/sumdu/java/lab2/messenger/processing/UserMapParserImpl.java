@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +51,26 @@ public final class UserMapParserImpl implements UserMapParser {
     LOG.info("Converting a Json String to a UserMap");
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.setPrettyPrinting().create();
-    return gson.fromJson(jsonString, UserMapImpl.class);
+    UserMapImpl userMap = gson.fromJson(jsonString, UserMapImpl.class);
+    if (Objects.isNull(userMap)) {
+      return new UserMapImpl();
+    } else {
+      return userMap;
+    }
   }
 
   @Override
   public boolean writeUserMapToFile(String jsonString) {
+    File friends = User.getFriendsFile();
+    if (!friends.exists()) {
+      try {
+        friends.createNewFile();
+      } catch (IOException e) {
+        return false;
+      }
+    }
     try {
-      FileUtils.writeStringToFile(User.getFriendsFile(), jsonString, "UTF-8");
+      FileUtils.writeStringToFile(friends, jsonString, "UTF-8");
       return true;
     } catch (IOException e) {
       LOG.error("writeUserMapToFile: IOException");
@@ -66,12 +81,20 @@ public final class UserMapParserImpl implements UserMapParser {
   @Override
   public UserMap getFriends() {
     File friends = User.getFriendsFile();
+    if (!friends.exists()) {
+      try {
+        friends.createNewFile();
+        return new UserMapImpl();
+      } catch (IOException e) {
+        LOG.error("writeUserMapToFile: IOException");
+      }
+    }
     try {
       String jsonString = FileUtils.readFileToString(friends, "UTF-8");
       return jsonStringToUserMap(jsonString);
     } catch (IOException e) {
-      //e.printStackTrace();
-      return null;
+      LOG.error("writeUserMapToFile: IOException");
+      return new UserMapImpl();
     }
   }
 
