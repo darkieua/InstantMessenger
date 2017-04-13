@@ -38,17 +38,15 @@ public enum XmlParser implements MessageMapParser {
    */
 
   public Document getDocument(File file) {
-
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
+
     try {
       builder = factory.newDocumentBuilder();
       if (!file.exists()) {
         file.createNewFile();
-        return builder.newDocument();
-      } else {
-        return builder.parse(file);
       }
+      return builder.parse(file);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       LOG.error(e.getMessage(), e);
       return builder.newDocument();

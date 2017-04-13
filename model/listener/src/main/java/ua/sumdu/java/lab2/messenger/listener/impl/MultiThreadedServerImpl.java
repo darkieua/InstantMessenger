@@ -50,7 +50,7 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
             RequestParsingImpl requestParsing = new RequestParsingImpl();
             String result = requestParsing.requestParser(request.toString());
             ResponseGeneratingImpl responseGenerating = new ResponseGeneratingImpl();
-            output.write(responseGenerating.generate(result).getBytes());
+            output.write(responseGenerating.responseGenerate(result).getBytes());
             output.flush();
             output.close();
             iterator.close();

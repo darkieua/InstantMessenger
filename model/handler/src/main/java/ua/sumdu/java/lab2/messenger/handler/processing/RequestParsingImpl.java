@@ -134,7 +134,7 @@ public class RequestParsingImpl implements RequestParsing {
     for (User user: friends.getMap().values()) {
       if (Objects.equals(user.getUsername(), fileName)
           && !CategoryUsers.BLACKLIST.name().equals(user.getCategory().name())) {
-        File file = new File(User.getUrlMessageDirectory() + fileName + ".xml");
+        File file = new File(User.getUrlMessageDirectory()+ "/" + fileName + ".xml");
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
         messageMap.addMessage(message);
         XmlParser.INSTANCE.write(messageMap, file);

@@ -43,7 +43,7 @@ public class ResponseParsingImplTest {
   }
 
   @Test
-  public void userIsOffline() throws Exception {
+  public void userIsOffline() {
     String response = USER_IS_OFFLINE.getResponseNumber() + "=test";
     responseParsing.responseParsing(response);
     MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());

@@ -3,13 +3,8 @@ package ua.sumdu.java.lab2.messenger.handler.processing;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.Message;
@@ -22,8 +17,6 @@ import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 
 public class ResponseParsingImpl implements ResponseParsing {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);
 
   private boolean test;
 
@@ -123,7 +116,7 @@ public class ResponseParsingImpl implements ResponseParsing {
   }
 
   private void sendOutNewGroupList(String newUserUsername, String groupName, GroupMapImpl groupMap) {
-
+    System.out.println(newUserUsername + groupName + groupMap.toString());
   }
 
   public void setTest(boolean test) {

@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 public class ResponseGeneratingImplTest {
 
   ResponseGeneratingImpl responseGenerating;
+  private static String testUser = "test_user";
 
   @Before
   public void init() {
@@ -94,10 +95,10 @@ public class ResponseGeneratingImplTest {
 
   @DataProvider
   public static Object[][] messages() throws UnknownHostException {
-    Message[] messages =  {new Message("test_user", CURRENT_USER.getUsername(), "text1", LocalDateTime.now()),
-      new Message("test_user", CURRENT_USER.getUsername(), "text2", LocalDateTime.now().minusDays(1)),
-      new Message("test_user", CURRENT_USER.getUsername(), "text3", LocalDateTime.now().minusDays(2)),
-      new Message("test_user", CURRENT_USER.getUsername(), "text4", LocalDateTime.now().minusDays(3))};
+    Message[] messages =  {new Message(testUser, CURRENT_USER.getUsername(), "text1", LocalDateTime.now()),
+      new Message(testUser, CURRENT_USER.getUsername(), "text2", LocalDateTime.now().minusDays(1)),
+      new Message(testUser, CURRENT_USER.getUsername(), "text3", LocalDateTime.now().minusDays(2)),
+      new Message(testUser, CURRENT_USER.getUsername(), "text4", LocalDateTime.now().minusDays(3))};
     return new Object[][]{{messages}};
   }
 
@@ -132,10 +133,5 @@ public class ResponseGeneratingImplTest {
     thisUser.addUser("test_chat", CURRENT_USER.setCategory(CategoryUsers.FRIEND));
     String correctResult = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser);
     assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
-  }
-
-  @Test
-  public void addedToFriends() {
-
   }
 }

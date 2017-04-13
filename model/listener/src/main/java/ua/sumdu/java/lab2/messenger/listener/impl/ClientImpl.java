@@ -29,7 +29,7 @@ public class ClientImpl extends Thread implements Client {
   public void run() {
     String response = interactionWithServer();
     ResponseParsingImpl responseParsing = new ResponseParsingImpl();
-    responseParsing.parse(response);
+    responseParsing.responseParsing(response);
 
   }
 

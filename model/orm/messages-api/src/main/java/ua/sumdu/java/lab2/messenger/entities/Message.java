@@ -34,6 +34,14 @@ public class Message {
     this.fileMap = fileMap;
   }
 
+  @Override
+  public String toString() {
+    return "Message{" + "sender='" + sender + '\''
+        + ", receiver='" + receiver + '\'' + ", text='"
+        + text + '\'' + ", timeSending=" + timeSending
+        + ", fileMap=" + fileMap + '}';
+  }
+
   /**
   * Message constructor without files.
   */
