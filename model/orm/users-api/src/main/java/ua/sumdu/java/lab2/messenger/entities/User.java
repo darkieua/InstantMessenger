@@ -186,4 +186,16 @@ public class User implements Cloneable, Serializable {
   private static String getUserHome() {
     return System.getProperty("user.home");
   }
+
+  public static File getSystemMessageFile() {
+    File system = new File(getUrlMessageDirectory() + "/system.xml");
+    if (!system.exists()) {
+      try {
+        system.createNewFile();
+      } catch (IOException e) {
+        LOG.error("System file not found",e);
+      }
+    }
+    return system;
+  }
 }

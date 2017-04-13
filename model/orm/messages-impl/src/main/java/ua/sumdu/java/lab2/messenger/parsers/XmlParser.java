@@ -176,6 +176,5 @@ public enum XmlParser implements MessageMapParser {
       LOG.error(e.getMessage(), e);
       return builder.newDocument();
     }
-
   }
 }

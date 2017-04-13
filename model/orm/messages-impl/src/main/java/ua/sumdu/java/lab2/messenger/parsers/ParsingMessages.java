@@ -31,7 +31,7 @@ public class ParsingMessages {
     XPathFactory pathFactory = XPathFactory.newInstance();
     XPath xpath = pathFactory.newXPath();
     XPathExpression expr;
-    if (Objects.isNull(doc)) {
+    if (Objects.isNull(doc.getDocumentElement())) {
       return new MessageMapImpl();
     }
     try {

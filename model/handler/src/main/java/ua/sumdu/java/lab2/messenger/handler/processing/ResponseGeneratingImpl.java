@@ -71,5 +71,8 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
     return result.toString();
   }
 
+  public String userIsOffline(String userIp) {
+    return USER_IS_OFFLINE.getResponseNumber() + "=" + userIp;
+  }
 
 }

@@ -35,7 +35,7 @@ public class ResponseGeneratingImplTest {
 
   @DataProvider
   public static Object[][] shortResponsesWithoutParsing() {
-    return new Object[][]{{String.valueOf(SUCCESSFUL.getResponseNumber())}, {String.valueOf(SUCCESSFUL.getResponseNumber())}};
+    return new Object[][]{{String.valueOf(SUCCESSFUL.getResponseNumber())}, {String.valueOf(USER_IS_OFFLINE.getResponseNumber())}};
   }
 
   @DataProvider
@@ -132,5 +132,10 @@ public class ResponseGeneratingImplTest {
     thisUser.addUser("test_chat", CURRENT_USER.setCategory(CategoryUsers.FRIEND));
     String correctResult = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser);
     assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
+  }
+
+  @Test
+  public void addedToFriends() {
+
   }
 }

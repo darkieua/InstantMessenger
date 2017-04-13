@@ -98,12 +98,13 @@ public class RequestParsingImpl implements RequestParsing {
    * Handling the addition of a new user to friends.
    */
 
-  public void addNewFriend(String str) {
+  public String addNewFriend(String str) {
     UserMapParserImpl userMapParser = UserMapParserImpl.getInstance();
     UserMap userMap = userMapParser.getFriends();
     User newUser = UserCreatorImpl.INSTANCE.toUser(str);
     userMap.addUser(newUser);
     userMapParser.writeUserMapToFile(userMapParser.userMapToJSonString(userMap));
+    return newUser.getUsername();
   }
 
   private String addGroup(String str) {
