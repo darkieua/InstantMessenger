@@ -74,7 +74,6 @@ public class ClientImpl extends Thread implements Client {
       }
       out.close();
       in.close();
-      socket.close();
       return response.toString();
     } catch (IOException e) {
       LOG.error(e.getMessage(), e);

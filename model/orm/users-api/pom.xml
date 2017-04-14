@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>users-api</artifactId>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>

@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>messages-impl</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -37,10 +38,6 @@
         <dependency>
             <groupId>com.tngtech.java</groupId>
             <artifactId>junit-dataprovider</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
         </dependency>
         <!--inner import -->
         <dependency>
