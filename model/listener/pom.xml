@@ -11,8 +11,30 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>listener</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>listener-api</module>
+        <module>listener-impl</module>
+    </modules>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
         <!--inner import -->
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>

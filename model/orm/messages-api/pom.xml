@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>messages-api</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--inner import -->
