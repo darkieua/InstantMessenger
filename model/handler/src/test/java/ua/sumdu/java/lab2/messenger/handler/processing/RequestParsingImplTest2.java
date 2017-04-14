@@ -26,17 +26,27 @@ public class RequestParsingImplTest2 {
 
   private RequestGeneratingImpl requestGenerating;
   private RequestParsingImpl requestParsing;
-  private static final User TEST_USER = new User(BLACKLIST, "test_user", "test_user@ex.so", 8080, User.CURRENT_USER.getIpAddress());
+  private static final User TEST_USER = new User(BLACKLIST, "test_user", "test_user@ex.so",
+    8080, User.CURRENT_USER.getIpAddress());
+
+  /**
+   * The method returns test messages.
+   */
 
   @DataProvider
   public static Object[][] messages() throws UnknownHostException {
     User currentUser = User.getCurrentUser();
     String testUsername = "user1";
-    return new Object[][] {{new Message(testUsername, currentUser.getUsername(), "text1", LocalDateTime.now()),
-        new Message(testUsername, currentUser.getUsername(), "text2", LocalDateTime.now()),
-        new Message(testUsername, currentUser.getUsername(), "text3", LocalDateTime.now()),
-        new Message(testUsername, currentUser.getUsername(), "text4", LocalDateTime.now())}};
+    return new Object[][] {{new Message(testUsername, currentUser.getUsername(), "text1",
+      LocalDateTime.now()), new Message(testUsername, currentUser.getUsername(), "text2",
+      LocalDateTime.now()), new Message(testUsername, currentUser.getUsername(), "text3",
+      LocalDateTime.now()), new Message(testUsername, currentUser.getUsername(), "text4",
+      LocalDateTime.now())}};
   }
+
+  /**
+   * The method initialises variables for testing.
+   */
 
   @Before
   public void init() throws UnknownHostException {
@@ -44,14 +54,20 @@ public class RequestParsingImplTest2 {
     requestGenerating = new RequestGeneratingImpl();
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     userMap.addUser(TEST_USER);
-    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
+    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance()
+      .userMapToJSonString(userMap));
   }
+
+  /**
+   * The method deletes data for testing.
+   */
 
   @After
   public void after() {
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     userMap.removeUser(TEST_USER);
-    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
+    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance()
+      .userMapToJSonString(userMap));
   }
 
 
@@ -67,7 +83,8 @@ public class RequestParsingImplTest2 {
     XmlParser.INSTANCE.write(messageMap, new File(path));
     requestParsing.requestParser(request);
     MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(new File(path));
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),
+      messageMap.toString()), newMap, messageMap);
     messageMap.deleteMessage(mess);
     XmlParser.INSTANCE.write(messageMap, new File(path));
   }
@@ -82,10 +99,12 @@ public class RequestParsingImplTest2 {
     groupMap.getMap().put(chatName, allGroups.getMap().get(chatName));
     groupMap.addUser(chatName, user);
     allGroups.addUser(chatName, user);
-    String request = UPDATE_GROUP_LIST.getRequestNumber() + "=" + groupMapParser.groupMapToJSonString(groupMap);
+    String request = UPDATE_GROUP_LIST.getRequestNumber() + "="
+      + groupMapParser.groupMapToJSonString(groupMap);
     requestParsing.requestParser(request);
     GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(), allGroups.toString()), newGroups, allGroups);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(), allGroups.toString()),
+      newGroups, allGroups);
     groupMap.getMap().get(chatName).removeUser(user);
     groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(groupMap));
   }
@@ -95,11 +114,13 @@ public class RequestParsingImplTest2 {
     String request1 = REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber() + "=" + "main";
     String response1 = UPDATED_GROUP_LIST.getResponseNumber() + "=" + "main";
     String newResponse1 = requestParsing.requestParser(request1);
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1, response1);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1,
+      response1);
     String request2 = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + 1;
     String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1;
     String newResponse2 = requestParsing.requestParser(request2);
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2, response2);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2,
+      response2);
   }
 
   @Test
@@ -108,14 +129,16 @@ public class RequestParsingImplTest2 {
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     userMap.addUser(user1);
     UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
-    Message mess = new Message(user1.getUsername(), User.CURRENT_USER.getUsername(), "text", LocalDateTime.now());
+    Message mess = new Message(user1.getUsername(), User.CURRENT_USER.getUsername(), "text",
+      LocalDateTime.now());
     String request = requestGenerating.newMessage(mess);
     String sender = mess.getSender();
     File messageFile = new File(User.getUrlMessageDirectory() + "/" + sender + ".xml");
     MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
     requestParsing.requestParser(request);
     MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),  messageMap.toString()), newMap, messageMap);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),  messageMap.toString()),
+      newMap, messageMap);
     messageMap.deleteMessage(mess);
     XmlParser.INSTANCE.write(messageMap, messageFile);
     userMap.removeUser(user1);

@@ -175,6 +175,10 @@ public class User implements Cloneable, Serializable {
     return new File(getUserHome() + "/InstantMessenger/user_config.json");
   }
 
+  /**
+   * The method returns the path to the message folder.
+   */
+
   public static String getUrlMessageDirectory() {
     File instant = new File(getUserHome() + "/InstantMessenger/messages/");
     if (!instant.exists()) {
@@ -186,6 +190,10 @@ public class User implements Cloneable, Serializable {
   private static String getUserHome() {
     return System.getProperty("user.home");
   }
+
+  /**
+   * The method returns the path to the system message file.
+   */
 
   public static File getSystemMessageFile() {
     File system = new File(getUrlMessageDirectory() + "/system.xml");

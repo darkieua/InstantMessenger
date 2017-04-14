@@ -115,7 +115,8 @@ public class ResponseParsingImpl implements ResponseParsing {
     XmlParser.INSTANCE.write(messages, system);
   }
 
-  private void sendOutNewGroupList(String newUserUsername, String groupName, GroupMapImpl groupMap) {
+  private void sendOutNewGroupList(String newUserUsername, String groupName,
+                                   GroupMapImpl groupMap) {
     System.out.println(newUserUsername + groupName + groupMap.toString());
   }
 

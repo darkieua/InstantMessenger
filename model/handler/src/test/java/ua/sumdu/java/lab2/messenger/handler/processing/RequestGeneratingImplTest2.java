@@ -31,14 +31,17 @@ public class RequestGeneratingImplTest2 {
     userMap.addUser(User.CURRENT_USER);
     String chatName = "testGroup";
     groups.getMap().put(chatName, userMap);
-    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groups));
+    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
+      .groupMapToJSonString(groups));
     String result = requestGenerating.updateGroupList(chatName);
     GroupMapImpl groupMap = new GroupMapImpl();
     groupMap.getMap().put(chatName, userMap);
-    String correctRequest = UPDATE_GROUP_LIST.getRequestNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(groupMap);
+    String correctRequest = UPDATE_GROUP_LIST.getRequestNumber() + "=" + GroupMapParserImpl
+      .getInstance().groupMapToJSonString(groupMap);
     assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
     groups.getMap().remove(chatName);
-    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groups));
+    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
+      .groupMapToJSonString(groups));
   }
 
   @Test
@@ -53,7 +56,8 @@ public class RequestGeneratingImplTest2 {
   public void messagesFromSpecificDate() {
     long date = 1;
     String result = requestGenerating.messagesFromSpecificDate(date);
-    String correctRequest = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "=" + CURRENT_USER.getUsername();
+    String correctRequest = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "="
+      + CURRENT_USER.getUsername();
     assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
   }
 }

@@ -1,8 +1,8 @@
 package ua.sumdu.java.lab2.messenger.handler.processing;
 
+import static org.junit.Assert.*;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
-import static org.junit.Assert.*;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
@@ -46,13 +46,14 @@ public class ResponseParsingImplTest {
   public void userIsOffline() {
     String response = USER_IS_OFFLINE.getResponseNumber() + "=test";
     responseParsing.responseParsing(response);
-    MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());
+    MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.
+        read(User.getSystemMessageFile());
     boolean isFind = false;
     for (Message message : messageMap.getMapForMails().values()) {
       if ("User(test) is offline".equals(message.getText())
-          && LocalDateTime.now().minusSeconds(1).isBefore(message.getTimeSending())) {
-          isFind = true;
-          messageMap.deleteMessage(message);
+        && LocalDateTime.now().minusSeconds(1).isBefore(message.getTimeSending())) {
+        isFind = true;
+        messageMap.deleteMessage(message);
       }
     }
     assertTrue(isFind);
@@ -60,7 +61,7 @@ public class ResponseParsingImplTest {
   }
 
   @Test
-  public void declinedRequest(){
+  public void declinedRequest() {
     String response = REQUEST_HAS_BEEN_DECLINED.getResponseNumber() + "=testUser(192.196.1.2)";
     responseParsing.responseParsing(response);
     MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());
@@ -78,16 +79,18 @@ public class ResponseParsingImplTest {
 
   @Test
   @UseDataProvider("groupForTest")
-  public void updatedGroupList(String chatName, UserMapImpl userMap){
+  public void updatedGroupList(String chatName, UserMapImpl userMap) {
     GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
     GroupMapImpl groupMap = (GroupMapImpl) groupMapParser.getGroupMap();
     GroupMapImpl groupForRequest = new GroupMapImpl();
     groupForRequest.getMap().put(chatName, userMap);
-    String request = UPDATED_GROUP_LIST.getResponseNumber()+"="+groupMapParser.groupMapToJSonString(groupForRequest);
+    String request = UPDATED_GROUP_LIST.getResponseNumber() + "="
+      + groupMapParser.groupMapToJSonString(groupForRequest);
     responseParsing.responseParsing(request);
     GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
     groupMap.getMap().put(chatName, userMap);
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(),  groupMap.toString()), newGroups, groupMap);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(),
+      groupMap.toString()), newGroups, groupMap);
     groupMap.getMap().remove(chatName);
     groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(groupMap));
   }
@@ -103,20 +106,24 @@ public class ResponseParsingImplTest {
       messageMap.addMessage(message);
       messagesForResponse.addMessage(message);
     }
-    File temp = File.createTempFile("test", "messagesForResponse", new File(User.getUrlMessageDirectory()));
+    File temp = File.createTempFile("test", "messagesForResponse",
+      new File(User.getUrlMessageDirectory()));
     XmlParser.INSTANCE.write(messageMap, temp);
-    String response = REQUESTED_MESSAGES.getResponseNumber() + "=" + XmlParser.INSTANCE.toXml(XmlParser.INSTANCE.getDocument(temp));
+    String response = REQUESTED_MESSAGES.getResponseNumber() + "="
+      + XmlParser.INSTANCE.toXml(XmlParser.INSTANCE.getDocument(temp));
     temp.delete();
     responseParsing.responseParsing(response);
     MessageMapImpl newMessageMap = (MessageMapImpl) XmlParser.INSTANCE.read(senderMessages);
-    Assert.assertEquals(RequestParsingImplTest.getMessage(newMessageMap.toString(),  messageMap.toString()), newMessageMap, messageMap);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newMessageMap.toString(),
+      messageMap.toString()), newMessageMap, messageMap);
     senderMessages.delete();
   }
 
   @Test
   public void addedToFriends() throws UnknownHostException {
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-    User newUser = UserCreatorImpl.INSTANCE.createUser(FRIEND, "test_user", "test_user@go.com", InetAddress.getLocalHost(), 8040);
+    User newUser = UserCreatorImpl.INSTANCE.createUser(FRIEND, "test_user", "test_user@go.com",
+      InetAddress.getLocalHost(), 8040);
     String response = ADDED_TO_FRIENDS.getResponseNumber() + "=" + newUser.toJSonString();
     responseParsing.responseParsing(response);
     userMap.addUser(newUser);
@@ -145,12 +152,15 @@ public class ResponseParsingImplTest {
     String chatName = "testGroup";
     currentGroups.addUser(chatName, testUser);
     newGroup.addUser(chatName, testUser);
-    String response = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(newGroup);
+    String response = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance()
+      .groupMapToJSonString(newGroup);
     responseParsing.setTest(true);
     responseParsing.responseParsing(response);
     GroupMapImpl updatedGroups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
-    Assert.assertEquals(RequestParsingImplTest.getMessage(updatedGroups.toString(),  currentGroups.toString()), updatedGroups, currentGroups);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(updatedGroups.toString(),  currentGroups.toString()),
+      updatedGroups, currentGroups);
     currentGroups.getMap().remove(chatName);
-    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(currentGroups));
+    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
+      .groupMapToJSonString(currentGroups));
   }
 }

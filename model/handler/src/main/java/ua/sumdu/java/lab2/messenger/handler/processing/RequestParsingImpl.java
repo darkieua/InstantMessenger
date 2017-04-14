@@ -6,7 +6,6 @@ import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
 import java.util.Objects;
-
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
@@ -134,7 +133,7 @@ public class RequestParsingImpl implements RequestParsing {
     for (User user: friends.getMap().values()) {
       if (Objects.equals(user.getUsername(), fileName)
           && !CategoryUsers.BLACKLIST.name().equals(user.getCategory().name())) {
-        File file = new File(User.getUrlMessageDirectory()+ "/" + fileName + ".xml");
+        File file = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
         messageMap.addMessage(message);
         XmlParser.INSTANCE.write(messageMap, file);
