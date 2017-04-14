@@ -27,7 +27,7 @@ public class SocketTest {
     RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
     String request = requestGenerating.addToFriends();
     InetAddress thisIp = InetAddress.getByName("localhost");
-    ClientImpl client = new ClientImpl(thisIp, 8102, request);
+    ClientImpl client = new ClientImpl(thisIp, 8048, request);
     client.run();
     MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());
     boolean isFind = false;
@@ -48,7 +48,7 @@ public class SocketTest {
     multiThreadedServer.start();
     InetAddress thisIp = InetAddress.getByName("localhost");
     User newUser = UserCreatorImpl.INSTANCE.createUser(FRIEND, "test_user", "test_user@go.com",
-        InetAddress.getLocalHost(), 8040);
+        InetAddress.getLocalHost(), 8048);
     String request = ADD_TO_FRIENDS.getRequestNumber() + "=" + newUser.toJSonString();
     ClientImpl client = new ClientImpl(thisIp, CURRENT_USER.getPort(), request);
     client.run();

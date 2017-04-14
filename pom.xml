@@ -216,6 +216,16 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${maven-dependency-plugin.version}</version>
             </plugin>
+            <!--<plugin>
+                <groupId>com.versioneye</groupId>
+                <artifactId>versioneye-maven-plugin</artifactId>
+                <version>3.11.2</version>
+                <configuration>
+                    <apiKey>4e59ca73e250d5ba35e2</apiKey>
+                    <organisation>yuliashevchenko137_orga</organisation>
+                    <team>Owners</team>
+                </configuration>
+            </plugin>-->
         </plugins>
         <resources>
             <resource>
