@@ -1,4 +1,4 @@
-package ua.sumdu.java.lab2.messenger.listener.impl;
+package ua.sumde.java.lab2.messenger.listener.impl;
 
 import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
 

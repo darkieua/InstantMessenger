@@ -11,7 +11,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>listener</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>listener-api</module>
+        <module>listener-impl</module>
+    </modules>
 
     <dependencies>
 
