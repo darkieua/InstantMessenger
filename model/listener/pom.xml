@@ -26,6 +26,10 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
         <!--inner import -->
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>

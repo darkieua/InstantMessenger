@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.sumdu.java.lab2.messenger.handler.processing.ResponseGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.ResponseParsingImpl;
 import ua.sumdu.java.lab2.messenger.listener.api.Client;
 
@@ -19,27 +20,41 @@ public class ClientImpl extends Thread implements Client {
 
   private Socket socket;
   private final String request;
+  private final InetAddress adr;
+  private final boolean isConnect;
 
   public ClientImpl(InetAddress adr, int port, String request) {
-    socketInit(adr, port);
+    isConnect = socketInit(adr, port);
     this.request = request;
+    this.adr = adr;
   }
 
   @Override
   public void run() {
-    String response = interactionWithServer();
-    ResponseParsingImpl responseParsing = new ResponseParsingImpl();
-    responseParsing.responseParsing(response);
-
+    if (isConnect) {
+      String response = interactionWithServer();
+      ResponseParsingImpl responseParsing = new ResponseParsingImpl();
+      String context = responseParsing.responseParsing(response);
+      if (!"".equals(context)) {
+        String[] words = context.split("=");
+        Distribution.sendOutNewGroupList(words[0], words[1]);
+      }
+    } else {
+      ResponseGeneratingImpl responseGenerating = new ResponseGeneratingImpl();
+      ResponseParsingImpl responseParsing = new ResponseParsingImpl();
+      responseParsing.responseParsing(responseGenerating.userIsOffline(adr.getHostAddress()));
+    }
   }
 
 
   @Override
-  public void socketInit(InetAddress adr, int port) {
-    try (Socket socket = new Socket(adr, port)) {
+  public boolean socketInit(InetAddress adr, int port) {
+    try {
+      Socket socket = new Socket(adr, port);
       this.socket = socket;
+      return true;
     } catch (IOException e) {
-      LOG.error(e.getMessage(), e);
+      return false;
     }
   }
 
@@ -63,7 +78,7 @@ public class ClientImpl extends Thread implements Client {
       return response.toString();
     } catch (IOException e) {
       LOG.error(e.getMessage(), e);
-      return null;
     }
+    return "";
   }
 }

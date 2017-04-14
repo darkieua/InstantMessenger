@@ -154,7 +154,6 @@ public class ResponseParsingImplTest {
     newGroup.addUser(chatName, testUser);
     String response = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance()
       .groupMapToJSonString(newGroup);
-    responseParsing.setTest(true);
     responseParsing.responseParsing(response);
     GroupMapImpl updatedGroups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
     Assert.assertEquals(RequestParsingImplTest.getMessage(updatedGroups.toString(),  currentGroups.toString()),

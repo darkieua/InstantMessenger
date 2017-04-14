@@ -30,6 +30,12 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
   private ServerSocket serverSocket;
   private boolean work;
 
+  public void setTest(boolean test) {
+    this.test = test;
+  }
+
+  private boolean test;
+
   @Override
   public void run() {
     openServerSocket();
@@ -48,6 +54,7 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
               request.append(iterator.nextLine());
             }
             RequestParsingImpl requestParsing = new RequestParsingImpl();
+            requestParsing.setTest(test);
             String result = requestParsing.requestParser(request.toString());
             ResponseGeneratingImpl responseGenerating = new ResponseGeneratingImpl();
             output.write(responseGenerating.responseGenerate(result).getBytes());

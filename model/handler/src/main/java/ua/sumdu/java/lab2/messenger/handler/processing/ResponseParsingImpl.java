@@ -18,35 +18,35 @@ import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 
 public class ResponseParsingImpl implements ResponseParsing {
 
-  private boolean test;
-
   @Override
-  public void responseParsing(String str) {
+  public String responseParsing(String str) {
     int responseType = Integer.parseInt(str.substring(0, 4));
     String context = str.substring(5);
     if (responseType > 1999 && responseType < 4000) {
-      infoResponses(responseType, context);
+      return infoResponses(responseType, context);
     } else if (responseType > 3999 && responseType < 5000) {
-      responsesUpdates(responseType, context);
+      return responsesUpdates(responseType, context);
     } else if (responseType > 4999 && responseType < 6000) {
-      addResponses(responseType, context);
+      return addResponses(responseType, context);
     }
+    return "";
   }
 
-  private void infoResponses(int responseType, String context) {
+  private String infoResponses(int responseType, String context) {
     if (REQUEST_HAS_BEEN_DECLINED.getResponseNumber() == responseType) {
-      notificationOfDeclinedRequest(context);
+      return notificationOfDeclinedRequest(context);
     } else if (USER_IS_OFFLINE.getResponseNumber() == responseType) {
-      notificationThatUserIsOffline(context);
+      return notificationThatUserIsOffline(context);
     } else {
-      return;
+      return "";
     }
   }
 
-  private void responsesUpdates(int responseType, String context) {
+  private String responsesUpdates(int responseType, String context) {
     if (responseType == UPDATED_GROUP_LIST.getResponseNumber()) {
       RequestParsingImpl requestParsing = new RequestParsingImpl();
       requestParsing.updateGroup(context);
+      return "";
     } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
       Document doc = XmlParser.loadXmlFromString(context);
       MessageMapImpl messageMap = (MessageMapImpl) ParsingMessages
@@ -61,14 +61,17 @@ public class ResponseParsingImpl implements ResponseParsing {
         currentMessageMap.addMessage(iterator.next());
       }
       XmlParser.INSTANCE.write(currentMessageMap, fileWithMails);
+      return "";
     }
+    return "";
   }
 
-  private void addResponses(int responseType, String context) {
+  private String addResponses(int responseType, String context) {
     if (ADDED_TO_FRIENDS.getResponseNumber() == responseType) {
       RequestParsingImpl requestParsing = new RequestParsingImpl();
       String name = requestParsing.addNewFriend(context);
       notificationOfSuccessfulAdditionToFriends(name);
+      return "";
     } else if (responseType == ADDED_TO_GROUP.getResponseNumber()) {
       GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
       GroupMapImpl groupMap = (GroupMapImpl) groupMapParser.jsonStringToGroupMap(context);
@@ -82,45 +85,40 @@ public class ResponseParsingImpl implements ResponseParsing {
       for (User user : userMap.getMap().values()) {
         updatedGroup.addUser(groupName, user);
       }
-      if (!test) {
-        sendOutNewGroupList(newUser.getUsername(), groupName, updatedGroup);
-      }
+      return newUser.getUsername() + "=" + groupName;
+    } else {
+      return "";
     }
   }
 
-  private void notificationThatUserIsOffline(String userIp) {
+  private String notificationThatUserIsOffline(String userIp) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
     Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
         "User(" + userIp + ") is offline", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);
+    return "";
   }
 
-  private void notificationOfDeclinedRequest(String userName) {
+  private String notificationOfDeclinedRequest(String userName) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
     Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
         "User " + userName + "  declined your request", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);
+    return "";
   }
 
-  private void notificationOfSuccessfulAdditionToFriends(String name) {
+  private String notificationOfSuccessfulAdditionToFriends(String name) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
     Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
         "User " + name + " confirmed your request to friends", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);
+    return "";
   }
 
-  private void sendOutNewGroupList(String newUserUsername, String groupName,
-                                   GroupMapImpl groupMap) {
-    System.out.println(newUserUsername + groupName + groupMap.toString());
-  }
-
-  public void setTest(boolean test) {
-    this.test = test;
-  }
 }
