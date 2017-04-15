@@ -107,16 +107,22 @@ public class RequestParsingImplTest2 {
 
   @Test
   public void requestForUpdateLists() {
-    String request1 = REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber() + "=" + "main";
-    String response1 = UPDATED_GROUP_LIST.getResponseNumber() + "=" + "main";
+    String groupName = "main";
+    String request1 = requestGenerating.requestForUpdateGroupList(groupName);
+    String response1 = UPDATED_GROUP_LIST.getResponseNumber() + "=" + groupName;
     String newResponse1 = requestParsing.requestParser(request1);
     Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1,
       response1);
-    String request2 = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + 1;
-    String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1;
+    String request2 = requestGenerating.messagesFromSpecificDate(1);
+    String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1 + "=" + User.CURRENT_USER.getUsername();
     String newResponse2 = requestParsing.requestParser(request2);
     Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2,
       response2);
+    String request3 = requestGenerating.groupMessagesFromSpecificDate(1, groupName);
+    String response3 = REQUESTED_GROUP_MESSAGES.getResponseNumber() + "=" + 1 + "=" + groupName;
+    String newResponse3 = requestParsing.requestParser(request3);
+    Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse3, response3), newResponse3,
+        response3);
   }
 
   @Test

@@ -10,40 +10,9 @@ public class Message {
   private String receiver;
   private String text;
   private LocalDateTime timeSending;
-  private Map<String, byte[]> fileMap = null;
-
-  public Map<String, byte[]> getFileMap() {
-    return fileMap;
-  }
-
-  public Message setFileMap(Map<String, byte[]> fileMap) {
-    this.fileMap = fileMap;
-    return this;
-  }
 
   /**
-  * Message constructor with files.
-  */
-
-  public Message(String sender, String receiver, String text, LocalDateTime timeSending,
-                 Map<String, byte[]> fileMap) {
-    this.sender = sender;
-    this.receiver = receiver;
-    this.text = text;
-    this.timeSending = timeSending;
-    this.fileMap = fileMap;
-  }
-
-  @Override
-  public String toString() {
-    return "Message{" + "sender='" + sender + '\''
-        + ", receiver='" + receiver + '\'' + ", text='"
-        + text + '\'' + ", timeSending=" + timeSending
-        + ", fileMap=" + fileMap + '}';
-  }
-
-  /**
-  * Message constructor without files.
+  * Message constructor.
   */
 
   public Message(String sender, String receiver, String text, LocalDateTime timeSending) {
@@ -52,6 +21,14 @@ public class Message {
     this.text = text;
     this.timeSending = timeSending;
   }
+
+  @Override
+  public String toString() {
+    return "Message{" + "sender='" + sender + '\''
+        + ", receiver='" + receiver + '\'' + ", text='"
+        + text + '\'' + ", timeSending=" + timeSending+ '}';
+  }
+
 
   public String getSender() {
     return sender;
@@ -97,12 +74,11 @@ public class Message {
     return Objects.equals(sender, message.sender)
         && Objects.equals(receiver, message.receiver)
         && Objects.equals(text, message.text)
-        && Objects.equals(timeSending, message.timeSending)
-        && Objects.equals(fileMap, message.fileMap);
+        && Objects.equals(timeSending, message.timeSending);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sender, receiver, text, timeSending, fileMap);
+    return Objects.hash(sender, receiver, text, timeSending);
   }
 }

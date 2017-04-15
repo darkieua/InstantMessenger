@@ -47,14 +47,20 @@ public class ResponseParsingImpl implements ResponseParsing {
       RequestParsingImpl requestParsing = new RequestParsingImpl();
       requestParsing.updateGroup(context);
       return "";
-    } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
+    } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()
+        || responseType == REQUESTED_GROUP_MESSAGES.getResponseNumber()) {
       Document doc = XmlParser.loadXmlFromString(context);
       MessageMapImpl messageMap = (MessageMapImpl) ParsingMessages
           .getMessagesFromSpecificDate(doc, 0);
       Iterator<Message> iterator = messageMap.getMapForMails().values().iterator();
       Message mess1 = iterator.next();
-      String sender = mess1.getSender();
-      File fileWithMails = new File(User.getUrlMessageDirectory() + "/" + sender + ".xml");
+      String fileName;
+      if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
+        fileName = mess1.getSender();
+      } else {
+        fileName = mess1.getReceiver();
+      }
+      File fileWithMails = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
       MessageMapImpl currentMessageMap = (MessageMapImpl) XmlParser.INSTANCE.read(fileWithMails);
       currentMessageMap.addMessage(mess1);
       while (iterator.hasNext()) {

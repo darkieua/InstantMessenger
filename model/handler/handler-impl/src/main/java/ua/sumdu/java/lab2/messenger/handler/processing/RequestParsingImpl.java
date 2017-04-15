@@ -87,6 +87,8 @@ public class RequestParsingImpl implements RequestParsing {
       return UPDATED_GROUP_LIST.getResponseNumber() + "=" + context;
     } else if (requestType == MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber()) {
       return REQUESTED_MESSAGES.getResponseNumber() + "=" + context;
+    } else if (requestType == GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber()) {
+      return REQUESTED_GROUP_MESSAGES.getResponseNumber() + "=" + context;
     } else {
       return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
     }
@@ -123,13 +125,15 @@ public class RequestParsingImpl implements RequestParsing {
     Document doc = XmlParser.loadXmlFromString(str);
     Message message = ParsingMessages.parseMessage(doc.getFirstChild());
     String fileName;
+    UserMapImpl users;
     if ("user".equals(type)) {
       fileName = message.getSender();
+      users = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     } else {
       fileName = message.getReceiver();
+      users = (UserMapImpl) GroupMapParserImpl.getInstance().getUserMap(fileName);
     }
-    UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-    for (User user: friends.getMap().values()) {
+    for (User user: users.getMap().values()) {
       if (Objects.equals(user.getUsername(), fileName)
           && !CategoryUsers.BLACKLIST.name().equals(user.getCategory().name())) {
         File file = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");

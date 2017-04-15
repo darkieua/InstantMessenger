@@ -17,4 +17,6 @@ public interface RequestGenerating {
   String requestForUpdateGroupList(String groupName);
 
   String messagesFromSpecificDate(long date);
+
+  String groupMessagesFromSpecificDate(long date, String groupName);
 }

@@ -60,4 +60,14 @@ public class RequestGeneratingImplTest2 {
       + User.CURRENT_USER.getUsername();
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
   }
+
+  @Test
+  public void groupMessageFromSpecificDate() {
+    long date = 1;
+    String groupName = "main";
+    String result = requestGenerating.groupMessagesFromSpecificDate(date, groupName);
+    String correctRequest = GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "="
+        + groupName;
+    Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
+  }
 }

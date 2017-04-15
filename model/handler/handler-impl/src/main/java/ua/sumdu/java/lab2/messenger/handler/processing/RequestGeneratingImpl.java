@@ -77,6 +77,14 @@ public class RequestGeneratingImpl implements RequestGenerating {
     return str.toString();
   }
 
+  @Override
+  public String groupMessagesFromSpecificDate(long date, String groupName) {
+    StringBuilder str = new StringBuilder();
+    str.append(GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
+        .append('=').append(date).append('=').append(groupName);
+    return str.toString();
+  }
+
   /**
    * Converts a message to a xml string.
    */

@@ -57,7 +57,8 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
         currentGroup.addUser(groupName, user);
       }
       result.append(groupMapParser.groupMapToJSonString(currentGroup));
-    } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
+    } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()
+        || responseType == REQUESTED_GROUP_MESSAGES.getResponseNumber()) {
       String[] words = context.split("=");
       long date = Long.parseLong(words[0]);
       Document doc = XmlParser.INSTANCE.getDocument(new File(
