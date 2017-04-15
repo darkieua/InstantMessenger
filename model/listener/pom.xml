@@ -36,11 +36,6 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <!--inner import -->
-        <dependency>
-            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>handler</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
 
 
