@@ -23,6 +23,7 @@
         <maven-dependency-plugin.version>3.0.0</maven-dependency-plugin.version>
         <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+        <versioneye-maven-plugin.version>3.11.2</versioneye-maven-plugin.version>
         <!--Logging-->
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -43,6 +44,8 @@
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <junit-dataprovider.version>1.12.0</junit-dataprovider.version>
+        <mockito-core.version>2.7.22</mockito-core.version>
+        <powermock.version>1.6.6</powermock.version>
     </properties>
 
     <dependencyManagement>
@@ -111,6 +114,23 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -213,7 +233,7 @@
             <plugin>
                 <groupId>com.versioneye</groupId>
                 <artifactId>versioneye-maven-plugin</artifactId>
-                <version>3.11.2</version>
+                <version>${versioneye-maven-plugin.version}</version>
                 <configuration>
                     <apiKey>9a70721a59334054b67b</apiKey>
                     <organisation>yuliashevchenko137_orga</organisation>

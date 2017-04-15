@@ -1,4 +1,4 @@
-package ua.sumde.java.lab2.messenger.listener.impl;
+package ua.sumdu.java.lab2.messenger.listener.impl;
 
 import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
 
@@ -79,12 +79,17 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
 
   public void openServerSocket() {
     service = Executors.newCachedThreadPool();
+    this.work = true;
+    this.serverSocket = startServet();
+  }
+
+  public ServerSocket startServet() {
     int serverPort = CURRENT_USER.getPort();
     try {
-      this.serverSocket = new ServerSocket(serverPort);
-      this.work = true;
+       return new ServerSocket(serverPort);
     } catch (IOException e) {
       LOG.error(e.getMessage(), e);
+      return null;
     }
   }
 

@@ -1,4 +1,4 @@
-package ua.sumde.java.lab2.messenger.listener.impl;
+package ua.sumdu.java.lab2.messenger.listener.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Objects;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
@@ -49,12 +51,19 @@ public class ClientImpl extends Thread implements Client {
 
   @Override
   public boolean socketInit(InetAddress adr, int port) {
-    try {
-      Socket socket = new Socket(adr, port);
-      this.socket = socket;
-      return true;
-    } catch (IOException e) {
+    this.socket = openSocket(adr, port);
+    if (Objects.isNull(socket)) {
       return false;
+    } else {
+      return true;
+    }
+  }
+
+  public Socket openSocket(InetAddress adr, int port) {
+    try {
+      return new Socket(adr, port);
+    } catch (IOException e) {
+      return null;
     }
   }
 
