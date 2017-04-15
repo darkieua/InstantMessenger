@@ -52,11 +52,7 @@ public class ClientImpl extends Thread implements Client {
   @Override
   public boolean socketInit(InetAddress adr, int port) {
     this.socket = openSocket(adr, port);
-    if (Objects.isNull(socket)) {
-      return false;
-    } else {
-      return true;
-    }
+    return Objects.nonNull(socket);
   }
 
   public Socket openSocket(InetAddress adr, int port) {

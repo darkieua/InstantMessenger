@@ -33,6 +33,16 @@
             <artifactId>listener-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>users-impl</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>handler-impl</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

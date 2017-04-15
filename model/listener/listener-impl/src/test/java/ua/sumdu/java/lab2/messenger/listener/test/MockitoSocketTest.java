@@ -57,7 +57,6 @@ public class MockitoSocketTest {
     when(multiThreadedServer.startServet()).thenReturn(server);
     multiThreadedServer.setTest(true);
     multiThreadedServer.start();
-    InetAddress thisIp = InetAddress.getByName("localhost");
     // initialise sockets
     Socket connectedClient = mock(Socket.class);
     // initialize streams
@@ -69,13 +68,12 @@ public class MockitoSocketTest {
     // initialise connection
     when(server.accept()).thenReturn(connectedClient);
     BufferedReader in = new BufferedReader(new InputStreamReader(mcis));
-    StringBuilder response = new StringBuilder();
+    String response = "";
     LineIterator iterator = IOUtils.lineIterator(in);
-
     while (iterator.hasNext()) {
-      response.append(iterator.nextLine()).append("\n");
+      response = response + iterator.nextLine() + "\n";
     }
-    assertEquals("Oops", response.toString(), ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
+    assertEquals("Oops", response, ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
         + "=" + CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString() + "\n");
   }
 
