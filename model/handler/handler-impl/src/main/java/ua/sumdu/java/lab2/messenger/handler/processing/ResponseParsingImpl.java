@@ -15,6 +15,7 @@ import ua.sumdu.java.lab2.messenger.handler.api.ResponseParsing;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
+import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class ResponseParsingImpl implements ResponseParsing {
 
@@ -28,6 +29,18 @@ public class ResponseParsingImpl implements ResponseParsing {
       return responsesUpdates(responseType, context);
     } else if (responseType > 4999 && responseType < 6000) {
       return addResponses(responseType, context);
+    } else if (responseType > 6999 && responseType <= 7999) {
+      return dataResponse(responseType, context);
+    }
+    return "";
+  }
+
+  private String dataResponse(int responseType, String context) {
+    DataTransferImpl dataTransfer = new DataTransferImpl();
+    if (responseType == DATA_ACQUISITION.getResponseNumber()) {
+      return dataTransfer.parsingDataAcquisitionResponse(context);
+    } else if (responseType == DATA_SENDING_REJECTED.getResponseNumber()) {
+      return dataTransfer.parsingDataSendingRejectedResponse(context);
     }
     return "";
   }

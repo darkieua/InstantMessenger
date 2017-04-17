@@ -191,6 +191,10 @@ public class User implements Cloneable, Serializable {
     return System.getProperty("user.home");
   }
 
+  public static String getDirectoryForDownloadFiles() {
+    return getUserHome();
+  }
+
   /**
    * The method returns the path to the system message file.
    */

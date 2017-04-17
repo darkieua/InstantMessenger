@@ -1,7 +1,6 @@
 package ua.sumdu.java.lab2.messenger.entities;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
 
 public class Message {

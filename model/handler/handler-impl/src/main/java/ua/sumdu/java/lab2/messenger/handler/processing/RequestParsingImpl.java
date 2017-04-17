@@ -14,6 +14,7 @@ import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserCreatorImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
+import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class RequestParsingImpl implements RequestParsing {
 
@@ -23,13 +24,27 @@ public class RequestParsingImpl implements RequestParsing {
   public String requestParser(String string) {
     int requestType = Integer.parseInt(string.substring(0,4));
     String context = string.substring(5);
-    if (requestType > 999 && requestType < 2999) {
+    if (requestType > 999 && requestType <= 2999) {
       return adding(requestType, context);
-    } else if ((requestType > 2999 && requestType < 3999)
-            || (requestType > 5999 && requestType < 6999)) {
+    } else if ((requestType > 2999 && requestType <= 3999)
+            || (requestType > 5999 && requestType <= 6999)) {
       return receivingDataAndMessages(requestType, context);
-    } else if (requestType > 3999 && requestType < 5999) {
+    } else if (requestType > 3999 && requestType <= 5999) {
       return updateRequestsAndUpdateData(requestType, context);
+    } else {
+      return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
+    }
+  }
+
+  private String dataRequests(int requestType, String context) {
+    if (requestType == DATA_REQUEST.getRequestNumber()) {
+      DataTransferImpl dataTransfer = new DataTransferImpl();
+      String result = dataTransfer.requestParsing(context);
+      if ("".equals(result)) {
+        return String.valueOf(DATA_SENDING_REJECTED.getResponseNumber());
+      } else {
+        return DATA_ACQUISITION.getResponseNumber() + "=" + result;
+      }
     } else {
       return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
     }
@@ -68,7 +83,9 @@ public class RequestParsingImpl implements RequestParsing {
   }
 
   private String receivingDataAndMessages(int requestType, String context) {
-    if (requestType == NEW_MESSAGE.getRequestNumber()) {
+    if (requestType > 5999 && requestType <= 6999) {
+      return dataRequests(requestType, context);
+    } else if (requestType == NEW_MESSAGE.getRequestNumber()) {
       newMessage(context, "user");
       return String.valueOf(SUCCESSFUL.getResponseNumber());
     } else if (requestType == NEW_MESSAGE_TO_GROUP.getRequestNumber()) {

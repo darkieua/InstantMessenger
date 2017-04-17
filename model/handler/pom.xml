@@ -16,6 +16,9 @@
     <modules>
         <module>handler-api</module>
         <module>handler-impl</module>
+        <module>transfer</module>
     </modules>
+
+
 
 </project>

@@ -9,6 +9,7 @@ import ua.sumdu.java.lab2.messenger.handler.api.ResponseGenerating;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
+import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class ResponseGeneratingImpl implements ResponseGenerating {
 
@@ -20,8 +21,10 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
     }
     int responseType = Integer.parseInt(string.substring(0, 4));
     String context = string.substring(5);
-    if (responseType > 3999 && responseType < 4999) {
+    if (responseType > 3999 && responseType <= 4999) {
       return updatingRequest(responseType, context);
+    } else if (responseType > 6999 && responseType <= 7999) {
+      return dataAcquisition(responseType, context);
     } else if (responseType == ADDED_TO_GROUP.getResponseNumber()) {
       result.append(responseType).append('=');
       String groupName = string.substring(5);
@@ -30,6 +33,15 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
       result.append(GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser));
     }
     return result.toString();
+  }
+
+  private String dataAcquisition(int responseType, String context) {
+    if (responseType == DATA_ACQUISITION.getResponseNumber()) {
+      DataTransferImpl dataTransfer = new DataTransferImpl();
+      return responseType + "=" + dataTransfer.dataAcquisition(context);
+    } else {
+      return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
+    }
   }
 
   private String shortResponses(String string) {
@@ -41,6 +53,8 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
           .append(User.CURRENT_USER.getIpAddress()).append(')');
     } else if (type == ADDED_TO_FRIENDS.getResponseNumber()) {
       result.append('=').append(User.CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString());
+    } else if (type == DATA_SENDING_REJECTED.getResponseNumber()) {
+      result.append('=').append(User.CURRENT_USER.getUsername());
     }
     return result.toString();
   }

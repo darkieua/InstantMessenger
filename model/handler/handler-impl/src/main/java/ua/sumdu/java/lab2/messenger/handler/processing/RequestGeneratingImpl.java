@@ -13,6 +13,7 @@ import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.api.RequestGenerating;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
+import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class RequestGeneratingImpl implements RequestGenerating {
   private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);
@@ -84,6 +85,19 @@ public class RequestGeneratingImpl implements RequestGenerating {
         .append('=').append(date).append('=').append(groupName);
     return str.toString();
   }
+
+  @Override
+  public String dataRequest(SentFiles files) {
+    StringBuilder result = new StringBuilder();
+    DataTransferImpl dataTransfer = new DataTransferImpl();
+    result.append(DATA_REQUEST.getRequestNumber())
+        .append('=')
+        .append(User.CURRENT_USER.getUsername())
+        .append("==")
+        .append(dataTransfer.dataRequest(files));
+    return result.toString();
+  }
+
 
   /**
    * Converts a message to a xml string.

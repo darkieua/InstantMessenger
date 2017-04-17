@@ -1,6 +1,7 @@
 package ua.sumdu.java.lab2.messenger.handler.api;
 
 import ua.sumdu.java.lab2.messenger.entities.Message;
+import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 
 public interface RequestGenerating {
 
@@ -19,4 +20,6 @@ public interface RequestGenerating {
   String messagesFromSpecificDate(long date);
 
   String groupMessagesFromSpecificDate(long date, String groupName);
+
+  String dataRequest(SentFiles files);
 }

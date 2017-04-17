@@ -54,7 +54,7 @@ public class MockitoSocketTest {
     // initialize server
     MultiThreadedServerImpl multiThreadedServer = spy(new MultiThreadedServerImpl());
     ServerSocket server = mock(ServerSocket.class);
-    when(multiThreadedServer.startServet()).thenReturn(server);
+    doReturn(server).when(multiThreadedServer).startServet();
     multiThreadedServer.setTest(true);
     multiThreadedServer.start();
     // initialise sockets
@@ -73,7 +73,7 @@ public class MockitoSocketTest {
     while (iterator.hasNext()) {
       response = response + iterator.nextLine() + "\n";
     }
-    assertEquals("Oops", response, ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
+    assertEquals(response, ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
         + "=" + CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString() + "\n");
   }
 
