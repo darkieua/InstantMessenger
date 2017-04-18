@@ -48,7 +48,6 @@ public class ClientImpl extends Thread implements Client {
     }
   }
 
-
   @Override
   public boolean socketInit(InetAddress adr, int port) {
     this.socket = openSocket(adr, port);

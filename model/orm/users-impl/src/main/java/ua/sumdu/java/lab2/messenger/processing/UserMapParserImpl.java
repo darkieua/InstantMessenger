@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.messenger.processing;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
@@ -39,19 +38,21 @@ public final class UserMapParserImpl implements UserMapParser {
 
   @Override
   public String userMapToJSonString(UserMap userMap) {
-    LOG.info("Converting a UserMap to a Json String");
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.setPrettyPrinting().create();
+    LOG.debug("Converting a UserMap to a Json String");
     UserMapImpl newUsers = (UserMapImpl) userMap;
-    return gson.toJson(newUsers);
+    return new GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+        .toJson(newUsers);
   }
 
   @Override
   public UserMap jsonStringToUserMap(String jsonString) {
-    LOG.info("Converting a Json String to a UserMap");
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.setPrettyPrinting().create();
-    UserMapImpl userMap = gson.fromJson(jsonString, UserMapImpl.class);
+    LOG.debug("Converting a Json String to a UserMap");
+    UserMapImpl userMap = new GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+        .fromJson(jsonString, UserMapImpl.class);
     if (Objects.isNull(userMap)) {
       return new UserMapImpl();
     } else {
@@ -61,15 +62,11 @@ public final class UserMapParserImpl implements UserMapParser {
 
   @Override
   public boolean writeUserMapToFile(String jsonString) {
-    File friends = User.getFriendsFile();
-    if (!friends.exists()) {
-      try {
-        friends.createNewFile();
-      } catch (IOException e) {
-        return false;
-      }
-    }
     try {
+      File friends = User.getFriendsFile();
+      if (!friends.exists()) {
+        friends.createNewFile();
+      }
       FileUtils.writeStringToFile(friends, jsonString, "UTF-8");
       return true;
     } catch (IOException e) {
@@ -78,18 +75,13 @@ public final class UserMapParserImpl implements UserMapParser {
     }
   }
 
-  @Override
+    @Override
   public UserMap getFriends() {
-    File friends = User.getFriendsFile();
-    if (!friends.exists()) {
-      try {
-        friends.createNewFile();
-        return new UserMapImpl();
-      } catch (IOException e) {
-        LOG.error("writeUserMapToFile: IOException");
-      }
-    }
     try {
+      File friends = User.getFriendsFile();
+      if (!friends.exists()) {
+        friends.createNewFile();
+      }
       String jsonString = FileUtils.readFileToString(friends, "UTF-8");
       return jsonStringToUserMap(jsonString);
     } catch (IOException e) {

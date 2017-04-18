@@ -1,5 +1,6 @@
 package ua.sumdu.java.lab2.messenger.processing;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;
@@ -9,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.Test;
+import ua.sumdu.java.lab2.messenger.entities.CategoryUsers;
 import ua.sumdu.java.lab2.messenger.entities.User;
 import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 
@@ -53,6 +55,18 @@ public class UserMapImplTest {
     map.remove(user3.getUsername());
     usermap.removeUser(user3);
     assertTrue(usermap.getMap().equals(map));
+  }
+
+  @Test
+  public void equalsAndHashcode() throws UnknownHostException {
+    User newUser = new User(CategoryUsers.FRIEND, "user1", "user1@ex.ex",
+        7401, InetAddress.getLocalHost());
+    UserMapImpl userMap1 = new UserMapImpl();
+    UserMapImpl userMap2 = new UserMapImpl();
+    userMap1.addUser(newUser);
+    userMap2.addUser(newUser);
+    assertTrue(userMap1.equals(userMap2));
+    assertTrue(userMap1.hashCode() == userMap2.hashCode());
   }
 
 }

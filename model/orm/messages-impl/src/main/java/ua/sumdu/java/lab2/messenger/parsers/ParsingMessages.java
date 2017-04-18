@@ -32,6 +32,7 @@ public class ParsingMessages {
     XPath xpath = pathFactory.newXPath();
     XPathExpression expr;
     if (Objects.isNull(doc.getDocumentElement())) {
+      LOG.warn("Message map is empty");
       return new MessageMapImpl();
     }
     try {

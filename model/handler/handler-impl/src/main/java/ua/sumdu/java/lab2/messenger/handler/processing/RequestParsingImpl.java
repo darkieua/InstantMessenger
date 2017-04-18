@@ -18,8 +18,6 @@ import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class RequestParsingImpl implements RequestParsing {
 
-  private boolean test = false;
-
   @Override
   public String requestParser(String string) {
     int requestType = Integer.parseInt(string.substring(0,4));
@@ -53,11 +51,7 @@ public class RequestParsingImpl implements RequestParsing {
   private String adding(int requestType, String context) {
     if (requestType == ADD_TO_FRIENDS.getRequestNumber()) {
       boolean usersReaction;
-      if (test) {
-        usersReaction = true;
-      } else {
-        usersReaction = getReaction(context, "user");
-      }
+      usersReaction = getReaction(context, "user");
       if (usersReaction) {
         addNewFriend(context);
         return String.valueOf(ADDED_TO_FRIENDS.getResponseNumber());
@@ -66,11 +60,7 @@ public class RequestParsingImpl implements RequestParsing {
       }
     } else if (requestType == ADD_TO_GROUP.getRequestNumber()) {
       boolean usersReaction;
-      if (test) {
-        usersReaction = true;
-      } else {
-        usersReaction = getReaction(context, "group");
-      }
+      usersReaction = getReaction(context, "group");
       if (usersReaction) {
         String groupName = addGroup(context);
         return ADDED_TO_GROUP.getResponseNumber() + "=" + groupName;
@@ -177,11 +167,7 @@ public class RequestParsingImpl implements RequestParsing {
     groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(allGroup));
   }
 
-  public void setTest(boolean test) {
-    this.test = test;
-  }
-
   public boolean getReaction(String name, String groupOrUser) {
-    return false;
+    return false; // controller
   }
 }

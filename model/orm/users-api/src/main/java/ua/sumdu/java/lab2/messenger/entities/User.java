@@ -91,9 +91,12 @@ public class User implements Cloneable, Serializable {
 
   public User update(CategoryUsers category, String username, String email,
                      InetAddress ipAddress, int port) {
-    LOG.info("Update user");
-    return this.setCategory(category).setUsername(username).setEmail(email)
-            .setIpAddress(ipAddress).setPort(port);
+    LOG.debug("Update user");
+    return this.setCategory(category)
+        .setUsername(username)
+        .setEmail(email)
+        .setIpAddress(ipAddress)
+        .setPort(port);
   }
 
 
@@ -136,10 +139,11 @@ public class User implements Cloneable, Serializable {
    */
 
   public String toJSonString() {
-    LOG.info("Converting a User to a Json String");
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.setPrettyPrinting().create();
-    return gson.toJson(this);
+    LOG.debug("Converting a User to a Json String");
+    return new GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+        .toJson(this);
   }
 
   /**

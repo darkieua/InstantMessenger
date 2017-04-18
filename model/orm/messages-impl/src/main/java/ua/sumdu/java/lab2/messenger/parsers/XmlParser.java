@@ -42,18 +42,19 @@ public enum XmlParser implements MessageMapParser {
    */
 
   public Document getDocument(File file) {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = null;
-
     try {
-      builder = factory.newDocumentBuilder();
       if (!file.exists()) {
         file.createNewFile();
       }
-      return builder.parse(file);
+      return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       LOG.error(e.getMessage(), e);
-      return builder.newDocument();
+      try {
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+      } catch (ParserConfigurationException e1) {
+        LOG.error(e1.getMessage(), e1);
+        return null;
+      }
     }
   }
 
@@ -138,8 +139,11 @@ public enum XmlParser implements MessageMapParser {
   @Override
   public MessageMap read(File file) {
     Document doc = getDocument(file);
-    long date = Date.from(LocalDateTime.now().minusMonths(2).atZone(ZoneId.systemDefault())
-        .toInstant()).getTime();
+    long date = Date.from(LocalDateTime.now()
+        .minusMonths(2)
+        .atZone(ZoneId.systemDefault())
+        .toInstant())
+        .getTime();
     return ParsingMessages.getMessagesFromSpecificDate(doc, date);
   }
 
@@ -155,7 +159,7 @@ public enum XmlParser implements MessageMapParser {
       transformer.transform(new DOMSource(document), new StreamResult(writer));
       return writer.getBuffer().toString().replaceAll("\n|\r", "");
     } catch (TransformerException e) {
-      e.printStackTrace();
+      LOG.error(e.getMessage(), e);
       return null;
     }
   }
@@ -165,15 +169,17 @@ public enum XmlParser implements MessageMapParser {
   */
 
   public static Document loadXmlFromString(String xml) {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = null;
     try {
-      builder = factory.newDocumentBuilder();
       InputSource inputSource = new InputSource(new StringReader(xml));
-      return builder.parse(inputSource);
+      return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputSource);
     } catch (ParserConfigurationException | IOException | SAXException e) {
       LOG.error(e.getMessage(), e);
-      return builder.newDocument();
+      try {
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+      } catch (ParserConfigurationException e1) {
+        LOG.error(e1.getMessage(), e1);
+        return null;
+      }
     }
   }
 }

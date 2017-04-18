@@ -1,5 +1,6 @@
 package ua.sumdu.java.lab2.messenger.message.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
@@ -11,6 +12,9 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.entities.Message;
@@ -59,4 +63,14 @@ public class MessageMapImplTest {
     assertTrue(CORRECT_MAP.equals(MESSAGE_MAP));
   }
 
+  @Test
+  public void getetAndSetterTest() {
+    Message mess = new Message("user1", "user2", "text1",
+        LocalDateTime.now());
+    Map<LocalDateTime, Message> map = new TreeMap<>();
+    map.put(mess.getTimeSending(), mess);
+    MessageMapImpl messageMap = new MessageMapImpl();
+    messageMap.setMapForMails(map);
+    assertEquals(map, messageMap.getMapForMails());
+  }
 }

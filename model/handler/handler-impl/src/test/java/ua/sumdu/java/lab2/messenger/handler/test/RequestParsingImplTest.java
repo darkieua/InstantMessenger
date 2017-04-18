@@ -1,5 +1,8 @@
 package ua.sumdu.java.lab2.messenger.handler.test;
 
+import static org.mockito.Matchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
@@ -64,9 +67,9 @@ public class RequestParsingImplTest {
    */
   @Before
   public void init() throws UnknownHostException {
-    requestParsing = new RequestParsingImpl();
+    requestParsing = spy(new RequestParsingImpl());
     requestGenerating = new RequestGeneratingImpl();
-    requestParsing.setTest(true);
+    doReturn(true).when(requestParsing).getReaction(anyString(), anyString());
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     userMap.addUser(TEST_USER);
     UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance()

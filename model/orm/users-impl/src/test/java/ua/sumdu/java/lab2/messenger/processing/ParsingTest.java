@@ -1,9 +1,11 @@
 package ua.sumdu.java.lab2.messenger.processing;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.junit.Before;
@@ -58,6 +60,40 @@ public class ParsingTest {
     String str = parser.groupMapToJSonString(groupMap);
     GroupMapImpl newGroupMap = (GroupMapImpl) parser.jsonStringToGroupMap(str);
     assertTrue(newGroupMap.equals(groupMap));
+  }
+
+  @Test
+  public void gerCurrentGroups() {
+    GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
+    User newUser = User.CURRENT_USER;
+    groups.addUser("test", newUser);
+    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groups));
+    GroupMapImpl newGroup = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
+    assertEquals(groups, newGroup);
+    UserMapImpl userMap = (UserMapImpl) GroupMapParserImpl.getInstance().getUserMap("test");
+    UserMapImpl correctUserMap = new UserMapImpl();
+    correctUserMap.addUser(newUser);
+    assertEquals(userMap, correctUserMap);
+    newGroup.getMap().remove("test");
+    GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(newGroup));
+  }
+
+  @Test
+  public void getFriends() {
+    User newUser = User.getEmptyUser();
+    UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
+    friends.addUser(newUser);
+    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
+    UserMapImpl newMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
+    assertEquals(friends, newMap);
+    friends.removeUser(newUser);
+    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
+  }
+
+  @Test
+  public void getEmptyGroups() {
+    GroupMapImpl groupMap = (GroupMapImpl) GroupMapParserImpl.getInstance().jsonStringToGroupMap("");
+    assertEquals(groupMap, new GroupMapImpl());
   }
 
 }

@@ -43,7 +43,7 @@ public final class GroupMapParserImpl implements GroupMapParser {
 
   @Override
   public String groupMapToJSonString(GroupMap groupMap) {
-    LOG.info("Converting a GroupMap to a Json String");
+    LOG.debug("Converting a GroupMap to a Json String");
     GroupMapImpl newGroup = (GroupMapImpl) groupMap;
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.setPrettyPrinting().create();
@@ -52,10 +52,11 @@ public final class GroupMapParserImpl implements GroupMapParser {
 
   @Override
   public GroupMap jsonStringToGroupMap(String jsonString) {
-    LOG.info("Converting a Json String to a GroupMap");
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.setPrettyPrinting().create();
-    GroupMapImpl groupMap = gson.fromJson(jsonString, GroupMapImpl.class);
+    LOG.debug("Converting a Json String to a GroupMap");
+    GroupMapImpl groupMap = new GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+        .fromJson(jsonString, GroupMapImpl.class);
     if (Objects.isNull(groupMap)) {
       return new GroupMapImpl();
     } else {
@@ -65,16 +66,11 @@ public final class GroupMapParserImpl implements GroupMapParser {
 
   @Override
   public boolean writeGroupMapToFile(String jsonString) {
-    File groups = User.getGroupsFile();
-    if (!groups.exists()) {
-      try {
-        groups.createNewFile();
-      } catch (IOException e) {
-        LOG.error("writeGroupMapToFile: IOException");
-        return false;
-      }
-    }
     try {
+      File groups = User.getGroupsFile();
+      if (!groups.exists()) {
+        groups.createNewFile();
+      }
       FileUtils.writeStringToFile(groups, jsonString, "UTF-8");
       return true;
     } catch (IOException e) {

@@ -1,5 +1,8 @@
 package ua.sumdu.java.lab2.messenger.listener.impl;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
 
 import java.io.BufferedReader;
@@ -22,19 +25,21 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
 
   private static final Logger LOG = LoggerFactory.getLogger(ClientImpl.class);
 
+  public MultiThreadedServerImpl() {
+    this.service = Executors.newCachedThreadPool();
+  }
+
   public ExecutorService getService() {
     return service;
+  }
+
+  public void setService(ExecutorService service) {
+    this.service = service;
   }
 
   private ExecutorService service;
   private ServerSocket serverSocket;
   private boolean work;
-
-  public void setTest(boolean test) {
-    this.test = test;
-  }
-
-  private boolean test;
 
   @Override
   public void run() {
@@ -42,30 +47,7 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
     while (work) {
       try {
         Socket clientSocket = serverSocket.accept();
-        service.submit(() -> {
-          try {
-            OutputStream output = clientSocket.getOutputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(
-                    clientSocket.getInputStream());
-            BufferedReader input = new BufferedReader(inputStreamReader);
-            StringBuilder request = new StringBuilder();
-            LineIterator iterator = IOUtils.lineIterator(input);
-            while (iterator.hasNext()) {
-              request.append(iterator.nextLine());
-            }
-            RequestParsingImpl requestParsing = new RequestParsingImpl();
-            requestParsing.setTest(test);
-            String result = requestParsing.requestParser(request.toString());
-            ResponseGeneratingImpl responseGenerating = new ResponseGeneratingImpl();
-            output.write(responseGenerating.responseGenerate(result).getBytes());
-            output.flush();
-            output.close();
-            iterator.close();
-            input.close();
-            clientSocket.close();
-          } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-          }
+        service.submit(() -> { processingRequest(clientSocket);
         });
       } catch (IOException e) {
         LOG.error("Error accepting client connection", e);
@@ -73,12 +55,38 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
     }
   }
 
+  private void processingRequest(Socket clientSocket) {
+    try {
+      OutputStream output = clientSocket.getOutputStream();
+      InputStreamReader inputStreamReader = new InputStreamReader(
+          clientSocket.getInputStream());
+      BufferedReader input = new BufferedReader(inputStreamReader);
+      StringBuilder request = new StringBuilder();
+      LineIterator iterator = IOUtils.lineIterator(input);
+      while (iterator.hasNext()) {
+        request.append(iterator.nextLine());
+      }
+      RequestParsingImpl requestParsing = spy(new RequestParsingImpl());
+      doReturn(true).when(requestParsing).getReaction(anyString(), anyString());
+      String result = requestParsing.requestParser(request.toString());
+      ResponseGeneratingImpl responseGenerating = new ResponseGeneratingImpl();
+      output.write(responseGenerating.responseGenerate(result).getBytes());
+      output.flush();
+      output.close();
+      iterator.close();
+      input.close();
+      clientSocket.close();
+    } catch (IOException e) {
+      LOG.error(e.getMessage(), e);
+    }
+  }
+
+
   /**
   * Starting the server.
   */
 
   public void openServerSocket() {
-    service = Executors.newCachedThreadPool();
     this.work = true;
     this.serverSocket = startServet();
   }
@@ -92,6 +100,8 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
       return null;
     }
   }
+
+
 
   /**
   * Shutdown the server.

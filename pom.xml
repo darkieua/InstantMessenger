@@ -24,6 +24,7 @@
         <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <versioneye-maven-plugin.version>3.11.2</versioneye-maven-plugin.version>
+        <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
         <!--Logging-->
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -51,6 +52,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>

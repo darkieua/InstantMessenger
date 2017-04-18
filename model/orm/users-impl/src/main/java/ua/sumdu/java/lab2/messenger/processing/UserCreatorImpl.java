@@ -39,7 +39,7 @@ public enum UserCreatorImpl implements UserCreator {
   @Override
   public User createUser(CategoryUsers category, String username, String email,
                          InetAddress ipAddress, int port) throws UnknownHostException {
-    LOG.info("Data validation and creation new user");
+    LOG.debug("Data validation and creation new user");
     if (this.validateUsername(username) && this.validateEmail(email)) {
       return new User(category, username, email, port, ipAddress);
     } else {
@@ -53,7 +53,7 @@ public enum UserCreatorImpl implements UserCreator {
    */
 
   public User toUser(String jsonString) {
-    LOG.info("Converting a Json String to a UserMap");
+    LOG.debug("Converting a Json String to a UserMap");
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.setPrettyPrinting().create();
     return gson.fromJson(jsonString, User.class);
