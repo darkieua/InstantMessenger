@@ -30,7 +30,7 @@ public class RequestParsingImplTest {
   private RequestGeneratingImpl requestGenerating;
   private RequestParsingImpl requestParsing;
   private static final User TEST_USER = new User(CategoryUsers.BLACKLIST, "test_user", "test_user@ex.so",
-  8080, User.CURRENT_USER.getIpAddress());
+  8080, User.getCurrentUser().getIpAddress());
 
   /**
    * Return test group.
@@ -91,7 +91,7 @@ public class RequestParsingImplTest {
   public void addToFriends() {
     UserMapParserImpl userMapParser = UserMapParserImpl.getInstance();
     UserMapImpl userMap = (UserMapImpl) userMapParser.getFriends();
-    userMap.addUser(User.CURRENT_USER);
+    userMap.addUser(User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
     String request = requestGenerating.addToFriends();
     requestParsing.requestParser(request);
     UserMapImpl newMap = (UserMapImpl) userMapParser.getFriends();

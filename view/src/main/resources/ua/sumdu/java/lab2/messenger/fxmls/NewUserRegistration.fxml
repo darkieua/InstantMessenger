@@ -42,8 +42,8 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="username" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-      <TextField fx:id="email" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+      <TextField fx:id="username" promptText="user" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+      <TextField fx:id="email" promptText="user@email.com" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="165.0" text="Directory for saving files" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <font>
             <Font size="14.0" />
@@ -64,4 +64,9 @@
       </Label>
    </GridPane>
    <Button mnemonicParsing="false" onAction="#registration" text="Lets go!" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="75.0" />
+   <Label fx:id="error" layoutX="50.0" layoutY="242.0">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
 </AnchorPane>

@@ -21,7 +21,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
   @Override
   public String addToFriends() {
     return ADD_TO_FRIENDS.getRequestNumber() + "="
-            + User.CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString();
+            + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
   }
 
   @Override
@@ -74,7 +74,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
   public String messagesFromSpecificDate(long date) {
     StringBuilder str = new StringBuilder();
     str.append(MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
-        .append('=').append(date).append('=').append(User.CURRENT_USER.getUsername());
+        .append('=').append(date).append('=').append(User.getCurrentUser().getUsername());
     return str.toString();
   }
 
@@ -92,7 +92,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     DataTransferImpl dataTransfer = new DataTransferImpl();
     result.append(DATA_REQUEST.getRequestNumber())
         .append('=')
-        .append(User.CURRENT_USER.getUsername())
+        .append(User.getCurrentUser().getUsername())
         .append("==")
         .append(dataTransfer.dataRequest(files));
     return result.toString();

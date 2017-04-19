@@ -65,7 +65,7 @@ public class ParsingTest {
   @Test
   public void gerCurrentGroups() {
     GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
-    User newUser = User.CURRENT_USER;
+    User newUser = User.getCurrentUser();
     groups.addUser("test", newUser);
     GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groups));
     GroupMapImpl newGroup = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();

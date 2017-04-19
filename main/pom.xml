@@ -9,32 +9,27 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
-    <artifactId>controller</artifactId>
+    <artifactId>main</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>config-impl</artifactId>
+            <artifactId>view</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
-            <artifactId>users-impl</artifactId>
+            <artifactId>controller</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>users-api</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
+
 
 </project>

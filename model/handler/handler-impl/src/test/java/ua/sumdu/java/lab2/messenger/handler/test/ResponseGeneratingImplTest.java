@@ -62,7 +62,7 @@ public class ResponseGeneratingImplTest {
   public void declinedRequest() {
     String request = String.valueOf(REQUEST_HAS_BEEN_DECLINED.getResponseNumber());
     String result = responseGenerating.responseGenerate(request);
-    String correctResult = request + "=" + User.CURRENT_USER.getUsername() + "(" + User.CURRENT_USER.getIpAddress() + ")";
+    String correctResult = request + "=" + User.getCurrentUser().getUsername() + "(" + User.getCurrentUser().getIpAddress() + ")";
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
   }
 
@@ -70,7 +70,7 @@ public class ResponseGeneratingImplTest {
   public void addedToFriend() {
     String request = String.valueOf(ADDED_TO_FRIENDS.getResponseNumber());
     String result = responseGenerating.responseGenerate(request);
-    String correctResult = request + "=" + User.CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString();
+    String correctResult = request + "=" + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
   }
 
@@ -92,10 +92,10 @@ public class ResponseGeneratingImplTest {
 
   @DataProvider
   public static Object[][] messages() throws UnknownHostException {
-    Message[] messages =  {new Message(testUser, User.CURRENT_USER.getUsername(), "text1", LocalDateTime.now()),
-      new Message(testUser, User.CURRENT_USER.getUsername(), "text2", LocalDateTime.now().minusDays(1)),
-      new Message(testUser, User.CURRENT_USER.getUsername(), "text3", LocalDateTime.now().minusDays(2)),
-      new Message(testUser, User.CURRENT_USER.getUsername(), "text4", LocalDateTime.now().minusDays(3))};
+    Message[] messages =  {new Message(testUser, User.getCurrentUser().getUsername(), "text1", LocalDateTime.now()),
+      new Message(testUser, User.getCurrentUser().getUsername(), "text2", LocalDateTime.now().minusDays(1)),
+      new Message(testUser, User.getCurrentUser().getUsername(), "text3", LocalDateTime.now().minusDays(2)),
+      new Message(testUser, User.getCurrentUser().getUsername(), "text4", LocalDateTime.now().minusDays(3))};
     return new Object[][]{{messages}};
   }
 
@@ -127,7 +127,7 @@ public class ResponseGeneratingImplTest {
     String request = ADDED_TO_GROUP.getResponseNumber() + "=test_chat";
     String result = responseGenerating.responseGenerate(request);
     GroupMapImpl thisUser = new GroupMapImpl();
-    thisUser.addUser("test_chat", User.CURRENT_USER.setCategory(CategoryUsers.FRIEND));
+    thisUser.addUser("test_chat", User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
     String correctResult = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser);
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
 

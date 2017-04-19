@@ -28,7 +28,7 @@ public class RequestGeneratingImplTest2 {
     GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
     UserMapImpl userMap = new UserMapImpl();
     userMap.addUser(User.getEmptyUser());
-    userMap.addUser(User.CURRENT_USER);
+    userMap.addUser(User.getCurrentUser());
     String chatName = "testGroup";
     groups.getMap().put(chatName, userMap);
     GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
@@ -57,7 +57,7 @@ public class RequestGeneratingImplTest2 {
     long date = 1;
     String result = requestGenerating.messagesFromSpecificDate(date);
     String correctRequest = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "="
-      + User.CURRENT_USER.getUsername();
+      + User.getCurrentUser().getUsername();
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
   }
 

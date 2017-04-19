@@ -29,7 +29,7 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
       result.append(responseType).append('=');
       String groupName = string.substring(5);
       GroupMapImpl thisUser = new GroupMapImpl();
-      thisUser.addUser(groupName, User.CURRENT_USER.setCategory(CategoryUsers.FRIEND));
+      thisUser.addUser(groupName, User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
       result.append(GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser));
     }
     return result.toString();
@@ -49,12 +49,12 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
     result.append(string);
     int type = Integer.parseInt(string);
     if (type == REQUEST_HAS_BEEN_DECLINED.getResponseNumber()) {
-      result.append('=').append(User.CURRENT_USER.getUsername()).append('(')
-          .append(User.CURRENT_USER.getIpAddress()).append(')');
+      result.append('=').append(User.getCurrentUser().getUsername()).append('(')
+          .append(User.getCurrentUser().getIpAddress()).append(')');
     } else if (type == ADDED_TO_FRIENDS.getResponseNumber()) {
-      result.append('=').append(User.CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString());
+      result.append('=').append(User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString());
     } else if (type == DATA_SENDING_REJECTED.getResponseNumber()) {
-      result.append('=').append(User.CURRENT_USER.getUsername());
+      result.append('=').append(User.getCurrentUser().getUsername());
     }
     return result.toString();
   }

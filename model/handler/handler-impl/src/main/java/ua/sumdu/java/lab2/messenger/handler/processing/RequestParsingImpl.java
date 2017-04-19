@@ -123,7 +123,7 @@ public class RequestParsingImpl implements RequestParsing {
     for (User user: userMap.getMap().values()) {
       currentGroups.addUser(key, user);
     }
-    groupMap.addUser(key, User.CURRENT_USER);
+    groupMap.addUser(key, User.getCurrentUser());
     groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(currentGroups));
     return key;
   }

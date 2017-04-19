@@ -23,7 +23,7 @@ public class RequestParsingImplTest2 {
   private RequestGeneratingImpl requestGenerating;
   private RequestParsingImpl requestParsing;
   private static final User TEST_USER = new User(CategoryUsers.BLACKLIST, "test_user", "test_user@ex.so",
-    8080, User.CURRENT_USER.getIpAddress());
+    8080, User.getCurrentUser().getIpAddress());
 
   /**
    * The method returns test messages.
@@ -114,7 +114,7 @@ public class RequestParsingImplTest2 {
     Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1,
       response1);
     String request2 = requestGenerating.messagesFromSpecificDate(1);
-    String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1 + "=" + User.CURRENT_USER.getUsername();
+    String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1 + "=" + User.getCurrentUser().getUsername();
     String newResponse2 = requestParsing.requestParser(request2);
     Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2,
       response2);
@@ -131,7 +131,7 @@ public class RequestParsingImplTest2 {
     UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     userMap.addUser(user1);
     UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
-    Message mess = new Message(user1.getUsername(), User.CURRENT_USER.getUsername(), "text",
+    Message mess = new Message(user1.getUsername(), User.getCurrentUser().getUsername(), "text",
       LocalDateTime.now());
     String request = requestGenerating.newMessage(mess);
     String sender = mess.getSender();

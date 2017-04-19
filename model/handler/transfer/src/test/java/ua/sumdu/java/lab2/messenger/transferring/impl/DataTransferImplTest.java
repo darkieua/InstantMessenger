@@ -45,7 +45,7 @@ public class DataTransferImplTest {
     String result = files.toJSonString();
     dataTransfer = spy(new DataTransferImpl());
     when(dataTransfer.userInteraction(files)).thenReturn(new SentFiles());
-    String response = User.CURRENT_USER.getUsername() + "==" + files.toJSonString();
+    String response = User.getCurrentUser().getUsername() + "==" + files.toJSonString();
     assertEquals(result, dataTransfer.requestParsing(response));
   }
 
@@ -58,7 +58,7 @@ public class DataTransferImplTest {
     SendingAndReceivingFilesImpl sendingAndReceivingFiles = mock(SendingAndReceivingFilesImpl.class);
     when(dataTransfer.getSendingFilesElements()).thenReturn(sendingAndReceivingFiles);
     doNothing().when(sendingAndReceivingFiles).listenPort(anyInt(), anyObject());
-    String result = User.CURRENT_USER.getIpAddress() + ":" + port + "==" + files.toJSonString();
+    String result = User.getCurrentUser().getIpAddress() + ":" + port + "==" + files.toJSonString();
     assertEquals(result, dataTransfer.dataAcquisition(files.toJSonString()));
   }
 

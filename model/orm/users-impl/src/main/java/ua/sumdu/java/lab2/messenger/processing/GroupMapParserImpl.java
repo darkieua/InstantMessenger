@@ -16,6 +16,7 @@ import ua.sumdu.java.lab2.messenger.api.GroupMapParser;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
+import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 
 public final class GroupMapParserImpl implements GroupMapParser {
 
@@ -67,7 +68,7 @@ public final class GroupMapParserImpl implements GroupMapParser {
   @Override
   public boolean writeGroupMapToFile(String jsonString) {
     try {
-      File groups = User.getGroupsFile();
+      File groups = new File (User.getGroupsPath());
       if (!groups.exists()) {
         groups.createNewFile();
       }
@@ -80,7 +81,12 @@ public final class GroupMapParserImpl implements GroupMapParser {
   }
 
   public UserMap getUserMap(String groupName) {
-    return ((GroupMapImpl)getGroupMap()).getMap().get(groupName);
+    UserMapImpl groupMap = ((GroupMapImpl)getGroupMap()).getMap().get(groupName);
+    if (Objects.isNull(groupMap)) {
+      return new UserMapImpl();
+    } else {
+      return groupMap;
+    }
   }
 
   /**
@@ -89,7 +95,7 @@ public final class GroupMapParserImpl implements GroupMapParser {
 
   public GroupMap getGroupMap() {
     try {
-      File groups = User.getGroupsFile();
+      File groups = new File(User.getGroupsPath());
       if (!groups.exists()) {
         groups.createNewFile();
         return new GroupMapImpl();

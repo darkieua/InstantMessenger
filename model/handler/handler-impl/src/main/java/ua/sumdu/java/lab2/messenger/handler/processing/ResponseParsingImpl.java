@@ -113,7 +113,7 @@ public class ResponseParsingImpl implements ResponseParsing {
   private String notificationThatUserIsOffline(String userIp) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-    Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
+    Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
         "User(" + userIp + ") is offline", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);
@@ -123,7 +123,7 @@ public class ResponseParsingImpl implements ResponseParsing {
   private String notificationOfDeclinedRequest(String userName) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-    Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
+    Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
         "User " + userName + "  declined your request", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);
@@ -133,7 +133,7 @@ public class ResponseParsingImpl implements ResponseParsing {
   private String notificationOfSuccessfulAdditionToFriends(String name) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-    Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
+    Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
         "User " + name + " confirmed your request to friends", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);

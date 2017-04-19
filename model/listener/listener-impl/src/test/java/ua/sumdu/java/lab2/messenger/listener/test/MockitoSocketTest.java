@@ -1,12 +1,8 @@
 package ua.sumdu.java.lab2.messenger.listener.test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.when;
-import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
 
 import java.io.*;
 import java.net.*;
@@ -75,7 +71,7 @@ public class MockitoSocketTest {
       response = response + iterator.nextLine() + "\n";
     }
     assertEquals(response, ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
-        + "=" + CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString() + "\n");
+        + "=" + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString() + "\n");
   }
 
   @Test

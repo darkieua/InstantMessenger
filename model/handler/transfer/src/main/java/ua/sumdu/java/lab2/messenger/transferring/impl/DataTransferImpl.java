@@ -32,7 +32,7 @@ public class DataTransferImpl implements DataTransfer {
   @Override
   public String dataAcquisition(String response) {
     StringBuilder result = new StringBuilder();
-    String ipAddress = String.valueOf(User.CURRENT_USER.getIpAddress());
+    String ipAddress = String.valueOf(User.getCurrentUser().getIpAddress());
     result.append(ipAddress).append(':');
     int port = getFreePort();
     SendingAndReceivingFilesImpl sendingAndReceivingFiles = getSendingFilesElements();
@@ -55,7 +55,7 @@ public class DataTransferImpl implements DataTransfer {
   public String parsingDataSendingRejectedResponse(String context) {
     File system = User.getSystemMessageFile();
     MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-    Message newMessage = new Message("system", User.CURRENT_USER.getUsername(),
+    Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
         "User " + context + " declined to receive files", LocalDateTime.now());
     messages.addMessage(newMessage);
     XmlParser.INSTANCE.write(messages, system);

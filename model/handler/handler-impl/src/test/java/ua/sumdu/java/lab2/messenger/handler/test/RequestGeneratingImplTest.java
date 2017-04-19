@@ -46,7 +46,7 @@ public class RequestGeneratingImplTest {
 
   @Test
   public void addToFriends() {
-    String str = User.CURRENT_USER.setCategory(CategoryUsers.FRIEND).toJSonString();
+    String str = User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
     String correctRequest = ADD_TO_FRIENDS.getRequestNumber() + "=" + str;
     String result = requestGenerating.addToFriends();
     Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
@@ -57,7 +57,7 @@ public class RequestGeneratingImplTest {
     GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
     UserMapImpl userMap = new UserMapImpl();
     userMap.addUser(User.getEmptyUser());
-    userMap.addUser(User.CURRENT_USER);
+    userMap.addUser(User.getCurrentUser());
     String chatName = "testGroup";
     groups.getMap().put(chatName, userMap);
     GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()

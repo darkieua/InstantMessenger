@@ -2,7 +2,6 @@ package ua.sumdu.java.lab2.messenger.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileReader;
@@ -23,8 +22,6 @@ public class User implements Cloneable, Serializable {
   private String email = "";
   private int port = -1;
   private InetAddress ipAddress;
-
-  public static final User CURRENT_USER = getCurrentUser();
 
   /**
    * Create a new user.
@@ -152,7 +149,7 @@ public class User implements Cloneable, Serializable {
 
   public static User getCurrentUser() {
     try {
-      String genreJson = IOUtils.toString(new FileReader(getUserConfigFile()));
+      String genreJson = IOUtils.toString(new FileReader(new File(getUserConfigPath())));
       ObjectMapper mapper = new ObjectMapper();
       JsonNode node = mapper.readTree(genreJson);
       String username = node.get("username").asText();
@@ -167,16 +164,18 @@ public class User implements Cloneable, Serializable {
     }
   }
 
-  public static File getFriendsFile() {
-    return new File(getUserHome() + "/InstantMessenger/friends.json");
+  public static String getFriendsPath() {
+    return getUserHome() + "/InstantMessenger/friends.json";
   }
 
-  public static File getGroupsFile() {
-    return new File(getUserHome() + "/InstantMessenger/groups.json");
+  public static String getGroupsPath() {
+    return getUserHome() + "/InstantMessenger/groups.json";
   }
 
-  public static File getUserConfigFile() {
-    return new File(getUserHome() + "/InstantMessenger/user_config.json");
+  public static String getUserConfigPath() {
+    File mainDirectory = new File(getUserHome() + "/InstantMessenger/");
+    mainDirectory.mkdir();
+    return getUserHome() + "/InstantMessenger/user_config.json";
   }
 
   /**

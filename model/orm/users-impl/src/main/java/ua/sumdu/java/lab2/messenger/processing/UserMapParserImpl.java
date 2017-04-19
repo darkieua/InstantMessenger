@@ -63,7 +63,7 @@ public final class UserMapParserImpl implements UserMapParser {
   @Override
   public boolean writeUserMapToFile(String jsonString) {
     try {
-      File friends = User.getFriendsFile();
+      File friends = new File(User.getFriendsPath());
       if (!friends.exists()) {
         friends.createNewFile();
       }
@@ -78,7 +78,7 @@ public final class UserMapParserImpl implements UserMapParser {
     @Override
   public UserMap getFriends() {
     try {
-      File friends = User.getFriendsFile();
+      File friends = new File(User.getFriendsPath());
       if (!friends.exists()) {
         friends.createNewFile();
       }

@@ -3,7 +3,6 @@ package ua.sumdu.java.lab2.messenger.listener.impl;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static ua.sumdu.java.lab2.messenger.entities.User.CURRENT_USER;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.sumdu.java.lab2.messenger.entities.User;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestParsingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.ResponseGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.listener.api.MultiThreadedServer;
@@ -92,7 +92,7 @@ public class MultiThreadedServerImpl extends Thread implements MultiThreadedServ
   }
 
   public ServerSocket startServet() {
-    int serverPort = CURRENT_USER.getPort();
+    int serverPort = User.getCurrentUser().getPort();
     try {
        return new ServerSocket(serverPort);
     } catch (IOException e) {
