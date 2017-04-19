@@ -11,6 +11,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>view</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>controller</artifactId>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
