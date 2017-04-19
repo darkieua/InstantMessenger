@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -23,6 +22,6 @@ public class AddController {
   @FXML
   public TextField ipAddress;
 
-  public void createRequest(ActionEvent actionEvent) {
-  }
+  /*public void createRequest(ActionEvent actionEvent) {
+  }*/
 }

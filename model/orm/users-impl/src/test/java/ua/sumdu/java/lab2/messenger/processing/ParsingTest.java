@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;
 
-import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.junit.Before;
@@ -76,18 +75,6 @@ public class ParsingTest {
     assertEquals(userMap, correctUserMap);
     newGroup.getMap().remove("test");
     GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(newGroup));
-  }
-
-  @Test
-  public void getFriends() {
-    User newUser = User.getEmptyUser();
-    UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-    friends.addUser(newUser);
-    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
-    UserMapImpl newMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-    assertEquals(friends, newMap);
-    friends.removeUser(newUser);
-    UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
   }
 
   @Test

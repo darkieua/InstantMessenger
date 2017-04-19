@@ -12,19 +12,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.entities.Message;
 import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 @RunWith(DataProviderRunner.class)
 public class XmlParserTest {

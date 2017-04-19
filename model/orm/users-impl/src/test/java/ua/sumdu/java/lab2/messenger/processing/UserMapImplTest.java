@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.messenger.processing;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.FRIEND;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.BLACKLIST;

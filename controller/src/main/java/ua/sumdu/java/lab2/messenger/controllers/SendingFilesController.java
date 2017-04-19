@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 
 public class SendingFilesController {
@@ -13,12 +12,12 @@ public class SendingFilesController {
   public TableColumn fileName;
   public TableColumn fileSize;
 
-  public void selectFiles(ActionEvent actionEvent) {
+  /*public void selectFiles(ActionEvent actionEvent) {
   }
 
   public void sentFiles(ActionEvent actionEvent) {
   }
 
   public void remoteFile(ActionEvent actionEvent) {
-  }
+  }*/
 }

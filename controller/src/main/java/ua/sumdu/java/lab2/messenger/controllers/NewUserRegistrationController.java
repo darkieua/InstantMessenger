@@ -17,7 +17,6 @@ import ua.sumdu.java.lab2.messenger.processing.UserCreatorImpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -41,28 +40,28 @@ public class NewUserRegistrationController {
   public void registration(ActionEvent actionEvent) {
     Node source = (Node) actionEvent.getSource();
     Stage stage = (Stage) source.getScene().getWindow();
-    StringBuilder errorMessage = new StringBuilder();
+    String errorMessage = "";
     if (!UserCreatorImpl.INSTANCE.validateUsername(username.getText())) {
       LOG.warn("Invalid username");
-      errorMessage.append("Invalid username\n");
+      errorMessage += "Invalid username\n";
     }
     if (!UserCreatorImpl.INSTANCE.validateEmail(email.getText())) {
       LOG.warn("Invalid e-mail");
-      errorMessage.append("Invalid e-mail\n");
+      errorMessage += "Invalid e-mail\n";
     }
     if ("".equals(path)) {
       LOG.warn("Folder for saving files is not selected");
-      errorMessage.append("Folder for saving files is not selected\n");
+      errorMessage += "Folder for saving files is not selected\n";
     }
-    if ("".equals(errorMessage.toString())) {
+    if ("".equals(errorMessage)) {
       error.setText("");
       SettingsImpl settings = new SettingsImpl();
       try {
         String ipAddress = InetAddress.getLocalHost().getHostAddress();
-        settings.putSetting("ip", ipAddress);
+        settings.putSetting("ipAddress", ipAddress);
       } catch (UnknownHostException e) {
         LOG.error(e.getMessage(), e);
-        settings.putSetting("ip", "");
+        settings.putSetting("ipAddress", "");
       }
       settings.putSetting("port", String.valueOf(9696));
       settings.putSetting("downloadPath", path);
@@ -86,20 +85,8 @@ public class NewUserRegistrationController {
       }
       stage.close();
     } else {
-      error.setText(errorMessage.toString());
+      error.setText(errorMessage);
     }
-      //PrintWriter out = new PrintWriter(new File)
-    /* = InetAddress.getLocalHost();
-    settings.putSetting();
-    this.newTask = this.createTask();
-    if ("".equals(this.str1)) {
-      this.bool = true;
-      stage.close();
-    } else {
-      this.bool = false;
-      this.error.setText(this.str1);
-      this.str1 = "";*/
-    //}
   }
 
   public void directorySelection(ActionEvent actionEvent) {
