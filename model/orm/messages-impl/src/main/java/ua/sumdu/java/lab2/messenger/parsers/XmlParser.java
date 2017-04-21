@@ -45,10 +45,11 @@ public enum XmlParser implements MessageMapParser {
     try {
       if (!file.exists()) {
         file.createNewFile();
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
       }
       return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
     } catch (ParserConfigurationException | SAXException | IOException e) {
-      LOG.error(e.getMessage(), e);
+      LOG.error(e.getMessage());
       try {
         return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
       } catch (ParserConfigurationException e1) {

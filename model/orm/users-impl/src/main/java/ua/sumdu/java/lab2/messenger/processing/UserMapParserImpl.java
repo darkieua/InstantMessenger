@@ -62,12 +62,23 @@ public final class UserMapParserImpl implements UserMapParser {
 
   @Override
   public boolean writeUserMapToFile(String jsonString) {
+    File friends = new File(User.getFriendsPath());
+    return write(friends, jsonString);
+  }
+
+  @Override
+  public boolean writeBlackListToFile(String jsonString) {
+    File blackList = new File(User.getBlackListPath());
+    return write(blackList, jsonString);
+  }
+
+
+  private boolean write(File file, String jsonString) {
     try {
-      File friends = new File(User.getFriendsPath());
-      if (!friends.exists()) {
-        friends.createNewFile();
+      if (!file.exists()) {
+        file.createNewFile();
       }
-      FileUtils.writeStringToFile(friends, jsonString, "UTF-8");
+      FileUtils.writeStringToFile(file, jsonString, "UTF-8");
       return true;
     } catch (IOException e) {
       LOG.error("writeUserMapToFile: IOException");
@@ -81,8 +92,25 @@ public final class UserMapParserImpl implements UserMapParser {
       File friends = new File(User.getFriendsPath());
       if (!friends.exists()) {
         friends.createNewFile();
+        return new UserMapImpl();
       }
       String jsonString = FileUtils.readFileToString(friends, "UTF-8");
+      return jsonStringToUserMap(jsonString);
+    } catch (IOException e) {
+      LOG.error("writeUserMapToFile: IOException");
+      return new UserMapImpl();
+    }
+  }
+
+  @Override
+  public UserMap getBlackList() {
+    try {
+      File blackListFile = new File(User.getBlackListPath());
+      if (!blackListFile.exists()) {
+        blackListFile.createNewFile();
+        return new UserMapImpl();
+      }
+      String jsonString = FileUtils.readFileToString(blackListFile, "UTF-8");
       return jsonStringToUserMap(jsonString);
     } catch (IOException e) {
       LOG.error("writeUserMapToFile: IOException");

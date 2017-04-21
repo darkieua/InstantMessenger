@@ -22,14 +22,17 @@ public class ResponseParsingImpl implements ResponseParsing {
   @Override
   public String responseParsing(String str) {
     int responseType = Integer.parseInt(str.substring(0, 4));
-    String context = str.substring(5);
     if (responseType > 1999 && responseType < 4000) {
+      String context = str.substring(5);
       return infoResponses(responseType, context);
     } else if (responseType > 3999 && responseType < 5000) {
+      String context = str.substring(5);
       return responsesUpdates(responseType, context);
     } else if (responseType > 4999 && responseType < 6000) {
+      String context = str.substring(5);
       return addResponses(responseType, context);
     } else if (responseType > 6999 && responseType <= 7999) {
+      String context = str.substring(5);
       return dataResponse(responseType, context);
     }
     return "";
@@ -59,28 +62,28 @@ public class ResponseParsingImpl implements ResponseParsing {
     if (responseType == UPDATED_GROUP_LIST.getResponseNumber()) {
       RequestParsingImpl requestParsing = new RequestParsingImpl();
       requestParsing.updateGroup(context);
-      return "";
     } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()
         || responseType == REQUESTED_GROUP_MESSAGES.getResponseNumber()) {
       Document doc = XmlParser.loadXmlFromString(context);
       MessageMapImpl messageMap = (MessageMapImpl) ParsingMessages
           .getMessagesFromSpecificDate(doc, 0);
       Iterator<Message> iterator = messageMap.getMapForMails().values().iterator();
-      Message mess1 = iterator.next();
-      String fileName;
-      if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
-        fileName = mess1.getSender();
-      } else {
-        fileName = mess1.getReceiver();
+      if (iterator.hasNext()) {
+        Message mess1 = iterator.next();
+        String fileName;
+        if (responseType == REQUESTED_MESSAGES.getResponseNumber()) {
+          fileName = mess1.getSender();
+        } else {
+          fileName = mess1.getReceiver();
+        }
+        File fileWithMails = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
+        MessageMapImpl currentMessageMap = (MessageMapImpl) XmlParser.INSTANCE.read(fileWithMails);
+        currentMessageMap.addMessage(mess1);
+        while (iterator.hasNext()) {
+          currentMessageMap.addMessage(iterator.next());
+        }
+        XmlParser.INSTANCE.write(currentMessageMap, fileWithMails);
       }
-      File fileWithMails = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
-      MessageMapImpl currentMessageMap = (MessageMapImpl) XmlParser.INSTANCE.read(fileWithMails);
-      currentMessageMap.addMessage(mess1);
-      while (iterator.hasNext()) {
-        currentMessageMap.addMessage(iterator.next());
-      }
-      XmlParser.INSTANCE.write(currentMessageMap, fileWithMails);
-      return "";
     }
     return "";
   }

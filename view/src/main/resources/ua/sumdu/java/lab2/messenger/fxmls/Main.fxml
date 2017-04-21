@@ -17,41 +17,79 @@
         <Button mnemonicParsing="false" onAction="#add" prefHeight="30.0" prefWidth="80.0" text="Add" />
         <Button mnemonicParsing="false" onAction="#sentFiles" prefHeight="30.0" prefWidth="80.0" text="Send file" />
     </HBox>
-    <SplitPane dividerPositions="0.33444816053511706" prefHeight="374.0" prefWidth="552.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
-      <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="56.0" SplitPane.resizableWithParent="false">
-              <children>
-                  <Accordion prefHeight="357.0" prefWidth="202.0">
-                      <panes>
-                          <TitledPane animated="false" text="Friends">
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                  <ListView fx:id="friendsList" layoutX="-34.0" layoutY="27.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              </AnchorPane>
-                          </TitledPane>
-                          <TitledPane animated="false" text="Groups">
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                  <ListView fx:id="groupList" layoutY="47.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              </AnchorPane>
-                          </TitledPane>
-                      </panes>
-                  </Accordion>
-              </children>
-          </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="251.0" prefWidth="264.0">
-              <children>
-                  <TabPane fx:id="tabPane" prefHeight="280.0" prefWidth="395.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <tabs>
-                          <Tab fx:id="systemChat" text="system">
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="249.0" prefWidth="402.0">
-                                  <ListView fx:id="systemMessages" prefHeight="255.0" prefWidth="403.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                              </AnchorPane>
-                          </Tab>
-                      </tabs>
-                  </TabPane>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sentMessage" prefHeight="41.0" prefWidth="64.0" text="OK" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <TextArea fx:id="textMessage" layoutX="-1.0" layoutY="282.0" maxHeight="100.0" maxWidth="-Infinity" minHeight="60.0" minWidth="100.0" prefHeight="88.0" prefWidth="331.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="65.0" />
-              </children>
-          </AnchorPane>
-      </items>
+    <SplitPane dividerPositions="0.33444816053511706" prefHeight="374.0" prefWidth="552.0" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="56.0"
+                    SplitPane.resizableWithParent="false">
+            <Accordion prefHeight="372.0" prefWidth="202.0">
+                <panes>
+                    <TitledPane animated="false" text="Friends">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <Accordion prefHeight="322.0" prefWidth="202.0">
+                                <panes>
+                                    <TitledPane animated="false" prefHeight="371.0" prefWidth="202.0"
+                                                text="Available">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="221.0"
+                                                    prefWidth="200.0">
+                                            <Button fx:id="blockButton" layoutX="148.0" layoutY="245.0"
+                                                    mnemonicParsing="false" onAction="#block" text="Block"
+                                                    visible="false" AnchorPane.bottomAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0"/>
+                                            <ListView fx:id="friendsList" layoutX="19.0" layoutY="21.0"
+                                                      onMouseClicked="#showFriendsChat" prefHeight="240.0"
+                                                      prefWidth="182.0" AnchorPane.bottomAnchor="25.0"
+                                                      AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                                                      AnchorPane.topAnchor="5.0"/>
+                                        </AnchorPane>
+                                    </TitledPane>
+                                    <TitledPane animated="false" prefHeight="287.0" prefWidth="202.0"
+                                                text="BlackList">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
+                                                    prefWidth="200.0">
+                                            <ListView fx:id="blackList" layoutX="10.0" layoutY="8.0"
+                                                      prefHeight="242.0"
+                                                      prefWidth="174.0" AnchorPane.bottomAnchor="25.0"
+                                                      AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                                                      AnchorPane.topAnchor="5.0"/>
+                                            <Button fx:id="restore" layoutX="143.0" layoutY="245.0"
+                                                    mnemonicParsing="false" onAction="#restoreFromBlacklist"
+                                                    text="Restore" visible="false" AnchorPane.bottomAnchor="0.0"
+                                                    AnchorPane.rightAnchor="0.0"/>
+                                        </AnchorPane>
+                                    </TitledPane>
+                                </panes>
+                            </Accordion>
+                        </AnchorPane>
+                    </TitledPane>
+                    <TitledPane animated="false" text="Groups">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <ListView fx:id="groupList" layoutY="47.0" onMouseClicked="#showGroupChat"
+                                      prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0"
+                                      AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                                      AnchorPane.topAnchor="5.0"/>
+                        </AnchorPane>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="251.0" prefWidth="264.0">
+            <TabPane fx:id="tabPane" prefHeight="280.0" prefWidth="395.0" tabClosingPolicy="ALL_TABS"
+                     AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                     AnchorPane.topAnchor="0.0">
+                <Tab closable="false" text="system">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="249.0" prefWidth="402.0">
+                        <ListView fx:id="systemMessages" prefHeight="255.0" prefWidth="403.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                    </AnchorPane>
+                </Tab>
+            </TabPane>
+            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                    mnemonicParsing="false" onAction="#sentMessage" prefHeight="41.0" prefWidth="64.0" text="OK"
+                    textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+            <TextArea fx:id="textMessage" layoutX="-1.0" layoutY="282.0" maxHeight="100.0" maxWidth="-Infinity"
+                      minHeight="60.0" minWidth="100.0" prefHeight="88.0" prefWidth="331.0"
+                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="65.0"/>
+        </AnchorPane>
     </SplitPane>
 </AnchorPane>

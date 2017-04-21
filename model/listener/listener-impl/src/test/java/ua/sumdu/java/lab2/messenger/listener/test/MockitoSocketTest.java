@@ -4,24 +4,18 @@ import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.when;
 
-import java.io.*;
 import java.net.*;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.sumdu.java.lab2.messenger.listener.impl.*;
 import ua.sumdu.java.lab2.messenger.entities.*;
-import ua.sumdu.java.lab2.messenger.handler.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
-import ua.sumdu.java.lab2.messenger.processing.UserCreatorImpl;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ClientImpl.class, MultiThreadedServerImpl.class})
@@ -48,7 +42,7 @@ public class MockitoSocketTest {
     assertTrue(isFind);
   }
 
-  @Test
+  /*@Test
   public void correctWork() throws IOException {
     User newUser = UserCreatorImpl.INSTANCE.createUser(CategoryUsers.FRIEND, "test_user", "test_user@go.com",
         InetAddress.getLocalHost(), 8048);
@@ -72,7 +66,7 @@ public class MockitoSocketTest {
     }
     assertEquals(response, ResponseType.ADDED_TO_FRIENDS.getResponseNumber()
         + "=" + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString() + "\n");
-  }
+  }*/
 
   @Test
   public void getExecutor() {

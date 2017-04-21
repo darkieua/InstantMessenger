@@ -10,7 +10,7 @@
 
 
 <AnchorPane prefHeight="350.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.ReceivingFilesController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.transferring.impl.ReceivingFilesController">
    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="178.0" layoutY="31.0" text="Receiving files"
           textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" AnchorPane.leftAnchor="10.0"
           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">

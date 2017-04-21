@@ -19,6 +19,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class NewUserRegistrationController {
   private static final Logger LOG = LoggerFactory.getLogger(NewUserRegistrationController.class);
@@ -67,7 +70,8 @@ public class NewUserRegistrationController {
       settings.putSetting("downloadPath", path);
       settings.putSetting("username", username.getText());
       settings.putSetting("email", email.getText());
-      settings.putSetting("folderForSaving", path);
+      Date out = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+      settings.putSetting("lastLoginTime", String.valueOf(out.getTime()));
       SettingsParserImpl settingsParser = new SettingsParserImpl();
       String result = settingsParser.settingsToJson(settings);
       File userConfig = new File(User.getUserConfigPath());
@@ -76,16 +80,20 @@ public class NewUserRegistrationController {
       } catch (IOException e) {
         LOG.error(e.getMessage(), e);
       }
-      try (FileWriter writer = new FileWriter(userConfig, false)) {
-        writer.write(result);
-        writer.flush();
-        writer.close();
-      } catch (IOException e) {
-        LOG.error(e.getMessage(), e);
-      }
+      writeToFile(userConfig, result);
       stage.close();
     } else {
       error.setText(errorMessage);
+    }
+  }
+
+  public static void writeToFile(File file , String str) {
+    try (FileWriter writer = new FileWriter(file, false)) {
+      writer.write(str);
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      LOG.error(e.getMessage(), e);
     }
   }
 

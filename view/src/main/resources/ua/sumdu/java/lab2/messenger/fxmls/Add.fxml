@@ -23,7 +23,7 @@
         </Label>
       <AnchorPane prefHeight="90.0" prefWidth="444.0">
          <children>
-                 <RadioButton fx:id="addToFriends" mnemonicParsing="false" text="Add to friends" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+                 <RadioButton fx:id="addToFriends" mnemonicParsing="false" onAction="#showFriendsDetails" text="Add to friends" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
                      <toggleGroup>
                          <ToggleGroup fx:id="addUser" />
                      </toggleGroup>
@@ -31,7 +31,7 @@
                          <Font name="System Italic" size="14.0" />
                      </font>
                  </RadioButton>
-                 <RadioButton fx:id="addToGroup" mnemonicParsing="false" selected="true" text="Add to group" toggleGroup="$addUser" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
+                 <RadioButton fx:id="addToGroup" mnemonicParsing="false" onAction="#showGroupsDetails" selected="true" text="Add to group" toggleGroup="$addUser" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
                      <font>
                          <Font name="System Italic" size="14.0" />
                      </font>
@@ -52,6 +52,11 @@
              </Label>
              <TextField fx:id="ipAddress" promptText="192.168.1.1" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0" />
             <Button defaultButton="true" mnemonicParsing="false" onAction="#createRequest" prefHeight="25.0" prefWidth="56.0" text="OK" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="50.0" />
+         <Label fx:id="error" layoutX="23.0" layoutY="74.0">
+            <font>
+               <Font name="System Italic" size="14.0" />
+            </font>
+         </Label>
         </AnchorPane>
     </VBox>
 </AnchorPane>

@@ -23,12 +23,12 @@
             </Label>
             <HBox layoutY="50.0" prefHeight="65.0" prefWidth="478.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                 <AnchorPane prefHeight="65.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
-                    <RadioButton fx:id="sendFilesToFriend" mnemonicParsing="false" selected="true" text="friend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+                    <RadioButton fx:id="sendFilesToFriend" mnemonicParsing="false" onAction="#selectFriend" selected="true" text="friend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
                         <toggleGroup>
                             <ToggleGroup fx:id="groupOrFriend" />
                         </toggleGroup>
                     </RadioButton>
-                    <RadioButton fx:id="sendFilesToGroup" layoutX="52.0" mnemonicParsing="false" text="group" toggleGroup="$groupOrFriend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="20.0" />
+                    <RadioButton fx:id="sendFilesToGroup" layoutX="52.0" mnemonicParsing="false" onAction="#selectGroup" text="group" toggleGroup="$groupOrFriend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="20.0" />
                     <Label fx:id="choiceLabel" layoutX="106.0" text="Select friend" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="20.0">
                         <font>
                             <Font name="System Italic" size="14.0" />
@@ -57,7 +57,7 @@
                 </AnchorPane>
             </HBox>
             <Button layoutX="40.0" layoutY="310.0" mnemonicParsing="false" onAction="#sentFiles" prefHeight="25.0" prefWidth="48.0" text="Sent" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" />
-            <Button layoutX="386.0" layoutY="310.0" mnemonicParsing="false" onAction="#remoteFile" text="Remote" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" />
+            <Button fx:id="remote" layoutX="386.0" layoutY="310.0" mnemonicParsing="false" onAction="#remoteFile" text="Remote" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" />
          <VBox.margin>
             <Insets />
          </VBox.margin>

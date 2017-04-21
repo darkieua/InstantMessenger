@@ -3,11 +3,15 @@ package ua.sumdu.java.lab2.messenger.transferring.impl;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 import ua.sumdu.java.lab2.messenger.entities.User;
 import ua.sumdu.java.lab2.messenger.transferring.api.SendingAndReceivingFiles;
 
 public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
+  private static final Logger LOG = LoggerFactory.getLogger(SendingAndReceivingFilesImpl.class);
+
   @Override
   public void listenPort(int port, SentFiles files) {
     try {
@@ -40,7 +44,7 @@ public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
       }
        socket.close();
     } catch (IOException e) {
-      throw new IllegalStateException(e);
+      LOG.error(e.getMessage(), e);
     }
   }
 
@@ -78,7 +82,7 @@ public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
       socketOut.close();
       socket.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error(e.getMessage(), e);
     }
 
   }

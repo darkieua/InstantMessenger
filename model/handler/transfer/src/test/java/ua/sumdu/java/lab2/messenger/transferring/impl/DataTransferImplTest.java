@@ -44,7 +44,7 @@ public class DataTransferImplTest {
   public void requestParsing(SentFiles files) {
     String result = files.toJSonString();
     dataTransfer = spy(new DataTransferImpl());
-    when(dataTransfer.userInteraction(files)).thenReturn(new SentFiles());
+    doReturn(files).when(dataTransfer).userInteraction(any(), any());
     String response = User.getCurrentUser().getUsername() + "==" + files.toJSonString();
     assertEquals(result, dataTransfer.requestParsing(response));
   }

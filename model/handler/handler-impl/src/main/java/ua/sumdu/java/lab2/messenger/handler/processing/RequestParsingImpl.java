@@ -5,6 +5,13 @@ import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Optional;
+
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
@@ -17,6 +24,9 @@ import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 import ua.sumdu.java.lab2.messenger.transferring.impl.DataTransferImpl;
 
 public class RequestParsingImpl implements RequestParsing {
+  private static final Logger LOG = LoggerFactory.getLogger(RequestParsingImpl.class);
+
+  private static final String USER = "user";
 
   @Override
   public String requestParser(String string) {
@@ -51,7 +61,7 @@ public class RequestParsingImpl implements RequestParsing {
   private String adding(int requestType, String context) {
     if (requestType == ADD_TO_FRIENDS.getRequestNumber()) {
       boolean usersReaction;
-      usersReaction = getReaction(context, "user");
+      usersReaction = getReaction(context, USER);
       if (usersReaction) {
         addNewFriend(context);
         return String.valueOf(ADDED_TO_FRIENDS.getResponseNumber());
@@ -76,7 +86,7 @@ public class RequestParsingImpl implements RequestParsing {
     if (requestType > 5999 && requestType <= 6999) {
       return dataRequests(requestType, context);
     } else if (requestType == NEW_MESSAGE.getRequestNumber()) {
-      newMessage(context, "user");
+      newMessage(context, USER);
       return String.valueOf(SUCCESSFUL.getResponseNumber());
     } else if (requestType == NEW_MESSAGE_TO_GROUP.getRequestNumber()) {
       newMessage(context, "group");
@@ -133,7 +143,7 @@ public class RequestParsingImpl implements RequestParsing {
     Message message = ParsingMessages.parseMessage(doc.getFirstChild());
     String fileName;
     UserMapImpl users;
-    if ("user".equals(type)) {
+    if (USER.equals(type)) {
       fileName = message.getSender();
       users = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
     } else {
@@ -167,7 +177,34 @@ public class RequestParsingImpl implements RequestParsing {
     groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(allGroup));
   }
 
-  public boolean getReaction(String name, String groupOrUser) {
-    return false; // controller
+  public boolean getReaction(String context, String groupOrUser) {
+    final boolean[] reaction = new boolean[1];
+    boolean[] work = {true};
+    int time = 0;
+    Platform.runLater(() -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      if (USER.equals(groupOrUser)) {
+        User user = UserCreatorImpl.INSTANCE.toUser(context);
+        alert.setTitle("Add to friends");
+        alert.setContentText("User " + user.getUsername() + " sent a request to add to friends. \n Do you want to add the user " + user.getUsername() + " as a friend?");
+      } else {
+        GroupMapImpl groupMap = (GroupMapImpl) GroupMapParserImpl.getInstance().jsonStringToGroupMap(context);
+        String name = groupMap.getMap().keySet().iterator().next();
+        alert.setTitle("Add to group");
+        alert.setContentText("Administrator of the group <" + name + "> sent you a request to add to the group.\n Do you want to join a group <" + name + ">?");
+      }
+      Optional<ButtonType> result = alert.showAndWait();
+      reaction[0] =  result.isPresent() && result.get() == ButtonType.OK;
+      work[0] = false;
+    });
+    while(work[0] && time < 1790) {
+      time ++;
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        LOG.error(e.getMessage());
+      }
+    }
+    return reaction[0];
   }
 }

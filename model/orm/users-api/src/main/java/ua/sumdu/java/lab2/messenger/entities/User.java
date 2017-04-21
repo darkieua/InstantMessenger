@@ -150,8 +150,7 @@ public class User implements Cloneable, Serializable {
   public static User getCurrentUser() {
     try {
       String genreJson = IOUtils.toString(new FileReader(new File(getUserConfigPath())));
-      ObjectMapper mapper = new ObjectMapper();
-      JsonNode node = mapper.readTree(genreJson);
+      JsonNode node = new ObjectMapper().readTree(genreJson);
       String username = node.get("username").asText();
       String email = node.get("email").asText();
       int port = node.get("port").asInt();
@@ -164,8 +163,23 @@ public class User implements Cloneable, Serializable {
     }
   }
 
+  public static long getLastLoginTime() {
+    try {
+      String genreJson = IOUtils.toString(new FileReader(new File(getUserConfigPath())));
+      JsonNode node = new ObjectMapper().readTree(genreJson);
+      return Long.parseLong(node.get("lastLoginTime").asText());
+    } catch (IOException e) {
+      LOG.error("Config file not found",e);
+      return 0;
+    }
+  }
+
   public static String getFriendsPath() {
     return getUserHome() + "/InstantMessenger/friends.json";
+  }
+
+  public static String getBlackListPath() {
+    return getUserHome() + "/InstantMessenger/blacklist.json";
   }
 
   public static String getGroupsPath() {
@@ -191,11 +205,18 @@ public class User implements Cloneable, Serializable {
   }
 
   private static String getUserHome() {
-    return System.getProperty("user.home");
+    return System.getProperty("user.home") + "/AppData/Local/";
   }
 
   public static String getDirectoryForDownloadFiles() {
-    return getUserHome();
+    try {
+      String genreJson = IOUtils.toString(new FileReader(new File(getUserConfigPath())));
+      JsonNode node = new ObjectMapper().readTree(genreJson);
+      return node.get("downloadPath").asText();
+    } catch (IOException e) {
+      LOG.error(e.getMessage(), e);
+      return "";
+    }
   }
 
   /**
@@ -203,14 +224,16 @@ public class User implements Cloneable, Serializable {
    */
 
   public static File getSystemMessageFile() {
-    File system = new File(getUrlMessageDirectory() + "/system.xml");
-    if (!system.exists()) {
-      try {
-        system.createNewFile();
-      } catch (IOException e) {
-        LOG.error("System file not found",e);
+    synchronized (User.class) {
+      File system = new File(getUrlMessageDirectory() + "/system.xml");
+      if (!system.exists()) {
+        try {
+          system.createNewFile();
+        } catch (IOException e) {
+          LOG.error("System file not found",e);
+        }
       }
+      return system;
     }
-    return system;
   }
 }
