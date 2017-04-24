@@ -8,32 +8,32 @@ import ua.sumdu.java.lab2.messenger.api.Settings;
 import ua.sumdu.java.lab2.messenger.api.SettingsParser;
 
 public class SettingsParserImpl implements SettingsParser {
-  public static final Logger LOG = LoggerFactory.getLogger(SettingsParserImpl.class);
+    public static final Logger LOG = LoggerFactory.getLogger(SettingsParserImpl.class);
 
-  /**
-   * Converting settings to json string.
-   */
+    /**
+     * Converting settings to json string.
+     */
 
-  public String settingsToJson(Settings settings) {
-    Map<String, String> settingsMap = settings.getSettingsMap();
-    JSONObject jsonObject = new JSONObject();
-    for (String setting : settingsMap.keySet()) {
-      jsonObject.put(setting, settingsMap.get(setting));
+    public String settingsToJson(Settings settings) {
+        Map<String, String> settingsMap = settings.getSettingsMap();
+        JSONObject jsonObject = new JSONObject();
+        for (String setting : settingsMap.keySet()) {
+            jsonObject.put(setting, settingsMap.get(setting));
+        }
+        return jsonObject.toString();
     }
-    return jsonObject.toString();
-  }
 
-  /**
-   * Converting json string to settings.
-   */
+    /**
+     * Converting json string to settings.
+     */
 
-  public Settings jsonToSettings(String json) {
-    Settings settings = new SettingsImpl();
-    JSONObject jsonObject = new JSONObject(json);
+    public Settings jsonToSettings(String json) {
+        Settings settings = new SettingsImpl();
+        JSONObject jsonObject = new JSONObject(json);
 
-    for (String setting : jsonObject.keySet()) {
-      settings.putSetting(setting, (String)jsonObject.get(setting));
+        for (String setting : jsonObject.keySet()) {
+            settings.putSetting(setting, (String)jsonObject.get(setting));
+        }
+        return settings;
     }
-    return settings;
-  }
 }

@@ -5,21 +5,21 @@ import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 
 public interface RequestGenerating {
 
-  String addToFriends();
+    String addToFriends();
 
-  String addToGroup(String groupName);
+    String addToGroup(String groupName);
 
-  String newMessage(Message message);
+    String newMessage(Message message);
 
-  String newMessageToGroup(Message message);
+    String newMessageToGroup(Message message);
 
-  String updateGroupList(String groupName);
+    String updateGroupList(String groupName);
 
-  String requestForUpdateGroupList(String groupName);
+    String requestForUpdateGroupList(String groupName);
 
-  String messagesFromSpecificDate(long date);
+    String messagesFromSpecificDate(long date);
 
-  String groupMessagesFromSpecificDate(long date, String groupName);
+    String groupMessagesFromSpecificDate(long date, String groupName);
 
-  String dataRequest(SentFiles files);
+    String dataRequest(SentFiles files);
 }

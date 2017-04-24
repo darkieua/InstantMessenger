@@ -4,7 +4,7 @@ import java.net.InetAddress;
 
 public interface Client {
 
-  boolean socketInit(InetAddress adr, int port);
+    boolean socketInit(InetAddress adr, int port);
 
-  String interactionWithServer();
+    String interactionWithServer();
 }

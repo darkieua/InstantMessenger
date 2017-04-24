@@ -24,85 +24,85 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class NewUserRegistrationController {
-  private static final Logger LOG = LoggerFactory.getLogger(NewUserRegistrationController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NewUserRegistrationController.class);
 
-  @FXML
-  public TextField username;
+    @FXML
+    public TextField username;
 
-  @FXML
-  public TextField email;
+    @FXML
+    public TextField email;
 
-  @FXML
-  public Label directoryPath;
+    @FXML
+    public Label directoryPath;
 
-  @FXML
-  public Label error;
+    @FXML
+    public Label error;
 
-  private String path = "";
+    private String path = "";
 
-  public void registration(ActionEvent actionEvent) {
-    Node source = (Node) actionEvent.getSource();
-    Stage stage = (Stage) source.getScene().getWindow();
-    String errorMessage = "";
-    if (!UserCreatorImpl.INSTANCE.validateUsername(username.getText())) {
-      LOG.warn("Invalid username");
-      errorMessage += "Invalid username\n";
+    public void registration(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        String errorMessage = "";
+        if (!UserCreatorImpl.INSTANCE.validateUsername(username.getText())) {
+            LOG.warn("Invalid username");
+            errorMessage += "Invalid username\n";
+        }
+        if (!UserCreatorImpl.INSTANCE.validateEmail(email.getText())) {
+            LOG.warn("Invalid e-mail");
+            errorMessage += "Invalid e-mail\n";
+        }
+        if ("".equals(path)) {
+            LOG.warn("Folder for saving files is not selected");
+            errorMessage += "Folder for saving files is not selected\n";
+        }
+        if ("".equals(errorMessage)) {
+            error.setText("");
+            SettingsImpl settings = new SettingsImpl();
+            try {
+                String ipAddress = InetAddress.getLocalHost().getHostAddress();
+                settings.putSetting("ipAddress", ipAddress);
+            } catch (UnknownHostException e) {
+                LOG.error(e.getMessage(), e);
+                settings.putSetting("ipAddress", "");
+            }
+            settings.putSetting("port", String.valueOf(9696));
+            settings.putSetting("downloadPath", path);
+            settings.putSetting("username", username.getText());
+            settings.putSetting("email", email.getText());
+            Date out = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+            settings.putSetting("lastLoginTime", String.valueOf(out.getTime()));
+            SettingsParserImpl settingsParser = new SettingsParserImpl();
+            String result = settingsParser.settingsToJson(settings);
+            File userConfig = new File(User.getUserConfigPath());
+            try {
+                userConfig.createNewFile();
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+            }
+            writeToFile(userConfig, result);
+            stage.close();
+        } else {
+            error.setText(errorMessage);
+        }
     }
-    if (!UserCreatorImpl.INSTANCE.validateEmail(email.getText())) {
-      LOG.warn("Invalid e-mail");
-      errorMessage += "Invalid e-mail\n";
-    }
-    if ("".equals(path)) {
-      LOG.warn("Folder for saving files is not selected");
-      errorMessage += "Folder for saving files is not selected\n";
-    }
-    if ("".equals(errorMessage)) {
-      error.setText("");
-      SettingsImpl settings = new SettingsImpl();
-      try {
-        String ipAddress = InetAddress.getLocalHost().getHostAddress();
-        settings.putSetting("ipAddress", ipAddress);
-      } catch (UnknownHostException e) {
-        LOG.error(e.getMessage(), e);
-        settings.putSetting("ipAddress", "");
-      }
-      settings.putSetting("port", String.valueOf(9696));
-      settings.putSetting("downloadPath", path);
-      settings.putSetting("username", username.getText());
-      settings.putSetting("email", email.getText());
-      Date out = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-      settings.putSetting("lastLoginTime", String.valueOf(out.getTime()));
-      SettingsParserImpl settingsParser = new SettingsParserImpl();
-      String result = settingsParser.settingsToJson(settings);
-      File userConfig = new File(User.getUserConfigPath());
-      try {
-        userConfig.createNewFile();
-      } catch (IOException e) {
-        LOG.error(e.getMessage(), e);
-      }
-      writeToFile(userConfig, result);
-      stage.close();
-    } else {
-      error.setText(errorMessage);
-    }
-  }
 
-  public static void writeToFile(File file , String str) {
-    try (FileWriter writer = new FileWriter(file, false)) {
-      writer.write(str);
-      writer.flush();
-      writer.close();
-    } catch (IOException e) {
-      LOG.error(e.getMessage(), e);
+    public static void writeToFile(File file , String str) {
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write(str);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
-  }
 
-  public void directorySelection(ActionEvent actionEvent) {
-    Node source = (Node) actionEvent.getSource();
-    Stage stage = (Stage) source.getScene().getWindow();
-    DirectoryChooser directoryChooser = new DirectoryChooser();
-    File selectedDirectory = directoryChooser.showDialog(stage);
-    directoryPath.setText(selectedDirectory.getPath());
-    path = selectedDirectory.getPath();
-  }
+    public void directorySelection(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(stage);
+        directoryPath.setText(selectedDirectory.getPath());
+        path = selectedDirectory.getPath();
+    }
 }

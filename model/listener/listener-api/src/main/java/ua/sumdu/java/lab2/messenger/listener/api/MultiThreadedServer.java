@@ -4,9 +4,9 @@ import java.util.concurrent.ExecutorService;
 
 public interface MultiThreadedServer {
 
-  ExecutorService getService();
+    ExecutorService getService();
 
-  void openServerSocket();
+    void openServerSocket();
 
-  void stop();
+    void stopServer();
 }

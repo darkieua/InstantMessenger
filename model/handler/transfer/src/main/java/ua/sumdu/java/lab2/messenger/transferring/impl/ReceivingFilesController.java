@@ -2,52 +2,81 @@ package ua.sumdu.java.lab2.messenger.transferring.impl;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 
 public class ReceivingFilesController {
-  @FXML
-  public Label message;
+    @FXML
+    private Label message;
 
-  @FXML
-  public TableView files;
+    @FXML
+    private TableView<SentFiles.FileCharacteristics> files;
 
-  @FXML
-  public TableColumn fileName;
+    @FXML
+    private TableColumn fileName;
 
-  @FXML
-  public TableColumn fileSize;
+    @FXML
+    private TableColumn fileSize;
 
-  private SentFiles sentFiles;
+    @FXML
+    private Button remote;
 
-  private SentFiles newFileList;
+    private SentFiles sentFiles;
 
-  private String name;
+    private SentFiles newFileList;
+
+    private String name;
+
+    public final void initAfterAddParametrs() {
+        fileName.setCellValueFactory(
+                new PropertyValueFactory<>("name"));
+        fileSize.setCellValueFactory(
+                new PropertyValueFactory<>("shortSize"));
+        files.setItems(sentFiles.getObs());
+        files.getSelectionModel().selectedItemProperty().addListener(
+                (observableValue, oldValue,
+                 newValue) -> remote.setVisible(true));
+    }
 
 
-  public SentFiles getNewFileList() {
-    return newFileList;
-  }
+    public SentFiles getNewFileList() {
+        return newFileList;
+    }
 
-  public void setSentFiles(SentFiles sentFiles) {
-    this.sentFiles = sentFiles;
-  }
+    public void setSentFiles(SentFiles sentFiles) {
+         this.sentFiles = sentFiles;
+    }
 
-  public void buttonCancel() {
-    newFileList = new SentFiles();
-  }
+    public void buttonCancel(ActionEvent actionEvent) {
+        newFileList = new SentFiles();
+        closeStage(actionEvent);
+    }
 
-  public void buttonRemote(ActionEvent actionEvent) {
-    System.out.println(sentFiles.toString());
-  }
+    public void buttonRemote() {
+       SentFiles.FileCharacteristics file = files.getSelectionModel().getSelectedItem();
+       sentFiles.getList().remove(file);
+       sentFiles.updateObs();
+       files.setItems(sentFiles.getObs());
+    }
 
-  public void buttonOk(ActionEvent actionEvent) {
-    System.out.println(name);
-  }
+    public void buttonOk(ActionEvent actionEvent) {
+        newFileList = sentFiles;
+        closeStage(actionEvent);
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
+        
+    public void closeStage(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
 }

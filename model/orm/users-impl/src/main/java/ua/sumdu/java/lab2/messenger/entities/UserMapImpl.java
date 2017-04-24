@@ -9,57 +9,57 @@ import ua.sumdu.java.lab2.messenger.api.UserMap;
 
 public class UserMapImpl implements UserMap, Cloneable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(UserMapImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserMapImpl.class);
 
-  private Map<String, User> map;
+    private Map<String, User> map;
 
-  public UserMapImpl() {
-    LOG.debug("Creating an object of class UserMapImpl");
-    map = new TreeMap<>();
-  }
-
-  public Map<String, User> getMap() {
-    return map;
-  }
-
-  public UserMap setMap(Map<String, User> map) {
-    this.map = map;
-    return this;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public UserMapImpl() {
+        LOG.debug("Creating an object of class UserMapImpl");
+        map = new TreeMap<>();
     }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
+
+    public Map<String, User> getMap() {
+        return map;
     }
-    UserMapImpl userMap = (UserMapImpl) obj;
-    return Objects.equals(map, userMap.map);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(map);
-  }
+    public UserMap setMap(Map<String, User> map) {
+        this.map = map;
+        return this;
+    }
 
-  @Override
-  public String toString() {
-    return "UserMapImpl{" + "map=" + map + '}';
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        UserMapImpl userMap = (UserMapImpl) obj;
+        return Objects.equals(map, userMap.map);
+    }
 
-  @Override
-  public void addUser(ua.sumdu.java.lab2.messenger.entities.User user) {
-    LOG.debug("Adding a user to UserMapImpl");
-    String key = user.getEmail().split("@")[0];
-    map.put(key, user);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(map);
+    }
 
-  @Override
-  public void removeUser(ua.sumdu.java.lab2.messenger.entities.User user) {
-    LOG.debug("Delete a user from UserMapImpl");
-    String key = user.getEmail().split("@")[0];
-    map.remove(key);
-  }
+    @Override
+    public String toString() {
+        return "UserMapImpl{" + "map=" + map + '}';
+    }
+
+    @Override
+    public void addUser(ua.sumdu.java.lab2.messenger.entities.User user) {
+        LOG.debug("Adding a user to UserMapImpl");
+        String key = user.getEmail().split("@")[0];
+        map.put(key, user);
+    }
+
+    @Override
+    public void removeUser(ua.sumdu.java.lab2.messenger.entities.User user) {
+        LOG.debug("Delete a user from UserMapImpl");
+        String key = user.getEmail().split("@")[0];
+        map.remove(key);
+    }
 }

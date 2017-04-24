@@ -21,56 +21,55 @@ import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
 
 public class ParsingMessages {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ParsingMessages.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParsingMessages.class);
 
-  /**
-   *Selecting from the document messages that were sent later than some time.
-   */
+    /**
+     *Selecting from the document messages that were sent later than some time.
+     */
 
-  public static MessageMap getMessagesFromSpecificDate(Document doc, long date) {
-    XPathFactory pathFactory = XPathFactory.newInstance();
-    XPath xpath = pathFactory.newXPath();
-    XPathExpression expr;
-    if (Objects.isNull(doc.getDocumentElement())) {
-      LOG.warn("Message map is empty");
-      return new MessageMapImpl();
+    public static MessageMap getMessagesFromSpecificDate(Document doc, long date) {
+        XPathFactory pathFactory = XPathFactory.newInstance();
+        XPath xpath = pathFactory.newXPath();
+        XPathExpression expr;
+        if (Objects.isNull(doc.getDocumentElement())) {
+            return new MessageMapImpl();
+        }
+        try {
+            expr = xpath.compile("messages/message[@date>"
+                    + date + "]");
+            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            MessageMapImpl map = new MessageMapImpl();
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
+                map.addMessage(parseMessage(node));
+            }
+            return map;
+        } catch (XPathExpressionException e) {
+            LOG.error(e.getMessage(), e);
+            return new MessageMapImpl();
+        }
     }
-    try {
-      expr = xpath.compile("messages/message[@date>"
-          + date + "]");
-      NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-      MessageMapImpl map = new MessageMapImpl();
-      for (int i = 0; i < nodes.getLength(); i++) {
-        Node node = nodes.item(i);
-        map.addMessage(parseMessage(node));
-      }
-      return map;
-    } catch (XPathExpressionException e) {
-      LOG.error(e.getMessage(), e);
-      return new MessageMapImpl();
-    }
-  }
 
-  /**
-   * Method parses the messages of the current node.
-   */
+    /**
+     * Method parses the messages of the current node.
+     */
 
-  public static Message parseMessage(Node node) {
-    if (node.getNodeType() == node.ELEMENT_NODE) {
-      Element elem = (Element) node;
-      long countMilliSeconds = Long.parseLong(elem.getAttribute("date"));
-      LocalDateTime date =
-          LocalDateTime.ofInstant(Instant.ofEpochMilli(countMilliSeconds),
-              ZoneId.systemDefault());
-      String text = elem.getElementsByTagName("text").item(0).getTextContent();
-      String senderUsername = elem.getElementsByTagName("senderUsername").item(0)
-          .getTextContent();
-      String receiverUsername = elem.getElementsByTagName("receiverUsername").item(0)
-          .getTextContent();
-      return new Message(senderUsername, receiverUsername, text, date);
-    } else {
-      return null;
+    public static Message parseMessage(Node node) {
+        if (node.getNodeType() == node.ELEMENT_NODE) {
+            Element elem = (Element) node;
+            long countMilliSeconds = Long.parseLong(elem.getAttribute("date"));
+            LocalDateTime date =
+                    LocalDateTime.ofInstant(Instant.ofEpochMilli(countMilliSeconds),
+                            ZoneId.systemDefault());
+            String text = elem.getElementsByTagName("text").item(0).getTextContent();
+            String senderUsername = elem.getElementsByTagName("senderUsername").item(0)
+                    .getTextContent();
+            String receiverUsername = elem.getElementsByTagName("receiverUsername").item(0)
+                    .getTextContent();
+            return new Message(senderUsername, receiverUsername, text, date);
+        } else {
+            return null;
+        }
     }
-  }
 
 }

@@ -4,13 +4,13 @@ import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 
 public interface DataTransfer {
 
-  String dataRequest(SentFiles files);
+    String dataRequest(SentFiles files);
 
-  String requestParsing(String context);
+    String requestParsing(String context);
 
-  String dataAcquisition(String response);
+    String dataAcquisition(String response);
 
-  String parsingDataAcquisitionResponse(String context);
+    String parsingDataAcquisitionResponse(String context);
 
-  String parsingDataSendingRejectedResponse(String context);
+    String parsingDataSendingRejectedResponse(String context);
 }

@@ -9,66 +9,66 @@ import ua.sumdu.java.lab2.messenger.api.GroupMap;
 
 public class GroupMapImpl implements GroupMap, Cloneable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GroupMapImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GroupMapImpl.class);
 
-  private Map<String, UserMapImpl> map;
+    private Map<String, UserMapImpl> map;
 
-  public GroupMapImpl() {
-    map = new TreeMap<>();
-    LOG.debug("Creating an object of class GroupMapImpl");
-  }
-
-  @Override
-  public void addUser(String chatName, User user) {
-    LOG.debug("Adding a user to GroupMapImpl");
-    if (!map.containsKey(chatName)) {
-      UserMapImpl users = new UserMapImpl();
-      map.put(chatName, users);
+    public GroupMapImpl() {
+        map = new TreeMap<>();
+        LOG.debug("Creating an object of class GroupMapImpl");
     }
-    UserMapImpl userMap = map.get(chatName);
-    if (Objects.isNull(userMap)) {
-      map.put(chatName, new UserMapImpl());
+
+    @Override
+    public void addUser(String chatName, User user) {
+        LOG.debug("Adding a user to GroupMapImpl");
+        if (!map.containsKey(chatName)) {
+            UserMapImpl users = new UserMapImpl();
+            map.put(chatName, users);
+        }
+        UserMapImpl userMap = map.get(chatName);
+        if (Objects.isNull(userMap)) {
+            map.put(chatName, new UserMapImpl());
+        }
+        map.get(chatName).addUser(user);
     }
-    map.get(chatName).addUser(user);
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        GroupMapImpl groupMap = (GroupMapImpl) obj;
+        return Objects.equals(map, groupMap.map);
     }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(map);
     }
-    GroupMapImpl groupMap = (GroupMapImpl) obj;
-    return Objects.equals(map, groupMap.map);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(map);
-  }
+    @Override
+    public void deleteUser(String chatName, User user) {
+        LOG.debug("Delete a user grom GroupMapImpl");
 
-  @Override
-  public void deleteUser(String chatName, User user) {
-    LOG.debug("Delete a user grom GroupMapImpl");
-
-    if (map.containsKey(chatName)) {
-      map.get(chatName).removeUser(user);
+        if (map.containsKey(chatName)) {
+            map.get(chatName).removeUser(user);
+        }
     }
-  }
 
-  public Map<String, UserMapImpl> getMap() {
-    return map;
-  }
+    public Map<String, UserMapImpl> getMap() {
+        return map;
+    }
 
-  public GroupMapImpl setMap(Map<String, UserMapImpl> map) {
-    this.map = map;
-    return this;
-  }
+    public GroupMapImpl setMap(Map<String, UserMapImpl> map) {
+        this.map = map;
+        return this;
+    }
 
-  @Override
-  public String toString() {
-    return "GroupMapImpl{" + "map=" + map + '}';
-  }
+    @Override
+    public String toString() {
+        return "GroupMapImpl{" + "map=" + map + '}';
+    }
 }
