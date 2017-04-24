@@ -4,6 +4,7 @@ import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -13,6 +14,8 @@ import javafx.scene.control.ButtonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.MessageMap;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.api.RequestParsing;
@@ -29,7 +32,7 @@ public class RequestParsingImpl implements RequestParsing {
     private static final String USER = "user";
 
     @Override
-    public String requestParser(String string) {
+    public String requestParsing(String string) {
         int requestType = Integer.parseInt(string.substring(0,4));
         String context = string.substring(5);
         if (requestType > 999 && requestType <= 2999) {
@@ -39,9 +42,44 @@ public class RequestParsingImpl implements RequestParsing {
             return receivingDataAndMessages(requestType, context);
         } else if (requestType > 3999 && requestType <= 5999) {
             return updateRequestsAndUpdateData(requestType, context);
+        } else if (requestType > 6999 && requestType <= 7999) {
+            return deleteRequests(requestType, context);
         } else {
             return String.valueOf(UNIDENTIFIED_REQUEST.getResponseNumber());
         }
+    }
+
+    private String deleteRequests(int requestType, String context) {
+        if (requestType == REMOVING_FROM_FRIENDS.getRequestNumber()) {
+            UserMap friends = UserMapParserImpl.getInstance().getFriends();
+            for (User user : friends.getMap().values()) {
+                if (context.equals(user.getUsername())) {
+                    friends.removeUser(user);
+                    break;
+                }
+            }
+            File system = User.getSystemMessageFile();
+            MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
+            Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
+                    "User " + context + " deleted you from friends", LocalDateTime.now());
+            messages.addMessage(newMessage);
+            XmlParser.INSTANCE.write(messages, system);
+        } else if (requestType == USER_LEFT_GROUP.getRequestNumber()) {
+            String[] words = context.split("==");
+            GroupMap groupMap = GroupMapParserImpl.getInstance().getGroupMap();
+            for (User user : groupMap.getMap().get(words[0]).getMap().values()) {
+                if (words[1].equals(user.getUsername())) {
+                    groupMap.deleteUser(words[0], user);
+                    break;
+                }
+            }
+            GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groupMap));
+            File groupFile = new File(User.getUrlMessageDirectory() + "/" + words[0] + ".xml");
+            MessageMap messageMap = XmlParser.INSTANCE.read(groupFile);
+            messageMap.addMessage(new Message("system", words[0], "User " + words[1] + " left group.", LocalDateTime.now()));
+            XmlParser.INSTANCE.write(messageMap, groupFile);
+        }
+        return String.valueOf(SUCCESSFUL.getResponseNumber());
     }
 
     private String dataRequests(int requestType, String context) {
@@ -126,10 +164,10 @@ public class RequestParsingImpl implements RequestParsing {
 
     private String addGroup(String str) {
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
-        GroupMapImpl groupMap = (GroupMapImpl) groupMapParser.jsonStringToGroupMap(str);
-        GroupMapImpl currentGroups = (GroupMapImpl) groupMapParser.getGroupMap();
+        GroupMap groupMap = groupMapParser.jsonStringToGroupMap(str);
+        GroupMap currentGroups = groupMapParser.getGroupMap();
         String key = (String) groupMap.getMap().keySet().toArray()[0];
-        UserMapImpl userMap = groupMap.getMap().get(key);
+        UserMap userMap = groupMap.getMap().get(key);
         for (User user: userMap.getMap().values()) {
             currentGroups.addUser(key, user);
         }
@@ -164,12 +202,11 @@ public class RequestParsingImpl implements RequestParsing {
     /**
      * Processing group list updates.
      */
-
     public void updateGroup(String str) {
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
-        GroupMapImpl currentGroup = (GroupMapImpl) groupMapParser.jsonStringToGroupMap(str);
+        GroupMap currentGroup = groupMapParser.jsonStringToGroupMap(str);
         String groupName = (String) currentGroup.getMap().keySet().toArray()[0];
-        GroupMapImpl allGroup = (GroupMapImpl) groupMapParser.getGroupMap();
+        GroupMap allGroup = groupMapParser.getGroupMap();
         allGroup.getMap().remove(groupName);
         for (User user : currentGroup.getMap().get(groupName).getMap().values()) {
             allGroup.addUser(groupName, user);

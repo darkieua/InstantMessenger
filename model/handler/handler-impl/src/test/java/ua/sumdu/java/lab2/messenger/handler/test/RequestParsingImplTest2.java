@@ -71,13 +71,13 @@ public class RequestParsingImplTest2 {
     @Test
     public void newMessageToGroup(Message mess) {
         mess.setReceiver("testGroup");
-        String request = requestGenerating.newMessageToGroup(mess);
+        String request = requestGenerating.createRequestForNewGroupMessage(mess);
         String receiver = mess.getReceiver();
         String path = User.getUrlMessageDirectory() + "/" + receiver + ".xml";
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(new File(path));
         messageMap.addMessage(mess);
         XmlParser.INSTANCE.write(messageMap, new File(path));
-        requestParsing.requestParser(request);
+        requestParsing.requestParsing(request);
         MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(new File(path));
         Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),
             messageMap.toString()), newMap, messageMap);
@@ -97,7 +97,7 @@ public class RequestParsingImplTest2 {
         allGroups.addUser(chatName, user);
         String request = UPDATE_GROUP_LIST.getRequestNumber() + "="
             + groupMapParser.groupMapToJSonString(groupMap);
-        requestParsing.requestParser(request);
+        requestParsing.requestParsing(request);
         GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
         Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(), allGroups.toString()),
             newGroups, allGroups);
@@ -108,19 +108,19 @@ public class RequestParsingImplTest2 {
     @Test
     public void requestForUpdateLists() {
         String groupName = "main";
-        String request1 = requestGenerating.requestForUpdateGroupList(groupName);
+        String request1 = requestGenerating.createRequestForUpdateGroupList(groupName);
         String response1 = UPDATED_GROUP_LIST.getResponseNumber() + "=" + groupName;
-        String newResponse1 = requestParsing.requestParser(request1);
+        String newResponse1 = requestParsing.requestParsing(request1);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1,
             response1);
-        String request2 = requestGenerating.messagesFromSpecificDate(1);
+        String request2 = requestGenerating.createRequestForMessagesFromSpecificDate(1);
         String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1 + "=" + User.getCurrentUser().getUsername();
-        String newResponse2 = requestParsing.requestParser(request2);
+        String newResponse2 = requestParsing.requestParsing(request2);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2,
             response2);
-        String request3 = requestGenerating.groupMessagesFromSpecificDate(1, groupName);
+        String request3 = requestGenerating.createRequestForGroupMessagesFromSpecificDate(1, groupName);
         String response3 = REQUESTED_GROUP_MESSAGES.getResponseNumber() + "=" + 1 + "=" + groupName;
-        String newResponse3 = requestParsing.requestParser(request3);
+        String newResponse3 = requestParsing.requestParsing(request3);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse3, response3), newResponse3,
                 response3);
     }
@@ -133,11 +133,11 @@ public class RequestParsingImplTest2 {
         UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
         Message mess = new Message(user1.getUsername(), User.getCurrentUser().getUsername(), "text",
             LocalDateTime.now());
-        String request = requestGenerating.newMessage(mess);
+        String request = requestGenerating.createRequestForNewMessage(mess);
         String sender = mess.getSender();
         File messageFile = new File(User.getUrlMessageDirectory() + "/" + sender + ".xml");
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
-        requestParsing.requestParser(request);
+        requestParsing.requestParsing(request);
         MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newMap.toString(),    messageMap.toString()),
             newMap, messageMap);

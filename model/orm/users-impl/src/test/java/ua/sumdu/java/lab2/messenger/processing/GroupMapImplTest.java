@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
@@ -44,9 +46,9 @@ public class GroupMapImplTest {
     @DataProvider
     public static Object[][] dataForDelete() throws UnknownHostException {
         Object[][] obj = data();
-        Map<String, UserMapImpl> map0 = (Map<String, UserMapImpl>) obj[0][0];
-        Map<String, UserMapImpl> map = (Map<String, UserMapImpl>) obj[0][0];
-        GroupMapImpl group0 = new GroupMapImpl();
+        Map<String, UserMap> map0 = (Map<String, UserMap>) obj[0][0];
+        Map<String, UserMap> map = (Map<String, UserMap>) obj[0][0];
+        GroupMap group0 = new GroupMapImpl();
         group0.setMap(map0);
         GroupMapImpl group = new GroupMapImpl();
         group.setMap(map);
@@ -56,9 +58,9 @@ public class GroupMapImplTest {
         User user1 = userMap.getMap().get(USER1);
         map.get(name).getMap().remove(USER1);
         res[0] = new Object[]{group0, group, name, user1};
-        Map<String, UserMapImpl> map1 = new TreeMap<>();
+        Map<String, UserMap> map1 = new TreeMap<>();
         map1.putAll(map);
-        Map<String, UserMapImpl> map2 = new TreeMap<>();
+        Map<String, UserMap> map2 = new TreeMap<>();
         map2.putAll(map1);
         User user5 = userMap.getMap().get("user5");
         User user3 = userMap.getMap().get("user3");
@@ -76,7 +78,7 @@ public class GroupMapImplTest {
 
     @Test
     @UseDataProvider("data")
-    public void addUser(Map<String, UserMapImpl> map, String nameChat, UserMapImpl users) throws UnknownHostException {
+    public void addUser(Map<String, UserMap> map, String nameChat, UserMapImpl users) throws UnknownHostException {
         GroupMapImpl mapForGroup = new GroupMapImpl();
         for (User user :users.getMap().values()) {
             mapForGroup.addUser(nameChat, user);
@@ -94,13 +96,13 @@ public class GroupMapImplTest {
     @DataProvider
     public static Object[] dataForEquals() throws UnknownHostException {
         Object[][] obj = data();
-        Map<String, UserMapImpl> group = (Map<String, UserMapImpl>) obj[0][0];
+        Map<String, UserMap> group = (Map<String, UserMap>) obj[0][0];
         GroupMapImpl groupMap = new GroupMapImpl();
         groupMap.setMap(group);
         String name = (String) obj[0][1];
         GroupMapImpl newGroup = new GroupMapImpl();
-        Set<Map.Entry<String, UserMapImpl>> mainSet = group.entrySet();
-        for (Map.Entry<String, UserMapImpl> entry :mainSet) {
+        Set<Map.Entry<String, UserMap>> mainSet = group.entrySet();
+        for (Map.Entry<String, UserMap> entry :mainSet) {
             for (User user : entry.getValue().getMap().values()) {
                 newGroup.addUser(entry.getKey(), user);
             }

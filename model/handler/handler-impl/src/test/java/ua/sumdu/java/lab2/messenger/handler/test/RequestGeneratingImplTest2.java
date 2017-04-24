@@ -47,7 +47,7 @@ public class RequestGeneratingImplTest2 {
     @Test
     public void requestForUpdateGroupList() {
         String chatName = "testGroup";
-        String result = requestGenerating.requestForUpdateGroupList(chatName);
+        String result = requestGenerating.createRequestForUpdateGroupList(chatName);
         String correctRequest = REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber() + "=" + chatName;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
     }
@@ -55,7 +55,7 @@ public class RequestGeneratingImplTest2 {
     @Test
     public void messagesFromSpecificDate() {
         long date = 1;
-        String result = requestGenerating.messagesFromSpecificDate(date);
+        String result = requestGenerating.createRequestForMessagesFromSpecificDate(date);
         String correctRequest = MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "="
             + User.getCurrentUser().getUsername();
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
@@ -65,7 +65,7 @@ public class RequestGeneratingImplTest2 {
     public void groupMessageFromSpecificDate() {
         long date = 1;
         String groupName = "main";
-        String result = requestGenerating.groupMessagesFromSpecificDate(date, groupName);
+        String result = requestGenerating.createRequestForGroupMessagesFromSpecificDate(date, groupName);
         String correctRequest = GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber() + "=" + date + "="
                 + groupName;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);

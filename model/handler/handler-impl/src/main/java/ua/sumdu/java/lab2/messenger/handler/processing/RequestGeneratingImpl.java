@@ -19,13 +19,13 @@ public class RequestGeneratingImpl implements RequestGenerating {
     private static final Logger LOG = LoggerFactory.getLogger(RequestGeneratingImpl.class);
 
     @Override
-    public String addToFriends() {
+    public String creatingFriendsRequest() {
         return ADD_TO_FRIENDS.getRequestNumber() + "="
                 + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
     }
 
     @Override
-    public String addToGroup(String groupName) {
+    public String createJoinRequestToGroup(String groupName) {
         StringBuilder str = new StringBuilder();
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
         UserMapImpl groupUsers = (UserMapImpl) groupMapParser.getUserMap(groupName);
@@ -39,7 +39,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String newMessage(Message message) {
+    public String createRequestForNewMessage(Message message) {
         StringBuilder str = new StringBuilder();
         str.append(NEW_MESSAGE.getRequestNumber())
                     .append('=').append(createMessage(message));
@@ -47,7 +47,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String newMessageToGroup(Message message) {
+    public String createRequestForNewGroupMessage(Message message) {
         StringBuilder str = new StringBuilder();
         str.append(NEW_MESSAGE_TO_GROUP.getRequestNumber())
                     .append('=').append(createMessage(message));
@@ -56,14 +56,14 @@ public class RequestGeneratingImpl implements RequestGenerating {
 
     @Override
     public String updateGroupList(String groupName) {
-        String string = addToGroup(groupName);
+        String string = createJoinRequestToGroup(groupName);
         StringBuilder str = new StringBuilder();
         str.append(UPDATE_GROUP_LIST.getRequestNumber()).append(string.substring(4));
         return str.toString();
     }
 
     @Override
-    public String requestForUpdateGroupList(String groupName) {
+    public String createRequestForUpdateGroupList(String groupName) {
         StringBuilder str = new StringBuilder();
         str.append(REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber())
                 .append('=').append(groupName);
@@ -71,7 +71,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String messagesFromSpecificDate(long date) {
+    public String createRequestForMessagesFromSpecificDate(long date) {
         StringBuilder str = new StringBuilder();
         str.append(MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
                 .append('=').append(date).append('=').append(User.getCurrentUser().getUsername());
@@ -79,7 +79,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String groupMessagesFromSpecificDate(long date, String groupName) {
+    public String createRequestForGroupMessagesFromSpecificDate(long date, String groupName) {
         StringBuilder str = new StringBuilder();
         str.append(GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
                 .append('=').append(date).append('=').append(groupName);
@@ -87,7 +87,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String dataRequest(SentFiles files) {
+    public String createDataRequest(SentFiles files) {
         StringBuilder result = new StringBuilder();
         DataTransferImpl dataTransfer = new DataTransferImpl();
         result.append(DATA_REQUEST.getRequestNumber())
@@ -98,11 +98,20 @@ public class RequestGeneratingImpl implements RequestGenerating {
         return result.toString();
     }
 
+    @Override
+    public String creatingDeleteRequestFromFriends() {
+        return REMOVING_FROM_FRIENDS.getRequestNumber() + "=" + User.getCurrentUser().getUsername();
+    }
+
+    @Override
+    public String creatingDeleteRequestFromGroup(String groupName) {
+        return USER_LEFT_GROUP.getRequestNumber() + "=" + groupName + "==" + User.getCurrentUser().getUsername();
+    }
+
 
     /**
      * Converts a message to a xml string.
      */
-
     public String createMessage(Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;

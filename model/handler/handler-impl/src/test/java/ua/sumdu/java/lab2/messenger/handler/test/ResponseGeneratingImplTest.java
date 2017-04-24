@@ -127,7 +127,7 @@ public class ResponseGeneratingImplTest {
         String request = ADDED_TO_GROUP.getResponseNumber() + "=test_chat";
         String result = responseGenerating.responseGenerate(request);
         GroupMapImpl thisUser = new GroupMapImpl();
-        thisUser.addUser("test_chat", User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
+        thisUser.addUser("test_chat", User.getCurrentUser().setCategory(CategoryUsers.VISITOR));
         String correctResult = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser);
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
 

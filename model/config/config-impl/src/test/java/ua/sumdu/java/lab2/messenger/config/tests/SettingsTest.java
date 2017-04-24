@@ -20,9 +20,8 @@ public class SettingsTest {
     /**
      * Data for tests.
      */
-
     @DataProvider
-    public static Object[][] data() throws IOException {
+    public static Object[][] data() {
         Settings settings = new SettingsImpl();
         settings.putSetting("setting1", "value1");
         settings.putSetting("setting2", "value2");
@@ -31,7 +30,7 @@ public class SettingsTest {
 
     @Test
     @UseDataProvider("data")
-    public void writeAndReadJsonString(Settings settings) throws IOException {
+    public void writeAndReadJsonString(Settings settings) {
         SettingsParser parser = new SettingsParserImpl();
         String json = parser.settingsToJson(settings);
         Settings parsedSettings = parser.jsonToSettings(json);

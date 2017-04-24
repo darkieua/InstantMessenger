@@ -10,24 +10,24 @@ public class SettingsImpl implements Settings {
 
     private Map<String, String> settingsMap = new HashMap<String, String>();
 
-    public void putSetting(String setting, String value) {
+    public final void putSetting(final String setting, final String value) {
         settingsMap.put(setting, value);
     }
 
-    public void removeSetting(String setting) {
+    public final void removeSetting(final String setting) {
         settingsMap.remove(setting);
     }
 
-    public Map<String, String> getSettingsMap() {
+    public final Map<String, String> getSettingsMap() {
         return settingsMap;
     }
 
-    public void setSettingsMap(Map<String, String> settingsMap) {
-        this.settingsMap = settingsMap;
+    public final void setSettingsMap(final Map<String, String> settingMap) {
+        this.settingsMap = settingMap;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -39,7 +39,7 @@ public class SettingsImpl implements Settings {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(settingsMap);
     }
 }

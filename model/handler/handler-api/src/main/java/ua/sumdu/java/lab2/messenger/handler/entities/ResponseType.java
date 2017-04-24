@@ -20,7 +20,7 @@ public enum ResponseType {
 
   private int responseNumber;
 
-  ResponseType(int responseNumber) {
-    this.responseNumber = responseNumber;
+  ResponseType(final int response) {
+    this.responseNumber = response;
   }
 }

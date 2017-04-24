@@ -54,7 +54,7 @@ public final class GroupMapParserImpl implements GroupMapParser {
     @Override
     public GroupMap jsonStringToGroupMap(String jsonString) {
         LOG.debug("Converting a Json String to a GroupMap");
-        GroupMapImpl groupMap = new GsonBuilder()
+        GroupMap groupMap = new GsonBuilder()
                 .setPrettyPrinting()
                 .create()
                 .fromJson(jsonString, GroupMapImpl.class);
@@ -81,7 +81,7 @@ public final class GroupMapParserImpl implements GroupMapParser {
     }
 
     public UserMap getUserMap(String groupName) {
-        UserMapImpl groupMap = ((GroupMapImpl)getGroupMap()).getMap().get(groupName);
+        UserMap groupMap = getGroupMap().getMap().get(groupName);
         if (Objects.isNull(groupMap)) {
             return new UserMapImpl();
         } else {
@@ -92,7 +92,6 @@ public final class GroupMapParserImpl implements GroupMapParser {
     /**
     * Method returns all the groups in which the user is.
     */
-
     public GroupMap getGroupMap() {
         try {
             File groups = new File(User.getGroupsPath());

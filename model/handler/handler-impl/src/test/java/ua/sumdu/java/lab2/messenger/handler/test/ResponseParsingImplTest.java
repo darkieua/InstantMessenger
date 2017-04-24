@@ -82,7 +82,9 @@ public class ResponseParsingImplTest {
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
         GroupMapImpl groupMap = (GroupMapImpl) groupMapParser.getGroupMap();
         GroupMapImpl groupForRequest = new GroupMapImpl();
-        groupForRequest.getMap().put(chatName, userMap);
+        for (User user : userMap.getMap().values()) {
+            groupForRequest.addUser(chatName, user);
+        }
         String request = UPDATED_GROUP_LIST.getResponseNumber() + "="
             + groupMapParser.groupMapToJSonString(groupForRequest);
         responseParsing.responseParsing(request);

@@ -6,11 +6,11 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import org.w3c.dom.Document;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.Message;
 import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.messenger.handler.api.ResponseParsing;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
@@ -102,7 +102,7 @@ public class ResponseParsingImpl implements ResponseParsing {
             GroupMapImpl currentGroups = (GroupMapImpl) groupMapParser.getGroupMap();
             currentGroups.addUser(groupName, newUser);
             groupMapParser.writeGroupMapToFile(groupMapParser.groupMapToJSonString(currentGroups));
-            UserMapImpl userMap = currentGroups.getMap().get(groupName);
+            UserMap userMap = currentGroups.getMap().get(groupName);
             GroupMapImpl updatedGroup = new GroupMapImpl();
             for (User user : userMap.getMap().values()) {
                 updatedGroup.addUser(groupName, user);

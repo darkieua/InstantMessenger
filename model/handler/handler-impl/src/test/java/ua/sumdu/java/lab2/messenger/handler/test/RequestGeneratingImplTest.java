@@ -48,7 +48,7 @@ public class RequestGeneratingImplTest {
     public void addToFriends() {
         String str = User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
         String correctRequest = ADD_TO_FRIENDS.getRequestNumber() + "=" + str;
-        String result = requestGenerating.addToFriends();
+        String result = requestGenerating.creatingFriendsRequest();
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
     }
 
@@ -64,10 +64,12 @@ public class RequestGeneratingImplTest {
             .groupMapToJSonString(groups));
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
         GroupMapImpl desiredGroup = new GroupMapImpl();
-        desiredGroup.getMap().put(chatName, groups.getMap().get(chatName));
+        for (User user : groups.getMap().get(chatName).getMap().values()) {
+            desiredGroup.addUser(chatName, user);
+        }
         String correctRequest = ADD_TO_GROUP.getRequestNumber() + "=" +groupMapParser
             .groupMapToJSonString(desiredGroup);
-        String result = requestGenerating.addToGroup(chatName);
+        String result = requestGenerating.createJoinRequestToGroup(chatName);
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
         groups.getMap().remove(chatName);
         GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
@@ -77,7 +79,7 @@ public class RequestGeneratingImplTest {
     @UseDataProvider("messages")
     @Test
     public void newMessage(Message message) {
-        String result = requestGenerating.newMessage(message);
+        String result = requestGenerating.createRequestForNewMessage(message);
         String mess = requestGenerating.createMessage(message);
         String correctRequest = NEW_MESSAGE.getRequestNumber() + "=" + mess;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
@@ -88,7 +90,7 @@ public class RequestGeneratingImplTest {
     public void newMessageToGroup(Message message) {
         String chatName = "main";
         message.setReceiver(chatName);
-        String result = requestGenerating.newMessageToGroup(message);
+        String result = requestGenerating.createRequestForNewGroupMessage(message);
         String mess = requestGenerating.createMessage(message);
         String correctRequest = NEW_MESSAGE_TO_GROUP.getRequestNumber() + "=" + mess;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);

@@ -24,7 +24,7 @@ public class MockitoSocketTest {
     @Test
     public void userIsOfflineTest() throws UnknownHostException {
         RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
-        String request = requestGenerating.addToFriends();
+        String request = requestGenerating.creatingFriendsRequest();
         LocalDateTime date = LocalDateTime.now();
         InetAddress thisIp = InetAddress.getByName("localhost");
         ClientImpl client = spy(new ClientImpl(thisIp, 8048, request));

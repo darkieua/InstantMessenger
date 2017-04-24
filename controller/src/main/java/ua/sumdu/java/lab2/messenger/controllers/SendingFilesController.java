@@ -1,5 +1,9 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+
+import java.io.File;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,27 +13,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
+import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.listener.impl.ClientImpl;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 
-import java.io.File;
-import java.util.List;
-
 public class SendingFilesController {
     @FXML
     private RadioButton sendFilesToFriend;
-
-    @FXML
-    private ToggleGroup groupOrFriend;
-
-    @FXML
-    private RadioButton sendFilesToGroup;
 
     @FXML
     private Label choiceLabel;
@@ -59,52 +54,58 @@ public class SendingFilesController {
         fileSize.setCellValueFactory(
                 new PropertyValueFactory<>("shortSize"));
         fileTable.setItems(fileList.getObs());
-        fileTable.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, oldValue,
-                 newValue) -> remote.setVisible(true));
+        fileTable.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observableValue, oldValue, newValue) ->
+                                remote.setVisible(true));
     }
 
     public final void selectFiles(final ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
+        Stage stage = (Stage) ((Node) actionEvent.getSource())
+                .getScene()
+                .getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Sending files");
         List<File> files = fileChooser.showOpenMultipleDialog(stage);
-        String message = "";
+        StringBuilder message = new StringBuilder();
         for (File file : files) {
             if (file.getName().endsWith(".exe")) {
-                message += file.getName() + " (" + file.length() + ")\n";
+                message.append(file.getName())
+                        .append(" (")
+                        .append(file.length())
+                        .append(")\n");
             } else {
                 fileList.addFile(file);
             }
         }
         fileList.updateObs();
         fileTable.setItems(fileList.getObs());
-        if (!"".equals(message)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        if (!"".equals(message.toString())) {
+            Alert alert = new Alert(INFORMATION);
             alert.setTitle("Information");
             alert.setHeaderText("Successful");
             alert.setContentText("The following files can not be downloaded:\n"
-                    + message);
+                    + message.toString());
             alert.show();
         }
     }
 
     public final void sentFiles(final ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
+        Stage stage = (Stage) ((Node) actionEvent.getSource())
+                .getScene()
+                .getWindow();
         if (sendFilesToFriend.isSelected()) {
-            String userName = listChoiceBox
-                    .getSelectionModel()
+            String userName = listChoiceBox.getSelectionModel()
                     .getSelectedItem();
-            UserMapImpl friends = (UserMapImpl) UserMapParserImpl
-                    .getInstance()
+            UserMap friends = UserMapParserImpl.getInstance()
                     .getFriends();
-            for (User friend : friends.getMap().values()) {
+            for (User friend : friends.getMap()
+                    .values()) {
                 if (userName.equals(friend.getUsername())) {
                     workWithClient(friend);
                     stage.close();
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Alert alert = new Alert(INFORMATION);
                     alert.setTitle("Information");
                     alert.setHeaderText("Successful");
                     alert.setContentText("Request was successfully sent");
@@ -115,10 +116,10 @@ public class SendingFilesController {
         } else {
             String groupName = listChoiceBox.getSelectionModel()
                     .getSelectedItem();
-            UserMapImpl group = (UserMapImpl) GroupMapParserImpl
-                    .getInstance()
+            UserMap group = GroupMapParserImpl.getInstance()
                     .getUserMap(groupName);
-            for (User visitor : group.getMap().values()) {
+            for (User visitor : group.getMap()
+                    .values()) {
                 if (!User.getCurrentUser()
                         .getUsername()
                         .equals(visitor.getUsername())) {
@@ -126,7 +127,7 @@ public class SendingFilesController {
                 }
             }
             stage.close();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(INFORMATION);
             alert.setTitle("Information");
             alert.setHeaderText("Successful");
             alert.setContentText("Requests were successfully sent");
@@ -135,45 +136,46 @@ public class SendingFilesController {
     }
 
     private void workWithClient(final User user) {
-        RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
-        String result = requestGenerating.dataRequest(fileList);
-        new ClientImpl(user.getIpAddress(), user.getPort(), result).start();
+        new ClientImpl(user.getIpAddress(), user.getPort(),
+                new RequestGeneratingImpl()
+                        .createDataRequest(fileList))
+                .start();
     }
 
     public final void remoteFile() {
-        SentFiles.FileCharacteristics file = fileTable
-                .getSelectionModel()
+        SentFiles.FileCharacteristics file = fileTable.getSelectionModel()
                 .getSelectedItem();
-        fileList.getList().remove(file);
+        fileList.getList()
+                .remove(file);
         fileList.updateObs();
         fileTable.setItems(fileList.getObs());
     }
 
     public final void selectFriend() {
         choiceLabel.setText("Select friend: ");
-        UserMapImpl users = (UserMapImpl) UserMapParserImpl
-                .getInstance()
+        UserMap users = UserMapParserImpl.getInstance()
                 .getFriends();
         ObservableList<String> friendsName = FXCollections
                 .observableArrayList();
-        for (User user : users.getMap().values()) {
+        for (User user : users.getMap()
+                .values()) {
             friendsName.add(user.getUsername());
         }
         listChoiceBox.setItems(friendsName);
-        listChoiceBox.getSelectionModel().selectFirst();
+        listChoiceBox.getSelectionModel()
+                .selectFirst();
     }
 
     public final void selectGroup() {
         choiceLabel.setText("Select group: ");
-        GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl
-                .getInstance()
+        GroupMap groups = GroupMapParserImpl.getInstance()
                 .getGroupMap();
         ObservableList<String> friendsName = FXCollections
                 .observableArrayList();
-        for (String groupName : groups.getMap().keySet()) {
-            friendsName.add(groupName);
-        }
+        friendsName.addAll(groups.getMap()
+                .keySet());
         listChoiceBox.setItems(friendsName);
-        listChoiceBox.getSelectionModel().selectFirst();
+        listChoiceBox.getSelectionModel()
+                .selectFirst();
     }
 }

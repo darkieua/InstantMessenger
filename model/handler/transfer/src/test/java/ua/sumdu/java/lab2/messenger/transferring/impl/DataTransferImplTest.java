@@ -58,7 +58,7 @@ public class DataTransferImplTest {
         SendingAndReceivingFilesImpl sendingAndReceivingFiles = mock(SendingAndReceivingFilesImpl.class);
         when(dataTransfer.getSendingFilesElements()).thenReturn(sendingAndReceivingFiles);
         doNothing().when(sendingAndReceivingFiles).listenPort(anyInt(), anyObject());
-        String result = User.getCurrentUser().getIpAddress() + ":" + port + "==" + files.toJSonString();
+        String result = String.valueOf(User.getCurrentUser().getIpAddress()).substring(1) + ":" + port + "==" + files.toJSonString();
         assertEquals(result, dataTransfer.dataAcquisition(files.toJSonString()));
     }
 

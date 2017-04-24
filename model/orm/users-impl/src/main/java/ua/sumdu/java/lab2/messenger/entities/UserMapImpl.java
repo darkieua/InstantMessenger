@@ -3,6 +3,9 @@ package ua.sumdu.java.lab2.messenger.entities;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
@@ -12,6 +15,16 @@ public class UserMapImpl implements UserMap, Cloneable {
     private static final Logger LOG = LoggerFactory.getLogger(UserMapImpl.class);
 
     private Map<String, User> map;
+
+    public ObservableList<User> getAllUsers() {
+        allUsers = FXCollections.observableArrayList();
+        for (User user : map.values()) {
+            allUsers.add(user);
+        }
+        return allUsers;
+    }
+
+    private transient ObservableList<User> allUsers = FXCollections.observableArrayList();
 
     public UserMapImpl() {
         LOG.debug("Creating an object of class UserMapImpl");
@@ -54,6 +67,7 @@ public class UserMapImpl implements UserMap, Cloneable {
         LOG.debug("Adding a user to UserMapImpl");
         String key = user.getEmail().split("@")[0];
         map.put(key, user);
+        allUsers.add(user);
     }
 
     @Override
@@ -61,5 +75,6 @@ public class UserMapImpl implements UserMap, Cloneable {
         LOG.debug("Delete a user from UserMapImpl");
         String key = user.getEmail().split("@")[0];
         map.remove(key);
+        allUsers.remove(user);
     }
 }

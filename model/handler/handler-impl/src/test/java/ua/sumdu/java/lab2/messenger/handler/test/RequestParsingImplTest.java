@@ -17,6 +17,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestParsingImpl;
@@ -92,22 +94,24 @@ public class RequestParsingImplTest {
         UserMapParserImpl userMapParser = UserMapParserImpl.getInstance();
         UserMapImpl userMap = (UserMapImpl) userMapParser.getFriends();
         userMap.addUser(User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
-        String request = requestGenerating.addToFriends();
-        requestParsing.requestParser(request);
+        String request = requestGenerating.creatingFriendsRequest();
+        requestParsing.requestParsing(request);
         UserMapImpl newMap = (UserMapImpl) userMapParser.getFriends();
         Assert.assertEquals(getMessage(newMap.toString(), userMap.toString()), newMap, userMap);
     }
 
     @UseDataProvider("groupForTest")
     @Test
-    public void addGroup(String chatName, UserMapImpl userMap) {
+    public void addGroup(String chatName, UserMap userMap) {
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
-        GroupMapImpl groupMap = (GroupMapImpl) groupMapParser.getGroupMap();
-        GroupMapImpl groupForRequest = new GroupMapImpl();
-        groupForRequest.getMap().put(chatName, userMap);
+        GroupMap groupMap = groupMapParser.getGroupMap();
+        GroupMap groupForRequest = new GroupMapImpl();
+        for (User user : userMap.getMap().values()) {
+            groupForRequest.addUser(chatName, user);
+        }
         String request = ADD_TO_GROUP.getRequestNumber() + "="
             + groupMapParser.groupMapToJSonString(groupForRequest);
-        requestParsing.requestParser(request);
+        requestParsing.requestParsing(request);
         GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
         groupMap.getMap().put(chatName, userMap);
         Assert.assertEquals(getMessage(newGroups.toString(),    groupMap.toString()),
@@ -121,7 +125,7 @@ public class RequestParsingImplTest {
     public void newMessage(Message mess) {
         UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
         User user = User.getCurrentUser();
-        String request = requestGenerating.newMessage(mess);
+        String request = requestGenerating.createRequestForNewMessage(mess);
         String sender = mess.getSender();
         user = user.setCategory(CategoryUsers.FRIEND).setUsername(sender);
         friends.addUser(user);
@@ -130,7 +134,7 @@ public class RequestParsingImplTest {
         File messageFile = new File(User.getUrlMessageDirectory() + "/" + sender + ".xml");
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
         messageMap.addMessage(mess);
-        requestParsing.requestParser(request);
+        requestParsing.requestParsing(request);
         MessageMapImpl newMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);
         Assert.assertEquals(getMessage(newMap.getMapForMails().toString(),    messageMap.getMapForMails()
             .toString()), newMap, messageMap);

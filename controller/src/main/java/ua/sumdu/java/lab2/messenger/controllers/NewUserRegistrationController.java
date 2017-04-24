@@ -24,31 +24,36 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class NewUserRegistrationController {
-    private static final Logger LOG = LoggerFactory.getLogger(NewUserRegistrationController.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(NewUserRegistrationController.class);
 
     @FXML
-    public TextField username;
+    private TextField username;
 
     @FXML
-    public TextField email;
+    private TextField email;
 
     @FXML
-    public Label directoryPath;
+    private Label directoryPath;
 
     @FXML
-    public Label error;
+    private Label error;
 
     private String path = "";
+    private static final int PORT = 9696;
 
-    public void registration(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
+    public final void registration(final ActionEvent actionEvent) {
+        Stage stage = (Stage) ((Node) actionEvent.getSource())
+                .getScene()
+                .getWindow();
         String errorMessage = "";
-        if (!UserCreatorImpl.INSTANCE.validateUsername(username.getText())) {
+        if (!UserCreatorImpl.INSTANCE
+                .validateUsername(username.getText())) {
             LOG.warn("Invalid username");
             errorMessage += "Invalid username\n";
         }
-        if (!UserCreatorImpl.INSTANCE.validateEmail(email.getText())) {
+        if (!UserCreatorImpl.INSTANCE
+                .validateEmail(email.getText())) {
             LOG.warn("Invalid e-mail");
             errorMessage += "Invalid e-mail\n";
         }
@@ -60,18 +65,22 @@ public class NewUserRegistrationController {
             error.setText("");
             SettingsImpl settings = new SettingsImpl();
             try {
-                String ipAddress = InetAddress.getLocalHost().getHostAddress();
+                String ipAddress = InetAddress.getLocalHost()
+                        .getHostAddress();
                 settings.putSetting("ipAddress", ipAddress);
             } catch (UnknownHostException e) {
                 LOG.error(e.getMessage(), e);
                 settings.putSetting("ipAddress", "");
             }
-            settings.putSetting("port", String.valueOf(9696));
+            settings.putSetting("port", String.valueOf(PORT));
             settings.putSetting("downloadPath", path);
             settings.putSetting("username", username.getText());
             settings.putSetting("email", email.getText());
-            Date out = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-            settings.putSetting("lastLoginTime", String.valueOf(out.getTime()));
+            Date out = Date.from(LocalDateTime.now()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant());
+            settings.putSetting("lastLoginTime",
+                    String.valueOf(out.getTime()));
             SettingsParserImpl settingsParser = new SettingsParserImpl();
             String result = settingsParser.settingsToJson(settings);
             File userConfig = new File(User.getUserConfigPath());
@@ -87,7 +96,7 @@ public class NewUserRegistrationController {
         }
     }
 
-    public static void writeToFile(File file , String str) {
+    public static final void writeToFile(final File file, final String str) {
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write(str);
             writer.flush();
@@ -97,9 +106,10 @@ public class NewUserRegistrationController {
         }
     }
 
-    public void directorySelection(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
+    public final void directorySelection(final ActionEvent actionEvent) {
+        Stage stage = (Stage) ((Node) actionEvent.getSource())
+                .getScene()
+                .getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(stage);
         directoryPath.setText(selectedDirectory.getPath());

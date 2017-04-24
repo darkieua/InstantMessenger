@@ -29,7 +29,7 @@ public class ResponseGeneratingImpl implements ResponseGenerating {
             result.append(responseType).append('=');
             String groupName = string.substring(5);
             GroupMapImpl thisUser = new GroupMapImpl();
-            thisUser.addUser(groupName, User.getCurrentUser().setCategory(CategoryUsers.FRIEND));
+            thisUser.addUser(groupName, User.getCurrentUser().setCategory(CategoryUsers.VISITOR));
             result.append(GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser));
         }
         return result.toString();

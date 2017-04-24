@@ -1,11 +1,16 @@
 package ua.sumdu.java.lab2.messenger.api;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Map;
+
 import ua.sumdu.java.lab2.messenger.entities.Message;
 
 public interface MessageMap {
 
-    void addMessage(Message message) throws IOException;
+    Map<LocalDateTime, Message> getMapForMails();
 
-    void deleteMessage(Message message) throws IOException;
+    void addMessage(Message message);
+
+    void deleteMessage(Message message);
 }

@@ -6,12 +6,13 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 
 public class GroupMapImpl implements GroupMap, Cloneable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GroupMapImpl.class);
 
-    private Map<String, UserMapImpl> map;
+    private TreeMap<String, UserMapImpl> map;
 
     public GroupMapImpl() {
         map = new TreeMap<>();
@@ -25,7 +26,7 @@ public class GroupMapImpl implements GroupMap, Cloneable {
             UserMapImpl users = new UserMapImpl();
             map.put(chatName, users);
         }
-        UserMapImpl userMap = map.get(chatName);
+        UserMap userMap = map.get(chatName);
         if (Objects.isNull(userMap)) {
             map.put(chatName, new UserMapImpl());
         }
@@ -58,12 +59,19 @@ public class GroupMapImpl implements GroupMap, Cloneable {
         }
     }
 
-    public Map<String, UserMapImpl> getMap() {
-        return map;
+    public Map<String, UserMap> getMap() {
+        Map<String, UserMap> newMap = new TreeMap<>();
+        for (Map.Entry<String, UserMapImpl> pair : map.entrySet()) {
+            newMap.put(pair.getKey(), pair.getValue());
+        }
+        return newMap;
     }
 
-    public GroupMapImpl setMap(Map<String, UserMapImpl> map) {
-        this.map = map;
+    public GroupMap setMap(Map<String, UserMap> newMap) {
+        this.map = new TreeMap<>();
+        for (Map.Entry<String, UserMap> pair : newMap.entrySet()) {
+            this.map.put(pair.getKey(), (UserMapImpl) pair.getValue());
+        }
         return this;
     }
 

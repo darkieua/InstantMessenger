@@ -1,12 +1,13 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import javafx.application.Platform;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.sumdu.java.lab2.messenger.api.GroupMap;
+import ua.sumdu.java.lab2.messenger.api.MessageMap;
+import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.listener.impl.ClientImpl;
@@ -24,52 +28,87 @@ import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 
 public class MainController {
-    private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(MainController.class);
 
     @FXML
-    public ListView<String> blackList;
+    private Button delete;
 
     @FXML
-    public Button restore;
+    private Button leave;
 
     @FXML
-    public Button blockButton;
+    private Button info;
 
     @FXML
-    ListView<String> friendsList;
+    private ListView<String> blackList;
 
     @FXML
-    ListView<String> groupList;
+    private Button restore;
 
     @FXML
-    TabPane tabPane;
+    private Button blockButton;
 
     @FXML
-    ListView<String> systemMessages;
+    private ListView<String> friendsList;
 
     @FXML
-    TextArea textMessage;
+    private ListView<String> groupList;
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private ListView<String> systemMessages;
+
+    @FXML
+    private TextField textMessage;
 
     private Map<String, ListView> tabMap;
 
-    public Timer timer;
+    public Timer getTimer() {
+        return timer;
+    }
+
+    private Timer timer;
+    private static final int ONE_SECOND = 1000;
+    private static final int SEND_FILES_WIDTH = 500;
+    private static final int SEND_FILES_HEIGHT = 300;
+    private static final int ADD_WIDTH = 450;
+    private static final int ADD_HEIGHT = 250;
+    private static final int INFO_WIDTH = 450;
+    private static final int INFO_HEIGHT = 400;
 
     @FXML
     public final void initialize() {
-        UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
+        UserMap friends = UserMapParserImpl.getInstance().getFriends();
         RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
         long lastLogin = User.getLastLoginTime();
         for (User user : friends.getMap().values()) {
-            new ClientImpl(user.getIpAddress(), user.getPort(), requestGenerating.messagesFromSpecificDate(lastLogin)).start();
+            new ClientImpl(user.getIpAddress(), user.getPort(),
+                    requestGenerating
+                            .createRequestForMessagesFromSpecificDate(lastLogin))
+                    .start();
         }
-        GroupMapImpl groupMap = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
-        for (String groupName : groupMap.getMap().keySet()) {
-            UserMapImpl userMap = groupMap.getMap().get(groupName);
-            for (User user : userMap.getMap().values()) {
-                new ClientImpl(user.getIpAddress(), user.getPort(), requestGenerating.groupMessagesFromSpecificDate(lastLogin, groupName)).start();
-                new ClientImpl(user.getIpAddress(), user.getPort(), requestGenerating.requestForUpdateGroupList(groupName)).start();
+        GroupMap groupMap = GroupMapParserImpl.getInstance().getGroupMap();
+        for (String groupName : groupMap.getMap()
+                .keySet()) {
+            UserMap userMap = groupMap.getMap()
+                    .get(groupName);
+            for (User user : userMap.getMap()
+                    .values()) {
+                new ClientImpl(user.getIpAddress(), user.getPort(),
+                        requestGenerating
+                                .createRequestForGroupMessagesFromSpecificDate(lastLogin,
+                                        groupName))
+                        .start();
+                new ClientImpl(user.getIpAddress(), user.getPort(),
+                        requestGenerating
+                                .createRequestForUpdateGroupList(groupName))
+                        .start();
             }
         }
+        User.getSystemMessageFile().delete();
         tabMap = new TreeMap<>();
         tabMap.put("system", systemMessages);
         Initialize.initFriends(friendsList);
@@ -77,12 +116,33 @@ public class MainController {
         Initialize.initBlackList(blackList);
         blockButton.setVisible(false);
         restore.setVisible(false);
-        friendsList.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, oldValue,
-                 newValue) -> blockButton.setVisible(true));
-        blackList.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, oldValue,
-                 newValue) -> restore.setVisible(true));
+        delete.setVisible(false);
+        leave.setVisible(false);
+        info.setVisible(false);
+        XmlParser.INSTANCE.write(new MessageMapImpl(), User.getSystemMessageFile());
+        friendsList.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observableValue, oldValue,
+                              newValue) -> {
+                    blackList.getSelectionModel().clearSelection();
+                    blockButton.setVisible(true);
+                    delete.setVisible(true);
+                });
+        blackList.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observableValue, oldValue,
+                              newValue) -> {
+                    friendsList.getSelectionModel().clearSelection();
+                    restore.setVisible(true);
+                    delete.setVisible(true);
+                });
+        groupList.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observableValue, oldValue,
+                              newValue) -> {
+                    info.setVisible(true);
+                    leave.setVisible(true);
+                });
         Initialize.updateMessages(systemMessages, "system");
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -92,16 +152,17 @@ public class MainController {
                     Initialize.initGroups(groupList);
                     Initialize.initBlackList(blackList);
                     for (String chatName : tabMap.keySet()) {
-                        Initialize.updateMessages(tabMap.get(chatName), chatName);
+                        Initialize
+                                .updateMessages(tabMap.get(chatName), chatName);
                     }
                 });
             }
         };
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 900);
+        timer.scheduleAtFixedRate(timerTask, 0, ONE_SECOND);
     }
 
-    private void showMessages(String name) {
+    private void showMessages(final String name) {
         boolean isFind = false;
         for (Tab currentTab : tabPane.getTabs().sorted()) {
             if (name.equals(currentTab.getText())) {
@@ -123,116 +184,149 @@ public class MainController {
             tabMap.put(name, chat);
             newTab.setContent(chat);
             newTab.setClosable(true);
-            newTab.setOnCloseRequest(new EventHandler<Event>() {
-                @Override
-                public void handle(Event event) {
-                    tabMap.remove(name, chat);
-                }
-            });
-            tabPane.getSelectionModel().select(newTab);
+            newTab.setOnCloseRequest(event -> tabMap.remove(name, chat));
+            tabPane.getSelectionModel()
+                    .select(newTab);
         }
         Initialize.updateMessages(tabMap.get(name), name);
     }
 
-    public void sentMessage() {
+    public final void sentMessage() {
         String text = textMessage.getText();
         textMessage.clear();
-        String receiver = tabPane.getSelectionModel().getSelectedItem().getText();
-        Message message = new Message(User.getCurrentUser().getUsername(), receiver, text, LocalDateTime.now());
-        File file = new File(User.getUrlMessageDirectory() + "/" + receiver + ".xml");
-        MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
+        String receiver = tabPane.getSelectionModel()
+                .getSelectedItem()
+                .getText();
+        Message message = new Message(User.getCurrentUser()
+                .getUsername(),
+                receiver, text,
+                LocalDateTime.now());
+        File file = new File(User.getUrlMessageDirectory()
+                + "/" + receiver
+                + ".xml");
+        MessageMap messageMap = XmlParser.INSTANCE.read(file);
         messageMap.addMessage(message);
         XmlParser.INSTANCE.write(messageMap, file);
-        UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-        for (User user : friends.getMap().values()) {
-            if (user.getUsername().equals(receiver)) {
-                RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
-                ClientImpl client = new ClientImpl(user.getIpAddress(), user.getPort(), requestGenerating.newMessage(message));
-                client.start();
+        UserMap friends = UserMapParserImpl.getInstance()
+                .getFriends();
+        for (User user : friends.getMap()
+                .values()) {
+            if (user.getUsername()
+                    .equals(receiver)) {
+                RequestGeneratingImpl requestGenerating
+                        = new RequestGeneratingImpl();
+                new ClientImpl(user.getIpAddress(), user.getPort(),
+                        requestGenerating.createRequestForNewMessage(message))
+                        .start();
                 return;
             }
         }
-        UserMapImpl groupMap = (UserMapImpl) GroupMapParserImpl.getInstance().getUserMap(receiver);
-        RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
+        UserMap groupMap = GroupMapParserImpl.getInstance()
+                .getUserMap(receiver);
+        RequestGeneratingImpl requestGenerating
+                = new RequestGeneratingImpl();
         for (User user : groupMap.getMap().values()) {
-            ClientImpl client = new ClientImpl(user.getIpAddress(), user.getPort(), requestGenerating.newMessageToGroup(message));
-            client.start();
+            new ClientImpl(user.getIpAddress(), user.getPort(),
+                    requestGenerating.createRequestForNewGroupMessage(message))
+                    .start();
         }
     }
 
-    public void sentFiles() {
+    public final void sentFiles() {
         Stage stage = new Stage();
-        FXMLLoader sendingFilesController = new FXMLLoader();
-        sendingFilesController.setLocation(getClass().getResource("/ua/sumdu/java/lab2/messenger/fxmls/SendingFiles.fxml"));
+        FXMLLoader sendingFilesFxmlLoader = new FXMLLoader();
+        sendingFilesFxmlLoader.setLocation(getClass()
+                .getResource(
+                        "/ua/sumdu/java/lab2/messenger/fxmls/"
+                                + "SendingFiles.fxml"));
         Parent root = null;
         try {
-            root = sendingFilesController.load();
+            root = sendingFilesFxmlLoader.load();
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
         stage.setTitle("Add to friends or group");
-        stage.setScene(new Scene(root, 500, 350));
+        stage.setScene(new Scene(root, SEND_FILES_WIDTH, SEND_FILES_HEIGHT));
         stage.setResizable(false);
         stage.showAndWait();
     }
 
-    public void add() {
+    public final void add() {
         Stage stage = new Stage();
-        FXMLLoader addController = new FXMLLoader();
-        addController.setLocation(getClass().getResource("/ua/sumdu/java/lab2/messenger/fxmls/Add.fxml"));
+        FXMLLoader addFxmlLoader = new FXMLLoader();
+        addFxmlLoader.setLocation(getClass().getResource(
+                "/ua/sumdu/java/lab2/messenger/fxmls/Add.fxml"));
         Parent root = null;
         try {
-            root = addController.load();
+            root = addFxmlLoader.load();
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
         stage.setTitle("Add to friends or group");
-        stage.setScene(new Scene(root, 450, 250));
+        stage.setScene(new Scene(root, ADD_WIDTH, ADD_HEIGHT));
         stage.setResizable(false);
         stage.showAndWait();
         Initialize.updateMessages(systemMessages, "system");
     }
 
-    public void newGroup() {
+    public final void newGroup() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New group");
         dialog.setHeaderText("Create a new group");
         dialog.setContentText("Please enter group name:");
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
-            GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
-            groups.addUser(result.get(), User.getCurrentUser().setCategory(CategoryUsers.ADMIN));
-            GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groups));
+        if (result.isPresent()) {
+            GroupMap groups = GroupMapParserImpl.getInstance()
+                    .getGroupMap();
+            groups.addUser(result.get(), User.getCurrentUser()
+                            .setCategory(CategoryUsers.ADMIN));
+            GroupMapParserImpl.getInstance()
+                    .writeGroupMapToFile(GroupMapParserImpl.getInstance()
+                                    .groupMapToJSonString(groups));
             Initialize.initGroups(groupList);
         }
     }
 
-    public void showFriendsChat(MouseEvent mouseEvent) {
+    public final void showFriendsChat(final MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
-            showMessages(friendsList.getSelectionModel().getSelectedItems().get(0));
+            showMessages(friendsList.getSelectionModel()
+                    .getSelectedItems()
+                    .get(0));
         }
     }
 
-    public void showGroupChat(MouseEvent mouseEvent) {
+    public final void showGroupChat(final MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
-            showMessages(groupList.getSelectionModel().getSelectedItems().get(0));
+            showMessages(groupList.getSelectionModel()
+                    .getSelectedItems()
+                    .get(0));
         }
     }
 
-    public void block() {
-        String username = friendsList.getSelectionModel().getSelectedItem();
-        UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-        UserMapImpl blackListUsers = (UserMapImpl) UserMapParserImpl.getInstance().getBlackList();
-        for (User user : friends.getMap().values()) {
+    public final void block() {
+        String username = friendsList.getSelectionModel()
+                .getSelectedItem();
+        UserMap friends = UserMapParserImpl.getInstance()
+                .getFriends();
+        UserMap blackListUsers = UserMapParserImpl.getInstance()
+                .getBlackList();
+        for (User user : friends.getMap()
+                .values()) {
             if (username.equals(user.getUsername())) {
                 friends.removeUser(user);
                 blackListUsers.addUser(user);
                 break;
             }
         }
-        UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
+        UserMapParserImpl.getInstance()
+                .writeUserMapToFile(
+                        UserMapParserImpl.getInstance()
+                                .userMapToJSonString(friends));
         Initialize.initFriends(friendsList);
-        UserMapParserImpl.getInstance().writeBlackListToFile(UserMapParserImpl.getInstance().userMapToJSonString(blackListUsers));
+        UserMapParserImpl.getInstance()
+                .writeBlackListToFile(
+                        UserMapParserImpl.getInstance()
+                                .userMapToJSonString(blackListUsers));
         Initialize.initBlackList(blackList);
         for (Tab tab : tabPane.getTabs()) {
             if (tab.getText().equals(username)) {
@@ -241,23 +335,107 @@ public class MainController {
                 break;
             }
         }
-        tabPane.getSelectionModel().select(0);
+        tabPane.getSelectionModel()
+                .select(0);
     }
 
-    public void restoreFromBlacklist() {
-        String username = blackList.getSelectionModel().getSelectedItem();
-        UserMapImpl blackListUsers = (UserMapImpl) UserMapParserImpl.getInstance().getBlackList();
-        UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-        for (User user : blackListUsers.getMap().values()) {
+    public final void restoreFromBlacklist() {
+        String username = blackList.getSelectionModel()
+                .getSelectedItem();
+        UserMap blackListUsers = UserMapParserImpl.getInstance()
+                .getBlackList();
+        UserMap friends = UserMapParserImpl.getInstance()
+                .getFriends();
+        for (User user : blackListUsers.getMap()
+                .values()) {
             if (username.equals(user.getUsername())) {
                 blackListUsers.removeUser(user);
                 friends.addUser(user);
                 break;
             }
         }
-        UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
+        UserMapParserImpl.getInstance()
+                .writeUserMapToFile(
+                        UserMapParserImpl.getInstance()
+                                .userMapToJSonString(friends));
         Initialize.initFriends(friendsList);
-        UserMapParserImpl.getInstance().writeBlackListToFile(UserMapParserImpl.getInstance().userMapToJSonString(blackListUsers));
+        UserMapParserImpl.getInstance()
+                .writeBlackListToFile(
+                        UserMapParserImpl.getInstance()
+                                .userMapToJSonString(blackListUsers));
         Initialize.initBlackList(blackList);
+    }
+
+    public void deleteFriend() {
+        Alert alert = new Alert(CONFIRMATION);
+        alert.setTitle("Removing from friends");
+        alert.setContentText("Are you sure?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            String username = friendsList.getSelectionModel()
+                    .getSelectedItem();
+            if (Objects.nonNull(username)) {
+                UserMap friends = UserMapParserImpl.getInstance().getFriends();
+                deleteUser(friends, username);
+                UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(friends));
+            } else {
+                username = blackList.getSelectionModel().getSelectedItem();
+                UserMap blackList = UserMapParserImpl.getInstance().getBlackList();
+                deleteUser(blackList, username);
+                UserMapParserImpl.getInstance().writeBlackListToFile(UserMapParserImpl.getInstance().userMapToJSonString(blackList));
+            }
+            delete.setVisible(false);
+        }
+
+    }
+
+    private void deleteUser(UserMap users, String username) {
+        for (User user : users.getMap().values()) {
+            if (username.equals(user.getUsername())) {
+                new ClientImpl(user.getIpAddress(), user.getPort(), new RequestGeneratingImpl().creatingDeleteRequestFromFriends()).start();
+                users.removeUser(user);
+                return;
+            }
+        }
+    }
+
+    public void leaveGroup() {
+        Alert alert = new Alert(CONFIRMATION);
+        alert.setTitle("Leave group");
+        alert.setContentText("Are you sure?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            String groupName = groupList.getSelectionModel().getSelectedItem();
+            GroupMap groupMap = GroupMapParserImpl.getInstance().getGroupMap();
+            for (User user : groupMap.getMap().get(groupName).getMap().values()) {
+                new ClientImpl(user.getIpAddress(), user.getPort(), new RequestGeneratingImpl().creatingDeleteRequestFromGroup(groupName)).start();
+            }
+            Map<String, UserMap> map = groupMap.getMap();
+            map.remove(groupName);
+            groupMap.setMap(map);
+            GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groupMap));
+        }
+        Initialize.initGroups(groupList);
+    }
+
+    public void groupInfo() {
+        Stage stage = new Stage();
+        FXMLLoader groupInfoFxmlLoader = new FXMLLoader();
+        groupInfoFxmlLoader.setLocation(getClass()
+                .getResource(
+                        "/ua/sumdu/java/lab2/messenger/fxmls/"
+                                + "GroupInfo.fxml"));
+        Parent root = null;
+        try {
+            root = groupInfoFxmlLoader.load();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        GroupInfoController groupInfoController = groupInfoFxmlLoader.getController();
+        groupInfoController.dataFilling(groupList.getSelectionModel().getSelectedItem());
+        stage.setTitle("Group info");
+        stage.setScene(new Scene(root, INFO_WIDTH, INFO_HEIGHT));
+        stage.setResizable(false);
+        stage.show();
     }
 }
