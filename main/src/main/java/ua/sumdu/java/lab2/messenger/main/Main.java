@@ -64,8 +64,7 @@ public class Main extends Application {
             FXMLLoader mainFxmlLoader = new FXMLLoader();
             mainFxmlLoader.setLocation(getClass()
                     .getResource(
-                            "/ua/sumdu/java/lab2/messenger/fxmls/"
-                                    + "Main.fxml"));
+                            "/ua/sumdu/java/lab2/messenger/fxmls/Main.fxml"));
             Parent root = null;
             try {
                 root = mainFxmlLoader.load();

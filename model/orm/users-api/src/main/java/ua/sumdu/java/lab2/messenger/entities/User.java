@@ -236,4 +236,18 @@ public class User implements Cloneable, Serializable {
             return system;
         }
     }
+
+    public static File getNewMessageFile() {
+        synchronized (User.class) {
+            File newMessages = new File(getUrlMessageDirectory() + "/newMessages.json");
+            if (!newMessages.exists()) {
+                try {
+                    newMessages.createNewFile();
+                } catch (IOException e) {
+                    LOG.error("New messages file not found",e);
+                }
+            }
+            return newMessages;
+        }
+    }
 }

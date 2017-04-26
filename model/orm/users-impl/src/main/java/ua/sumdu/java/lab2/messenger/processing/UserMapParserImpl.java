@@ -86,7 +86,7 @@ public final class UserMapParserImpl implements UserMapParser {
         }
     }
 
-        @Override
+    @Override
     public UserMap getFriends() {
         try {
             File friends = new File(User.getFriendsPath());

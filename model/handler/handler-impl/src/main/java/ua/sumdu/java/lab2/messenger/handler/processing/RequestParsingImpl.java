@@ -4,6 +4,7 @@ import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import ua.sumdu.java.lab2.messenger.api.MessageMap;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.api.RequestParsing;
+import ua.sumdu.java.lab2.messenger.parsers.MessageCounterParser;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
@@ -195,6 +197,12 @@ public class RequestParsingImpl implements RequestParsing {
                 MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);
                 messageMap.addMessage(message);
                 XmlParser.INSTANCE.write(messageMap, file);
+                MessageCounter newMessages = MessageCounterParser.PARSER.getMessageCounter();
+                if (Objects.isNull(newMessages)) {
+                    newMessages = new MessageCounter();
+                }
+                newMessages.add(fileName, 1);
+                MessageCounterParser.PARSER.write(newMessages);
             }
         }
     }
@@ -215,29 +223,57 @@ public class RequestParsingImpl implements RequestParsing {
     }
 
     public boolean getReaction(String context, String groupOrUser) {
+        if (USER.equals(groupOrUser)) {
+            UserMap friends = UserMapParserImpl.getInstance().getFriends();
+            boolean isFind = false;
+            User newUser = UserCreatorImpl.INSTANCE.toUser(context);
+            for (User user : friends.getAllUsers()) {
+                if (newUser.getUsername().equals(user.getUsername())) {
+                    isFind = true;
+                    break;
+                }
+            }
+            if (!isFind) {
+                UserMap blackList = UserMapParserImpl.getInstance().getBlackList();
+                for (User user : blackList.getAllUsers()) {
+                    if (newUser.getUsername().equals(user.getUsername())) {
+                        isFind = true;
+                        break;
+                    }
+                }
+            }
+            return !isFind && createAlert("Add to friends", "User " + newUser.getUsername() + " sent a request to add to friends. \n Do you want to add the user " + newUser.getUsername() + " as a friend?");
+        } else {
+            GroupMap groups = GroupMapParserImpl.getInstance().getGroupMap();
+            GroupMap groupMap = GroupMapParserImpl.getInstance().jsonStringToGroupMap(context);
+            String name = groupMap.getMap().keySet().iterator().next();
+            boolean isFind = false;
+            for (String groupName : groups.getMap().keySet()) {
+                if (name.equals(groupName)) {
+                    isFind = true;
+                    break;
+                }
+            }
+            return !isFind && createAlert("Add to group", "Administrator of the group <" + name + "> sent you a request to add to the group.\n Do you want to join a group <" + name + ">?");
+        }
+    }
+
+    private boolean createAlert(String title, String text) {
         final boolean[] reaction = new boolean[1];
         boolean[] work = {true};
         int time = 0;
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            if (USER.equals(groupOrUser)) {
-                User user = UserCreatorImpl.INSTANCE.toUser(context);
-                alert.setTitle("Add to friends");
-                alert.setContentText("User " + user.getUsername() + " sent a request to add to friends. \n Do you want to add the user " + user.getUsername() + " as a friend?");
-            } else {
-                GroupMapImpl groupMap = (GroupMapImpl) GroupMapParserImpl.getInstance().jsonStringToGroupMap(context);
-                String name = groupMap.getMap().keySet().iterator().next();
-                alert.setTitle("Add to group");
-                alert.setContentText("Administrator of the group <" + name + "> sent you a request to add to the group.\n Do you want to join a group <" + name + ">?");
-            }
+            alert.setTitle(title);
+            alert.setContentText(text);
             Optional<ButtonType> result = alert.showAndWait();
             reaction[0] =    result.isPresent() && result.get() == ButtonType.OK;
             work[0] = false;
         });
-        while(work[0] && time < 1790) {
+        while(work[0] && time < 1799 * 2) {
             time ++;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 LOG.error(e.getMessage());
             }

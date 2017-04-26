@@ -3,15 +3,16 @@ package ua.sumdu.java.lab2.messenger.handler.processing;
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.Objects;
+
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
-import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
-import ua.sumdu.java.lab2.messenger.entities.Message;
-import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
-import ua.sumdu.java.lab2.messenger.entities.User;
+import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.api.ResponseParsing;
+import ua.sumdu.java.lab2.messenger.parsers.MessageCounterParser;
 import ua.sumdu.java.lab2.messenger.parsers.ParsingMessages;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
@@ -79,10 +80,18 @@ public class ResponseParsingImpl implements ResponseParsing {
                 File fileWithMails = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
                 MessageMapImpl currentMessageMap = (MessageMapImpl) XmlParser.INSTANCE.read(fileWithMails);
                 currentMessageMap.addMessage(mess1);
+                int count = 0;
                 while (iterator.hasNext()) {
                     currentMessageMap.addMessage(iterator.next());
+                    count++;
                 }
                 XmlParser.INSTANCE.write(currentMessageMap, fileWithMails);
+                MessageCounter messageCounter = MessageCounterParser.PARSER.getMessageCounter();
+                if (Objects.isNull(messageCounter)) {
+                    messageCounter = new MessageCounter();
+                }
+                messageCounter.add(fileName, count);
+                MessageCounterParser.PARSER.write(messageCounter);
             }
         }
         return "";

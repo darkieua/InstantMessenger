@@ -5,6 +5,8 @@ import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.CURRENT_USER;
 
 import java.io.File;
 import java.util.Set;
+
+import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -27,7 +29,7 @@ public final class Initialize {
         LOG.debug("Initialize constructor");
     }
 
-    public static void initFriends(final ListView<String> friendsList) {
+    public static void initFriends(final JFXListView<String> friendsList) {
         UserMap friends = UserMapParserImpl.getInstance()
                 .getFriends();
         ObservableList<String> list = FXCollections.observableArrayList();
@@ -43,7 +45,7 @@ public final class Initialize {
         friendsList.setItems(list);
     }
 
-    public static void initGroups(final ListView<String> groupList) {
+    public static void initGroups(final JFXListView<String> groupList) {
         GroupMap groups = GroupMapParserImpl.getInstance()
                 .getGroupMap();
         Set<String> groupNames = groups.getMap()
@@ -60,7 +62,7 @@ public final class Initialize {
         groupList.setItems(list);
     }
 
-    public static void initBlackList(final ListView<String> blackList) {
+    public static void initBlackList(final JFXListView<String> blackList) {
         UserMap blackListUsers = UserMapParserImpl
                 .getInstance()
                 .getBlackList();

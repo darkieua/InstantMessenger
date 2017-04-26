@@ -35,6 +35,11 @@
         </dependency>
         <dependency>
             <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
+            <artifactId>messages-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ua.sumdu.java.lab2.instant_messenger</groupId>
             <artifactId>messages-impl</artifactId>
             <version>1.0</version>
         </dependency>
