@@ -6,14 +6,18 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXHamburger;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +34,11 @@ import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 public class MainController {
     private static final Logger LOG = LoggerFactory
             .getLogger(MainController.class);
+    public JFXButton btnOK;
+    public JFXHamburger hamburger;
+    public JFXButton btnSentFiles;
+    public JFXButton btnAdd;
+    public JFXButton btnNewGroup;
 
     @FXML
     private Button delete;
@@ -59,12 +68,12 @@ public class MainController {
     private TabPane tabPane;
 
     @FXML
-    private ListView<String> systemMessages;
+    private ListView<Text> systemMessages;
 
     @FXML
     private TextField textMessage;
 
-    private Map<String, ListView> tabMap;
+    private Map<String, ListView<Text>> tabMap;
 
     public Timer getTimer() {
         return timer;
@@ -174,8 +183,9 @@ public class MainController {
         if (!isFind) {
             Tab newTab = new Tab();
             newTab.setText(name);
+            newTab.setClosable(true);
             tabPane.getTabs().add(newTab);
-            ListView<String> chat;
+            ListView<Text> chat;
             if (tabMap.get(name) == null) {
                 chat = new ListView<>();
             } else {
@@ -184,7 +194,7 @@ public class MainController {
             tabMap.put(name, chat);
             newTab.setContent(chat);
             newTab.setClosable(true);
-            newTab.setOnCloseRequest(event -> tabMap.remove(name, chat));
+            //newTab.setOnCloseRequest(event -> tabMap.remove(name, chat));
             tabPane.getSelectionModel()
                     .select(newTab);
         }
@@ -245,6 +255,10 @@ public class MainController {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
+        SendingFilesController sendingFilesController = sendingFilesFxmlLoader.getController();
+        String name = tabPane.getSelectionModel().getSelectedItem().getText();
+        sendingFilesController.setUsernameOrGroupname(name);
+        sendingFilesController.initAfterSet();
         stage.setTitle("Add to friends or group");
         stage.setScene(new Scene(root, SEND_FILES_WIDTH, SEND_FILES_HEIGHT));
         stage.setResizable(false);
@@ -414,6 +428,15 @@ public class MainController {
             map.remove(groupName);
             groupMap.setMap(map);
             GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groupMap));
+            Collection<Tab> tabs = tabPane.getTabs();
+            for (Tab tab : tabs) {
+                if (groupName.equals(tab.getText())) {
+                    tabPane.getTabs().remove(tab);
+                    break;
+                }
+            }
+            tabPane.getSelectionModel().selectFirst();
+            tabMap.remove(groupName);
         }
         Initialize.initGroups(groupList);
     }

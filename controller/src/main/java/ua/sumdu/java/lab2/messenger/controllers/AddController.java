@@ -26,6 +26,7 @@ import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 public class AddController {
     private static final Logger LOG = LoggerFactory
             .getLogger(AddController.class);
+    public ToggleGroup addUser;
 
     @FXML
     private RadioButton addToFriends;
@@ -34,7 +35,7 @@ public class AddController {
     private Label selectGroupLabel;
 
     @FXML
-    private ChoiceBox<String> groupChoiceBox;
+    private ComboBox<String> groupChoiceBox;
 
     @FXML
     private TextField ipAddress;

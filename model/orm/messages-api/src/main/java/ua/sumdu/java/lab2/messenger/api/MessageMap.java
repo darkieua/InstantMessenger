@@ -1,6 +1,5 @@
 package ua.sumdu.java.lab2.messenger.api;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.api.Settings;

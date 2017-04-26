@@ -8,6 +8,7 @@ import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.api.GroupMap;
@@ -71,24 +72,21 @@ public final class Initialize {
         blackList.setItems(list);
     }
 
-    public static void updateMessages(final ListView<String> chat,
+    public static void updateMessages(final ListView<Text> chat,
                                       final String groupName) {
         File messages = new File(User.getUrlMessageDirectory()
                 + File.separator
                 + groupName
                 + ".xml");
+        ObservableList<Text> list = FXCollections.observableArrayList();
         MessageMap messageMap = XmlParser.INSTANCE.read(messages);
-        ObservableList<String> list = FXCollections.observableArrayList();
         for (Message message : messageMap.getMapForMails().values()) {
-            String result = message.getSender() + ": "
+            Text text = new Text(message.getSender() + ": "
                     + message.getText() + " ("
-                    + message.getTimeSending() + ")";
-            list.add(result);
+                    + message.getTimeSending() + ")");
+            text.wrappingWidthProperty().bind(chat.widthProperty());
+            list.add(text);
         }
-        try {
-            chat.setItems(list);
-        } catch (IllegalStateException e) {
-            LOG.error(e.getMessage());
-        }
+        chat.setItems(list);
     }
 }

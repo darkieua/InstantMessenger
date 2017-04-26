@@ -189,7 +189,7 @@ public class RequestParsingImpl implements RequestParsing {
             users = (UserMapImpl) GroupMapParserImpl.getInstance().getUserMap(fileName);
         }
         for (User user: users.getMap().values()) {
-            if (Objects.equals(user.getUsername(), fileName)
+            if (Objects.equals(user.getUsername(), message.getSender())
                     && !CategoryUsers.BLACKLIST.name().equals(user.getCategory().name())) {
                 File file = new File(User.getUrlMessageDirectory() + "/" + fileName + ".xml");
                 MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(file);

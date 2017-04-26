@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -27,14 +27,23 @@
             <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="240.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Label text="Adminstrator" />
-        <Label text="The participants" GridPane.rowIndex="1" />
-        <Label fx:id="admin" text="admin" GridPane.columnIndex="1" />
+        <Label text="Adminstrator">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+        <Label text="The participants" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+        <Label fx:id="admin" text="admin" GridPane.columnIndex="1">
+         <font>
+            <Font name="System Italic" size="14.0" />
+         </font></Label>
         <ButtonBar GridPane.columnIndex="1" GridPane.rowIndex="2">
            <buttons>
-               <Button fx:id="remove" mnemonicParsing="false" onAction="#removeUser" text="Remove" />
-               <Button fx:id="block" mnemonicParsing="false" onAction="#blockUser" text="Block" />
-               <Button fx:id="restore" mnemonicParsing="false" onAction="#restoreUser" text="Restore" />
+            <JFXButton fx:id="remove" buttonType="RAISED" onAction="#removeUser" ripplerFill="#db280d" text="Remove" />
+            <JFXButton fx:id="restore" onAction="#restoreUser" ripplerFill="#0ddb38" text="Restore" />
+            <JFXButton fx:id="block" onAction="#blockUser" ripplerFill="#ed051e" text="Block" />
            </buttons>
         </ButtonBar>
         <TableView fx:id="participants" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

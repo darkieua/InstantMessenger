@@ -12,7 +12,7 @@ public class GroupMapImpl implements GroupMap, Cloneable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GroupMapImpl.class);
 
-    private TreeMap<String, UserMapImpl> map;
+    private Map<String, UserMapImpl> map;
 
     public GroupMapImpl() {
         map = new TreeMap<>();

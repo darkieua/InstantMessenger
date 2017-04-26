@@ -50,10 +50,17 @@
         <junit-dataprovider.version>1.12.0</junit-dataprovider.version>
         <mockito-all.version>1.10.19</mockito-all.version>
         <powermock.version>1.6.6</powermock.version>
+        <!--design-->
+        <jfoenix.version>1.3.0</jfoenix.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.jfoenix</groupId>
+                <artifactId>jfoenix</artifactId>
+                <version>${jfoenix.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>

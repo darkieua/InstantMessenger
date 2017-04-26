@@ -46,9 +46,28 @@ public class SendingFilesController {
 
     private SentFiles fileList = new SentFiles();
 
+    public void setUsernameOrGroupname(String usernameOrGroupname) {
+        this.usernameOrGroupname = usernameOrGroupname;
+    }
+
+    private String usernameOrGroupname;
+
+    private boolean set = false;
+
     @FXML
-    public final void initialize() {
-        selectFriend();
+    public final void initAfterSet() {
+        UserMap friends = UserMapParserImpl.getInstance().getFriends();
+        for (User user : friends.getAllUsers()) {
+            if (usernameOrGroupname.equals(user.getUsername())) {
+                set = true;
+                selectFriend();
+
+            }
+        }
+        if (!set) {
+            selectGroup();
+        }
+        listChoiceBox.getSelectionModel().select(usernameOrGroupname);
         fileName.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
         fileSize.setCellValueFactory(

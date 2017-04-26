@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 public class NewUserRegistrationController {
     private static final Logger LOG = LoggerFactory
@@ -112,7 +113,9 @@ public class NewUserRegistrationController {
                 .getWindow();
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(stage);
-        directoryPath.setText(selectedDirectory.getPath());
-        path = selectedDirectory.getPath();
+        if (Objects.nonNull(selectedDirectory.getPath())) {
+            directoryPath.setText(selectedDirectory.getPath());
+            path = selectedDirectory.getPath();
+        }
     }
 }
