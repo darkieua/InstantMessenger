@@ -7,17 +7,11 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import org.junit.Assert;
+import java.io.File;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import ua.sumdu.java.lab2.messenger.entities.Message;
-import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
-
-import java.io.File;
-import java.time.LocalDateTime;
 
 @RunWith(DataProviderRunner.class)
 public class DataTransferImplTest {
@@ -62,7 +56,7 @@ public class DataTransferImplTest {
         assertEquals(result, dataTransfer.dataAcquisition(files.toJSonString()));
     }
 
-    @Test
+/*    @Test
     public void parsingDataSendingRejectedResponse() {
         String name = "test";
         dataTransfer = new DataTransferImpl();
@@ -79,6 +73,6 @@ public class DataTransferImplTest {
         }
         Assert.assertTrue(isFind);
         XmlParser.INSTANCE.write(messageMap, User.getSystemMessageFile());
-    }
+    }*/
 
 }

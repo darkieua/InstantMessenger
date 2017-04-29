@@ -39,22 +39,6 @@ public class RequestGeneratingImpl implements RequestGenerating {
     }
 
     @Override
-    public String createRequestForNewMessage(Message message) {
-        StringBuilder str = new StringBuilder();
-        str.append(NEW_MESSAGE.getRequestNumber())
-                    .append('=').append(createMessage(message));
-        return str.toString();
-    }
-
-    @Override
-    public String createRequestForNewGroupMessage(Message message) {
-        StringBuilder str = new StringBuilder();
-        str.append(NEW_MESSAGE_TO_GROUP.getRequestNumber())
-                    .append('=').append(createMessage(message));
-        return str.toString();
-    }
-
-    @Override
     public String updateGroupList(String groupName) {
         String string = createJoinRequestToGroup(groupName);
         StringBuilder str = new StringBuilder();
@@ -67,22 +51,6 @@ public class RequestGeneratingImpl implements RequestGenerating {
         StringBuilder str = new StringBuilder();
         str.append(REQUEST_FOR_UPDATE_GROUP_LIST.getRequestNumber())
                 .append('=').append(groupName);
-        return str.toString();
-    }
-
-    @Override
-    public String createRequestForMessagesFromSpecificDate(long date) {
-        StringBuilder str = new StringBuilder();
-        str.append(MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
-                .append('=').append(date).append('=').append(User.getCurrentUser().getUsername());
-        return str.toString();
-    }
-
-    @Override
-    public String createRequestForGroupMessagesFromSpecificDate(long date, String groupName) {
-        StringBuilder str = new StringBuilder();
-        str.append(GROUP_MESSAGES_FROM_A_SPECIFIC_DATE.getRequestNumber())
-                .append('=').append(date).append('=').append(groupName);
         return str.toString();
     }
 
@@ -112,7 +80,7 @@ public class RequestGeneratingImpl implements RequestGenerating {
     /**
      * Converts a message to a xml string.
      */
-    public String createMessage(Message message) {
+    public static String createMessage(Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
         try {

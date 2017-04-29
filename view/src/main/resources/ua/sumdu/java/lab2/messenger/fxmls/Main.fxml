@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.MainController">
-     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+     <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <JFXTabPane fx:id="tabPane" prefHeight="331.0" prefWidth="402.0" style="-fx-background-color: #2be6ff;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab closable="false" disable="true" text="Messages">
@@ -30,13 +30,33 @@
       <JFXTextField fx:id="textMessage" focusColor="#008ba5" layoutX="24.0" layoutY="326.0" prefHeight="41.0" prefWidth="333.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="65.0" />
      </AnchorPane>
    <JFXHamburger fx:id="hamburger" minWidth="63.0" prefHeight="34.0" prefWidth="63.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-   <JFXDrawer fx:id="drawer" defaultDrawerSize="120.0" overLayVisible="false" prefHeight="404.0" prefWidth="127.0" resizableOnDrag="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <StackPane fx:id="stackPane2" layoutX="57.0" layoutY="-13.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-5.0">
+        <children>
+            <Circle radius="10.0" stroke="BLACK" strokeType="INSIDE">
+                <fill>
+                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.8164556962025317">
+                        <stops>
+                            <Stop color="#ff361beb" />
+                            <Stop color="WHITE" offset="1.0" />
+                        </stops>
+                    </RadialGradient>
+                </fill>
+            </Circle>
+            <Label fx:id="countMessages2" text="5" />
+        </children>
+    </StackPane>
+    <JFXDrawer fx:id="drawer" defaultDrawerSize="190.0" overLayVisible="false" prefHeight="404.0" prefWidth="190.0" resizableOnDrag="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <VBox fx:id="box" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="404.0" prefWidth="130.0" style="-fx-background-color: #008ba5;">
+         <VBox fx:id="box" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="404.0" prefWidth="190.0" style="-fx-background-color: #008ba5;">
             <children>
-               <JFXButton buttonType="RAISED" onAction="#newGroup" prefHeight="25.0" prefWidth="177.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="New group">
+               <JFXButton buttonType="RAISED" onAction="#myInfo" prefHeight="25.0" prefWidth="174.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="My info">
                   <VBox.margin>
                      <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+                  </VBox.margin>
+               </JFXButton>
+               <JFXButton buttonType="RAISED" onAction="#newGroup" prefHeight="25.0" prefWidth="177.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="New group">
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                   </VBox.margin>
                </JFXButton>
                <JFXButton buttonType="RAISED" onAction="#add" prefHeight="25.0" prefWidth="174.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="Add">
@@ -44,7 +64,7 @@
                      <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                   </VBox.margin>
                </JFXButton>
-               <JFXButton buttonType="RAISED" onAction="#sentFiles" prefHeight="25.0" prefWidth="191.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="SentFiles">
+               <JFXButton buttonType="RAISED" onAction="#sentFiles" prefHeight="25.0" prefWidth="191.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="Send files">
                   <VBox.margin>
                      <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                   </VBox.margin>
@@ -75,7 +95,7 @@
                   </VBox.margin>
                   <children>
                      <JFXButton fx:id="newMessages" buttonType="RAISED" layoutX="16.0" layoutY="12.0" prefHeight="25.0" prefWidth="79.0" ripplerFill="#1203e8" style="-fx-background-color: #6ef8ff;" text="New messages" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                      <StackPane fx:id="stackPane" layoutX="57.0" layoutY="-13.0" AnchorPane.rightAnchor="-10" AnchorPane.topAnchor="-10">
+                      <StackPane fx:id="stackPane1" layoutX="57.0" layoutY="-13.0" AnchorPane.rightAnchor="-10" AnchorPane.topAnchor="-10">
                           <children>
                               <Circle radius="10.0" stroke="BLACK" strokeType="INSIDE">
                                   <fill>
@@ -87,7 +107,7 @@
                                       </RadialGradient>
                                   </fill>
                               </Circle>
-                              <Label fx:id="countMessages" text="5" />
+                              <Label fx:id="countMessages1" text="5" />
                           </children>
                       </StackPane>
                   </children>
@@ -97,4 +117,5 @@
       </children>
    </JFXDrawer>
    <JFXButton fx:id="close" onAction="#closeTab" ripplerFill="#1203e8" style="-fx-background-color: #00bcd4;" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="5.0" />
+   <StackPane fx:id="stackPaneForDialog" layoutX="-7.0" prefHeight="404.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 </AnchorPane>

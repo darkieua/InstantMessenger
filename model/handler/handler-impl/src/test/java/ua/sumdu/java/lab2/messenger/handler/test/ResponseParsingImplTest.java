@@ -7,9 +7,7 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +16,6 @@ import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.processing.ResponseParsingImpl;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
-import ua.sumdu.java.lab2.messenger.processing.UserCreatorImpl;
-import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 
 @RunWith(DataProviderRunner.class)
 public class ResponseParsingImplTest {
@@ -39,41 +35,6 @@ public class ResponseParsingImplTest {
     @DataProvider
     public static Object[][] messages() throws UnknownHostException {
         return ResponseGeneratingImplTest.messages();
-    }
-
-    @Test
-    public void userIsOffline() {
-        String response = USER_IS_OFFLINE.getResponseNumber() + "=test";
-        responseParsing.responseParsing(response);
-        MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.
-                read(User.getSystemMessageFile());
-        boolean isFind = false;
-        for (Message message : messageMap.getMapForMails().values()) {
-            if ("User(test) is offline".equals(message.getText())
-                && LocalDateTime.now().minusSeconds(1).isBefore(message.getTimeSending())) {
-                isFind = true;
-                messageMap.deleteMessage(message);
-            }
-        }
-        Assert.assertTrue(isFind);
-        XmlParser.INSTANCE.write(messageMap, User.getSystemMessageFile());
-    }
-
-    @Test
-    public void declinedRequest() {
-        String response = REQUEST_HAS_BEEN_DECLINED.getResponseNumber() + "=testUser(192.196.1.2)";
-        responseParsing.responseParsing(response);
-        MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());
-        boolean isFind = false;
-        for (Message message : messageMap.getMapForMails().values()) {
-            if ("User testUser(192.196.1.2)    declined your request".equals(message.getText())
-                    && LocalDateTime.now().minusSeconds(1).isBefore(message.getTimeSending())) {
-                isFind = true;
-                messageMap.deleteMessage(message);
-            }
-        }
-        Assert.assertTrue(isFind);
-        XmlParser.INSTANCE.write(messageMap, User.getSystemMessageFile());
     }
 
     @Test
@@ -118,31 +79,6 @@ public class ResponseParsingImplTest {
         Assert.assertEquals(RequestParsingImplTest.getMessage(newMessageMap.toString(),
             messageMap.toString()), newMessageMap, messageMap);
         senderMessages.delete();
-    }
-
-    @Test
-    public void addedToFriends() throws UnknownHostException {
-        UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-        User newUser = UserCreatorImpl.INSTANCE.createUser(CategoryUsers.FRIEND, "test_user", "test_user@go.com",
-            InetAddress.getLocalHost(), 8040);
-        String response = ADDED_TO_FRIENDS.getResponseNumber() + "=" + newUser.toJSonString();
-        responseParsing.responseParsing(response);
-        userMap.addUser(newUser);
-        UserMapImpl newUserMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
-        Assert.assertEquals(RequestParsingImplTest.getMessage(newUserMap.toString(),    userMap.toString()), newUserMap, userMap);
-        userMap.removeUser(newUser);
-        UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
-        MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(User.getSystemMessageFile());
-        boolean isFind = false;
-        for (Message message : messageMap.getMapForMails().values()) {
-            if ("User test_user confirmed your request to friends".equals(message.getText())
-                    && LocalDateTime.now().minusSeconds(1).isBefore(message.getTimeSending())) {
-                isFind = true;
-                messageMap.deleteMessage(message);
-            }
-        }
-        Assert.assertTrue(isFind);
-        XmlParser.INSTANCE.write(messageMap, User.getSystemMessageFile());
     }
 
     @Test

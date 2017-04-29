@@ -1,23 +1,23 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static ua.sumdu.java.lab2.messenger.entities.CategoryUsers.*;
 
-import javafx.event.ActionEvent;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
+import java.util.Objects;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import ua.sumdu.java.lab2.messenger.api.GroupMap;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.CategoryUsers;
-import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.listener.impl.ClientImpl;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
-import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
-
-import java.util.Objects;
-import java.util.Optional;
 
 public class GroupInfoController {
 
@@ -29,6 +29,7 @@ public class GroupInfoController {
     public TableView<User> participants;
     public TableColumn userNames;
     public TableColumn userCategory;
+    public StackPane stackPaneForDialog;
 
     public void dataFilling(String groupName) {
         this.groupName.setText(groupName);
@@ -49,10 +50,10 @@ public class GroupInfoController {
         restore.setVisible(false);
         participants.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             User user = participants.getSelectionModel().getSelectedItem();
-            if (admin.getText().equals(User.getCurrentUser().getUsername()) && !user.getUsername().equals(User.getCurrentUser().getUsername())) {
-                remove.setVisible(true);
-            }
             if (Objects.nonNull(user)) {
+                if (admin.getText().equals(User.getCurrentUser().getUsername()) && !user.getUsername().equals(User.getCurrentUser().getUsername())) {
+                    remove.setVisible(true);
+                }
                 if (BLACKLIST.name().equals(user.getCategory().name())) {
                     restore.setVisible(true);
                     return;
@@ -64,11 +65,19 @@ public class GroupInfoController {
     }
 
     public void removeUser() {
-        Alert alert = new Alert(CONFIRMATION);
-        alert.setTitle("Removing from group");
-        alert.setContentText("Are you sure?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+        stackPaneForDialog.setVisible(true);
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setStyle("-fx-background-color: #e0f7fa");
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.getChildren().add(new Text("Removing from group"));
+        anchorPane.setStyle("-fx-background-color: #4dd0e1");
+        content.setHeading(anchorPane);
+        content.setBody(new Text("Are you sure?"));
+        JFXButton bCancel = new JFXButton("No");
+        JFXButton bOK = new JFXButton("Yes");
+        Initialize.buttonStyle(bOK);
+        Initialize.buttonStyle(bCancel);
+        bOK.setOnAction((event) -> {
             User userForDelete = participants.getSelectionModel()
                     .getSelectedItem();
             new ClientImpl(userForDelete.getIpAddress(), userForDelete.getPort(),
@@ -88,7 +97,21 @@ public class GroupInfoController {
                         .start();
             }
             remove.setVisible(false);
-        }
+        });
+        ButtonBar buttonBar = new ButtonBar();
+        buttonBar.getButtons().addAll(bOK, bCancel);
+        content.setActions(buttonBar);
+        stackPaneForDialog.setVisible(true);
+        JFXDialog dialog = new JFXDialog(stackPaneForDialog, content, JFXDialog.DialogTransition.CENTER);
+        bCancel.setOnAction((event) -> {
+            dialog.close();
+            stackPaneForDialog.setVisible(false);
+        });
+        dialog.show();
+        dialog.setOnDialogClosed((event) -> {
+            dialog.show();
+            stackPaneForDialog.setVisible(false);
+        });
     }
 
     public void blockUser() {

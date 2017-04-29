@@ -1,53 +1,42 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static java.lang.Thread.sleep;
+import static ua.sumdu.java.lab2.messenger.controllers.Constants.*;
+import static ua.sumdu.java.lab2.messenger.controllers.Initialize.*;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import javafx.animation.PauseTransition;
+import java.awt.*;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.util.*;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.sumdu.java.lab2.messenger.api.GroupMap;
-import ua.sumdu.java.lab2.messenger.api.MessageMap;
-import ua.sumdu.java.lab2.messenger.api.UserMap;
+import ua.sumdu.java.lab2.messenger.api.*;
 import ua.sumdu.java.lab2.messenger.entities.*;
-import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
+import ua.sumdu.java.lab2.messenger.handler.processing.*;
 import ua.sumdu.java.lab2.messenger.listener.impl.ClientImpl;
-import ua.sumdu.java.lab2.messenger.parsers.MessageCounterParser;
-import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
-import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
-import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
+import ua.sumdu.java.lab2.messenger.parsers.*;
+import ua.sumdu.java.lab2.messenger.processing.*;
 
+@SuppressWarnings("all")
 public class MainController {
     private static final Logger LOG = LoggerFactory
             .getLogger(MainController.class);
+    public AnchorPane anchorPane;
+    public StackPane stackPane2;
+    public javafx.scene.control.Label countMessages2;
+    public StackPane stackPaneForDialog;
     @FXML
     private JFXButton btnOK;
 
@@ -55,7 +44,7 @@ public class MainController {
     private VBox box;
 
     @FXML
-    private Label countMessages;
+    private javafx.scene.control.Label countMessages1;
 
     @FXML
     private JFXButton btnFriendsList;
@@ -67,21 +56,14 @@ public class MainController {
     private JFXButton close;
     @FXML
     private JFXButton newMessages;
-    private JFXButton delete;
-    private JFXButton leave;
-    private JFXButton info;
-    private JFXButton restore;
-    private JFXButton blockButton;
-    private JFXButton btnShowFriendsChat;
-    private JFXButton btnShowGroupChat;
 
     @FXML
-    private StackPane stackPane;
+    private StackPane stackPane1;
     @FXML
-    private JFXListView<String> blackList;
-    private JFXListView<String> friendsList;
-    private JFXListView<String> groupList;
-    private JFXListView<String> messageList;
+    private final JFXListView<String> blackList = new JFXListView<>();
+    private final JFXListView<String> friendsList = new JFXListView<>();
+    private final JFXListView<String> groupList = new JFXListView<>();
+    private final JFXListView<String> messageList = new JFXListView<>();
     @FXML
     private JFXTabPane tabPane;
 
@@ -98,77 +80,50 @@ public class MainController {
 
     @FXML
     private JFXPopup friendsPopup;
-    private JFXPopup friendsOption;
     private JFXPopup blackListPopup;
-    private JFXPopup blackListOption;
     private JFXPopup groupsPopup;
-    private JFXPopup groupOption;
-    private JFXPopup newMessagesPopup;
 
     public Timer getTimer() {
         return timer;
     }
 
     private Timer timer;
-    private static final int ONE_SECOND = 1000;
-    private static final int SEND_FILES_WIDTH = 500;
-    private static final int SEND_FILES_HEIGHT = 350;
-    private static final int ADD_WIDTH = 450;
-    private static final int ADD_HEIGHT = 250;
-    private static final int INFO_WIDTH = 450;
-    private static final int INFO_HEIGHT = 400;
+
+    private boolean open = false;
 
     @FXML
     public final void initialize() {
-        stackPane.setVisible(false);
+        stackPaneForDialog.setVisible(false);
+        stackPane1.setVisible(false);
+        stackPane2.setVisible(false);
         ImageView image = new ImageView("ua/sumdu/java/lab2/messenger/images/clear.png");
         image.setFitWidth(20);
         image.setFitHeight(20);
         close.setGraphic(image);
         initHamburger();
         updateData();
-        initPopups();
-        User.getSystemMessageFile().delete();
+        initFriendsPopups();
+        initBlackListPopups();
+        initGroupsPopups();
+        messageList.setOnMouseClicked((event) -> {
+            String name = messageList.getSelectionModel().getSelectedItem();
+            MessageCounter messageCounter = MessageCounterParser.PARSER.getMessageCounter();
+            messageCounter.remove(name);
+            MessageCounterParser.PARSER.write(messageCounter);
+            showMessages(name, tabPane, tabMap);
+        });
+        initMessageListPopup(messageList, newMessages, stackPane1);
         tabMap = new TreeMap<>();
-        Initialize.initFriends(friendsList);
-        Initialize.initGroups(groupList);
-        Initialize.initBlackList(blackList);
-        blockButton.setVisible(false);
-        restore.setVisible(false);
-        delete.setVisible(false);
-        leave.setVisible(false);
-        info.setVisible(false);
-        XmlParser.INSTANCE.write(new MessageMapImpl(), User.getSystemMessageFile());
-        friendsList.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observableValue, oldValue,
-                              newValue) -> {
-                    blackList.getSelectionModel().clearSelection();
-                    blockButton.setVisible(true);
-                    delete.setVisible(true);
-                });
-        blackList.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observableValue, oldValue,
-                              newValue) -> {
-                    friendsList.getSelectionModel().clearSelection();
-                    restore.setVisible(true);
-                    delete.setVisible(true);
-                });
-        groupList.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observableValue, oldValue,
-                              newValue) -> {
-                    info.setVisible(true);
-                    leave.setVisible(true);
-                });
+        initFriends(friendsList);
+        initGroups(groupList);
+        initBlackList(blackList);
         textMessage.setVisible(false);
         btnOK.setVisible(false);
         close.setVisible(false);
         tabPane.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldValue,
                               newValue) -> {
-                    if (tabPane.getSelectionModel().getSelectedItem().getText().equals("System")) {
+                    if (tabPane.getSelectionModel().getSelectedIndex() == 0) {
                         textMessage.setVisible(false);
                         btnOK.setVisible(false);
                         close.setVisible(false);
@@ -181,147 +136,128 @@ public class MainController {
         createTimer();
     }
 
-    private void initButtons() {
-        leave = new JFXButton();
-        leave.setText("leave group");
-        leave.setOnMouseClicked((e) -> leaveGroup());
-        info = new JFXButton();
-        info.setText("Get info");
-        info.setOnMouseClicked((e) -> groupInfo());
-        delete = new JFXButton();
-        delete.setText("Delete");
-        delete.setOnMouseClicked((e) -> deleteFriend());
-        restore = new JFXButton();
-        restore.setText("Restore");
-        restore.setOnMouseClicked((e) -> restoreFromBlacklist());
-        blockButton = new JFXButton();
-        blockButton.setText("Block");
-        blockButton.setOnMouseClicked((e) -> block());
-        btnShowFriendsChat = new JFXButton();
-        btnShowFriendsChat.setText("Open");
-        btnShowFriendsChat.setOnMouseClicked((e) -> showFriendsChat());
-        btnShowGroupChat = new JFXButton();
-        btnShowGroupChat.setText("Open");
-        btnShowGroupChat.setOnMouseClicked((e) -> showGroupChat());
-    }
-
-    private void initPopups() {
-        JFXListView<String> list1 = new JFXListView<>();
-        friendsList = list1;
-        VBox box1 = new VBox(list1);
+    private void initFriendsPopups() {
+        VBox box1 = new VBox(friendsList);
         box1.setMinSize(100, 200);
-        JFXListView<String> list2 = new JFXListView<>();
-        groupList = list2;
-        VBox box2 = new VBox(list2);
-        box2.setMinSize(100, 200);
-        JFXListView<String> list3 = new JFXListView<>();
-        blackList = list3;
-        VBox box3 = new VBox(list3);
-        box3.setMinSize(100, 200);
         friendsPopup = new JFXPopup();
         friendsPopup.setPopupContent(box1);
-        groupsPopup = new JFXPopup(box2);
-        blackListPopup = new JFXPopup(box3);
-        initButtons();
-        VBox friendsOptions = new VBox(btnShowFriendsChat, blockButton, delete);
-        friendsOption = new JFXPopup();
+        JFXButton deleteFriends = new JFXButton();
+        buttonStyle(deleteFriends);
+        deleteFriends.setText("Delete");
+        deleteFriends.setOnMouseClicked((event) -> deleteFriend());
+        stackPaneForDialog.getChildren().add(deleteFriends);
+        JFXButton blockButton = new JFXButton();
+        buttonStyle(blockButton);
+        blockButton.setText("Block");
+        blockButton.setOnMouseClicked((event) -> block());
+        JFXButton btnShowFriendsChat = new JFXButton();
+        buttonStyle(btnShowFriendsChat);
+        btnShowFriendsChat.setText("Open");
+        btnShowFriendsChat.setOnMouseClicked((event) -> {
+            showMessages(friendsList.getSelectionModel()
+                    .getSelectedItems()
+                    .get(0), tabPane, tabMap);
+        });
+        VBox friendsOptions = new VBox(btnShowFriendsChat, deleteFriends, blockButton);
+        JFXPopup friendsOption = new JFXPopup();
         friendsOption.setPopupContent(friendsOptions);
-        friendsList.setOnMouseClicked((e) -> {
+        friendsList.setOnMouseClicked((event) -> {
             if (Objects.nonNull(friendsList.getSelectionModel().getSelectedItem())) {
-                friendsOption.show(friendsList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, e.getX(), e.getY());
-            }
-        });
-        VBox groupOptions = new VBox(btnShowGroupChat, info, leave);
-        groupOption = new JFXPopup();
-        groupOption.setPopupContent(groupOptions);
-        groupList.setOnMouseClicked((e) -> {
-            if (Objects.nonNull(groupList.getSelectionModel().getSelectedItem())) {
-                groupOption.show(groupList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, e.getX(), e.getY());
-            }
-
-        });
-        VBox blackListOptions = new VBox(restore, delete);
-        blackListOption = new JFXPopup();
-        blackListOption.setPopupContent(blackListOptions);
-        blackList.setOnMouseClicked((e) -> {
-            if (Objects.nonNull(blackList.getSelectionModel().getSelectedItem())) {
-                blackListOption.show(blackList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, e.getX(), e.getY());
-            }
-        });
-        messageList = new JFXListView<>();
-        messageList.setOnMouseClicked((e) -> {
-            String name = messageList.getSelectionModel().getSelectedItem();
-            MessageCounter messageCounter = MessageCounterParser.PARSER.getMessageCounter();
-            messageCounter.remove(name);
-            MessageCounterParser.PARSER.write(messageCounter);
-            showMessages(name);
-        });
-        VBox box4 = new VBox(messageList);
-        box4.setMinSize(100, 200);
-        newMessagesPopup = new JFXPopup(box4);
-        newMessages.setOnMouseClicked((e) -> {
-            if (stackPane.isVisible()) {
-                newMessagesPopup.show(newMessages, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, e.getX(), e.getY());
+                friendsOption.show(friendsList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
             }
         });
     }
 
+    private void initBlackListPopups() {
+        VBox box3 = new VBox(blackList);
+        box3.setMinSize(100, 200);
+        blackListPopup = new JFXPopup(box3);
+        JFXButton delete = new JFXButton();
+        buttonStyle(delete);
+        delete.setText("Delete");
+        delete.setOnMouseClicked((event) -> deleteFriend());
+        stackPaneForDialog.getChildren().add(delete);
+        JFXButton restore = new JFXButton();
+        buttonStyle(restore);
+        restore.setText("Restore");
+        restore.setOnMouseClicked((event) -> restoreFromBlacklist());
+        VBox blackListOptions = new VBox(restore, delete);
+        JFXPopup blackListOption = new JFXPopup();
+        blackListOption.setPopupContent(blackListOptions);
+        blackList.setOnMouseClicked((event) -> {
+            if (Objects.nonNull(blackList.getSelectionModel().getSelectedItem())) {
+                blackListOption.show(blackList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
+            }
+        });
+    }
+
+    private void initGroupsPopups() {
+        JFXButton leave = new JFXButton();
+        buttonStyle(leave);
+        leave.setText("Leave");
+        leave.setOnMouseClicked((event) -> leaveGroup(stackPaneForDialog, groupList, tabPane, tabMap));
+        JFXButton info = new JFXButton();
+        buttonStyle(info);
+        info.setText("Get info");
+        info.setOnMouseClicked((event) -> {
+            Initialize init = new Initialize();
+            init.groupInfo(groupList);
+        });
+        JFXButton btnShowGroupChat = new JFXButton();
+        buttonStyle(btnShowGroupChat);
+        btnShowGroupChat.setText("Open");
+        btnShowGroupChat.setOnMouseClicked((event) -> showGroupChat());VBox box2 = new VBox(groupList);
+        box2.setMinSize(100, 200);
+        groupsPopup = new JFXPopup(box2);
+        VBox groupOptions = new VBox(btnShowGroupChat, info, leave);
+        JFXPopup groupOption = new JFXPopup();
+        groupOption.setPopupContent(groupOptions);
+        groupList.setOnMouseClicked((event) -> {
+            if (Objects.nonNull(groupList.getSelectionModel().getSelectedItem())) {
+                groupOption.show(groupList, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
+            }
+
+        });
+    }
+    
     private void initHamburger() {
         HamburgerBackArrowBasicTransition burgerTask = new HamburgerBackArrowBasicTransition(hamburger);
         burgerTask.setRate(-1);
         box.setVisible(true);
         drawer.setSidePane(box);
-        hamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e)->{
+        hamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (event)->{
             burgerTask.setRate(burgerTask.getRate()*-1);
             burgerTask.play();
             if (drawer.isShown()) {
+                anchorPane.setPadding(new javafx.geometry.Insets(0, 0, 0, 0));
                 drawer.setVisible(false);
                 drawer.close();
+                open = false;
+
             } else {
                 drawer.setVisible(true);
                 drawer.open();
+                open = true;
+                new Thread(() -> {
+                    try {
+                        sleep(500);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    anchorPane.setPadding(new javafx.geometry.Insets(0, 0, 0, 190));
+                }).start();
             }
         });
     }
-
-    private void updateData() {
-        UserMap friends = UserMapParserImpl.getInstance().getFriends();
-        RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
-        long lastLogin = User.getLastLoginTime();
-        for (User user : friends.getMap().values()) {
-            new ClientImpl(user.getIpAddress(), user.getPort(),
-                    requestGenerating
-                            .createRequestForMessagesFromSpecificDate(lastLogin))
-                    .start();
-        }
-        GroupMap groupMap = GroupMapParserImpl.getInstance().getGroupMap();
-        for (String groupName : groupMap.getMap()
-                .keySet()) {
-            UserMap userMap = groupMap.getMap()
-                    .get(groupName);
-            for (User user : userMap.getMap()
-                    .values()) {
-                new ClientImpl(user.getIpAddress(), user.getPort(),
-                        requestGenerating
-                                .createRequestForGroupMessagesFromSpecificDate(lastLogin,
-                                        groupName))
-                        .start();
-                new ClientImpl(user.getIpAddress(), user.getPort(),
-                        requestGenerating
-                                .createRequestForUpdateGroupList(groupName))
-                        .start();
-            }
-        }
-    }
-
+    
     private void createTimer() {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                    Initialize.initFriends(friendsList);
-                    Initialize.initGroups(groupList);
-                    Initialize.initBlackList(blackList);
+                    initFriends(friendsList);
+                    initGroups(groupList);
+                    initBlackList(blackList);
                     for (String chatName : tabMap.keySet()) {
                         Initialize
                                 .updateMessages(tabMap.get(chatName), chatName);
@@ -335,45 +271,15 @@ public class MainController {
                     for (int thisCount : messageCounter.getMap().values()) {
                         count += thisCount;
                     }
-                    if (count != 0) {
-                        countMessages.setText(String.valueOf(count));
-                        stackPane.setVisible(true);
-                    } else {
-                        stackPane.setVisible(false);
-                    }
+                    countMessages1.setText(String.valueOf(count));
+                    countMessages2.setText(String.valueOf(count));
+                    stackPane1.setVisible(count != 0);
+                    stackPane2.setVisible(count != 0 && !open);
                 });
             }
         };
         timer = new Timer();
         timer.scheduleAtFixedRate(timerTask, 0, ONE_SECOND);
-    }
-
-    private void showMessages(final String name) {
-        boolean isFind = false;
-        for (Tab currentTab : tabPane.getTabs().sorted()) {
-            if (name.equals(currentTab.getText())) {
-                tabPane.getSelectionModel().select(currentTab);
-                isFind = true;
-                break;
-            }
-        }
-        if (!isFind) {
-            Tab newTab = new Tab();
-            newTab.setText(name);
-            newTab.setClosable(true);
-            tabPane.getTabs().add(newTab);
-            ListView<Text> chat;
-            if (tabMap.get(name) == null) {
-                chat = new ListView<>();
-            } else {
-                chat = tabMap.get(name);
-            }
-            tabMap.put(name, chat);
-            newTab.setContent(chat);
-            newTab.setClosable(true);
-            tabPane.getSelectionModel().select(newTab);
-        }
-        Initialize.updateMessages(tabMap.get(name), name);
     }
 
     public final void sentMessage() {
@@ -398,21 +304,17 @@ public class MainController {
                 .values()) {
             if (user.getUsername()
                     .equals(receiver)) {
-                RequestGeneratingImpl requestGenerating
-                        = new RequestGeneratingImpl();
                 new ClientImpl(user.getIpAddress(), user.getPort(),
-                        requestGenerating.createRequestForNewMessage(message))
+                        new MessageRequestGeneratingImpl().createRequestForNewMessage(message))
                         .start();
                 return;
             }
         }
         UserMap groupMap = GroupMapParserImpl.getInstance()
                 .getUserMap(receiver);
-        RequestGeneratingImpl requestGenerating
-                = new RequestGeneratingImpl();
         for (User user : groupMap.getMap().values()) {
             new ClientImpl(user.getIpAddress(), user.getPort(),
-                    requestGenerating.createRequestForNewGroupMessage(message))
+                    new MessageRequestGeneratingImpl().createRequestForNewGroupMessage(message))
                     .start();
         }
     }
@@ -430,13 +332,15 @@ public class MainController {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
+        Image icon = new Image("/ua/sumdu/java/lab2/messenger/images/"
+                + "bubbles.png");
+        stage.getIcons().add(icon);
         SendingFilesController sendingFilesController = sendingFilesFxmlLoader.getController();
         String name = tabPane.getSelectionModel().getSelectedItem().getText();
         sendingFilesController.setUsernameOrGroupname(name);
         sendingFilesController.initAfterSet();
-        stage.setTitle("Add to friends or group");
+        stage.setTitle("Sending files");
         stage.setScene(new Scene(root, SEND_FILES_WIDTH, SEND_FILES_HEIGHT));
-        stage.setResizable(false);
         stage.showAndWait();
     }
 
@@ -451,6 +355,9 @@ public class MainController {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
+        Image icon = new Image("/ua/sumdu/java/lab2/messenger/images/"
+                + "bubbles.png");
+        stage.getIcons().add(icon);
         stage.setTitle("Add to friends or group");
         stage.setScene(new Scene(root, ADD_WIDTH, ADD_HEIGHT));
         stage.setResizable(false);
@@ -458,36 +365,52 @@ public class MainController {
     }
 
     public final void newGroup() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("New group");
-        dialog.setHeaderText("Create a new group");
-        dialog.setContentText("Please enter group name:");
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
+        stackPaneForDialog.setVisible(true);
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setStyle("-fx-background-color: #e0f7fa");
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.getChildren().add(new Text("New group"));
+        anchorPane.setStyle("-fx-background-color: #4dd0e1");
+        content.setHeading(anchorPane);
+        VBox box = new VBox();
+        HBox hbox = new HBox();
+        JFXTextField result = new JFXTextField();
+        result.setUnFocusColor(javafx.scene.paint.Paint.valueOf("#009faf"));
+        result.setFocusColor(javafx.scene.paint.Paint.valueOf("#88ffff"));
+        hbox.getChildren().addAll(new Text("Please enter group name:"), result);
+        box.getChildren().addAll(new Text("Create a new group"), hbox);
+        content.setBody(box);
+        JFXButton bOK = new JFXButton("Create");
+        buttonStyle(bOK);
+        JFXDialog dialog = new JFXDialog(stackPaneForDialog, content, JFXDialog.DialogTransition.CENTER);
+        bOK.setOnAction((event) -> {
             GroupMap groups = GroupMapParserImpl.getInstance()
                     .getGroupMap();
-            groups.addUser(result.get(), User.getCurrentUser()
-                            .setCategory(CategoryUsers.ADMIN));
+            groups.addUser(result.getText(), User.getCurrentUser()
+                    .setCategory(CategoryUsers.ADMIN));
             GroupMapParserImpl.getInstance()
                     .writeGroupMapToFile(GroupMapParserImpl.getInstance()
-                                    .groupMapToJSonString(groups));
-            Initialize.initGroups(groupList);
-        }
+                            .groupMapToJSonString(groups));
+            initGroups(groupList);
+            dialog.close();
+        });
+        content.setActions(bOK);
+        stackPaneForDialog.setVisible(true);
+        dialog.show();
+        dialog.setOnDialogClosed((event) -> {
+            dialog.show();
+            stackPaneForDialog.setVisible(false);
+        });
     }
-
-    public final void showFriendsChat() {
-        showMessages(friendsList.getSelectionModel()
-                .getSelectedItems()
-                .get(0));
-    }
-
+    
     public final void showGroupChat() {
         showMessages(groupList.getSelectionModel()
                 .getSelectedItems()
-                .get(0));
+                .get(0), tabPane, tabMap);
     }
 
     public final void block() {
+        friendsPopup.hide();
         String username = friendsList.getSelectionModel()
                 .getSelectedItem();
         UserMap friends = UserMapParserImpl.getInstance()
@@ -506,12 +429,12 @@ public class MainController {
                 .writeUserMapToFile(
                         UserMapParserImpl.getInstance()
                                 .userMapToJSonString(friends));
-        Initialize.initFriends(friendsList);
+        initFriends(friendsList);
         UserMapParserImpl.getInstance()
                 .writeBlackListToFile(
                         UserMapParserImpl.getInstance()
                                 .userMapToJSonString(blackListUsers));
-        Initialize.initBlackList(blackList);
+        initBlackList(blackList);
         for (Tab tab : tabPane.getTabs()) {
             if (tab.getText().equals(username)) {
                 tabPane.getTabs().remove(tab);
@@ -524,6 +447,7 @@ public class MainController {
     }
 
     public final void restoreFromBlacklist() {
+        blackListPopup.hide();
         String username = blackList.getSelectionModel()
                 .getSelectedItem();
         UserMap blackListUsers = UserMapParserImpl.getInstance()
@@ -542,20 +466,34 @@ public class MainController {
                 .writeUserMapToFile(
                         UserMapParserImpl.getInstance()
                                 .userMapToJSonString(friends));
-        Initialize.initFriends(friendsList);
+        initFriends(friendsList);
         UserMapParserImpl.getInstance()
                 .writeBlackListToFile(
                         UserMapParserImpl.getInstance()
                                 .userMapToJSonString(blackListUsers));
-        Initialize.initBlackList(blackList);
+        initBlackList(blackList);
     }
 
     public void deleteFriend() {
-        Alert alert = new Alert(CONFIRMATION);
-        alert.setTitle("Removing from friends");
-        alert.setContentText("Are you sure?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+        if (friendsPopup.isShowing()) {
+            friendsPopup.hide();
+        } else {
+            blackListPopup.hide();
+        }
+        stackPaneForDialog.setVisible(true);
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setStyle("-fx-background-color: #e0f7fa");
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.getChildren().add(new Text("Removing from friends"));
+        anchorPane.setStyle("-fx-background-color: #4dd0e1");
+        content.setHeading(anchorPane);
+        content.setBody(new Text("Are you sure?"));
+        JFXButton bCancel = new JFXButton("No");
+        JFXButton bOK = new JFXButton("Yes");
+        buttonStyle(bOK);
+        buttonStyle(bCancel);
+        bOK.setOnAction((event) -> {
+            stackPaneForDialog.setVisible(false);
             String username = friendsList.getSelectionModel()
                     .getSelectedItem();
             if (Objects.nonNull(username)) {
@@ -568,9 +506,21 @@ public class MainController {
                 deleteUser(blackList, username);
                 UserMapParserImpl.getInstance().writeBlackListToFile(UserMapParserImpl.getInstance().userMapToJSonString(blackList));
             }
-            delete.setVisible(false);
-        }
-
+        });
+        ButtonBar buttonBar = new ButtonBar();
+        buttonBar.getButtons().addAll(bOK, bCancel);
+        content.setActions(buttonBar);
+        stackPaneForDialog.setVisible(true);
+        JFXDialog dialog = new JFXDialog(stackPaneForDialog, content, JFXDialog.DialogTransition.CENTER);
+        bCancel.setOnAction((event) -> {
+            dialog.close();
+            stackPaneForDialog.setVisible(false);
+        });
+        dialog.show();
+        dialog.setOnDialogClosed((event) -> {
+            dialog.show();
+            stackPaneForDialog.setVisible(false);
+        });
     }
 
     private void deleteUser(UserMap users, String username) {
@@ -581,55 +531,6 @@ public class MainController {
                 return;
             }
         }
-    }
-
-    public void leaveGroup() {
-        Alert alert = new Alert(CONFIRMATION);
-        alert.setTitle("Leave group");
-        alert.setContentText("Are you sure?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
-            String groupName = groupList.getSelectionModel().getSelectedItem();
-            GroupMap groupMap = GroupMapParserImpl.getInstance().getGroupMap();
-            for (User user : groupMap.getMap().get(groupName).getMap().values()) {
-                new ClientImpl(user.getIpAddress(), user.getPort(), new RequestGeneratingImpl().creatingDeleteRequestFromGroup(groupName)).start();
-            }
-            Map<String, UserMap> map = groupMap.getMap();
-            map.remove(groupName);
-            groupMap.setMap(map);
-            GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance().groupMapToJSonString(groupMap));
-            Collection<Tab> tabs = tabPane.getTabs();
-            for (Tab tab : tabs) {
-                if (groupName.equals(tab.getText())) {
-                    tabPane.getTabs().remove(tab);
-                    break;
-                }
-            }
-            tabPane.getSelectionModel().selectFirst();
-            tabMap.remove(groupName);
-        }
-        Initialize.initGroups(groupList);
-    }
-
-    public void groupInfo() {
-        Stage stage = new Stage();
-        FXMLLoader groupInfoFxmlLoader = new FXMLLoader();
-        groupInfoFxmlLoader.setLocation(getClass()
-                .getResource(
-                        "/ua/sumdu/java/lab2/messenger/fxmls/"
-                                + "GroupInfo.fxml"));
-        Parent root = null;
-        try {
-            root = groupInfoFxmlLoader.load();
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        GroupInfoController groupInfoController = groupInfoFxmlLoader.getController();
-        groupInfoController.dataFilling(groupList.getSelectionModel().getSelectedItem());
-        stage.setTitle("Group info");
-        stage.setScene(new Scene(root, INFO_WIDTH, INFO_HEIGHT));
-        stage.setResizable(false);
-        stage.show();
     }
 
     public void goToDownload() {
@@ -656,7 +557,28 @@ public class MainController {
         groupsPopup.show(btnGroups, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void closeTab(ActionEvent actionEvent) {
+    public void closeTab() {
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+    }
+
+    public void myInfo() {
+        Stage stage = new Stage();
+        FXMLLoader myInfoFxmlLoader = new FXMLLoader();
+        myInfoFxmlLoader.setLocation(getClass()
+                .getResource(
+                        "/ua/sumdu/java/lab2/messenger/fxmls/"
+                                + "myInfo.fxml"));
+        Parent root = null;
+        try {
+            root = myInfoFxmlLoader.load();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        Image icon = new Image("/ua/sumdu/java/lab2/messenger/images/"
+                + "bubbles.png");
+        stage.getIcons().add(icon);
+        stage.setTitle("MyInfo");
+        stage.setScene(new Scene(root, SEND_FILES_WIDTH, SEND_FILES_HEIGHT));
+        stage.show();
     }
 }

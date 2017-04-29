@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.entities.*;
+import ua.sumdu.java.lab2.messenger.handler.processing.MessageRequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestParsingImpl;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
@@ -71,7 +72,7 @@ public class RequestParsingImplTest2 {
     @Test
     public void newMessageToGroup(Message mess) {
         mess.setReceiver("testGroup");
-        String request = requestGenerating.createRequestForNewGroupMessage(mess);
+        String request = new MessageRequestGeneratingImpl().createRequestForNewGroupMessage(mess);
         String receiver = mess.getReceiver();
         String path = User.getUrlMessageDirectory() + "/" + receiver + ".xml";
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(new File(path));
@@ -113,12 +114,12 @@ public class RequestParsingImplTest2 {
         String newResponse1 = requestParsing.requestParsing(request1);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse1, response1), newResponse1,
             response1);
-        String request2 = requestGenerating.createRequestForMessagesFromSpecificDate(1);
+        String request2 = new MessageRequestGeneratingImpl().createRequestForMessagesFromSpecificDate(1);
         String response2 = REQUESTED_MESSAGES.getResponseNumber() + "=" + 1 + "=" + User.getCurrentUser().getUsername();
         String newResponse2 = requestParsing.requestParsing(request2);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse2, response2), newResponse2,
             response2);
-        String request3 = requestGenerating.createRequestForGroupMessagesFromSpecificDate(1, groupName);
+        String request3 = new MessageRequestGeneratingImpl().createRequestForGroupMessagesFromSpecificDate(1, groupName);
         String response3 = REQUESTED_GROUP_MESSAGES.getResponseNumber() + "=" + 1 + "=" + groupName;
         String newResponse3 = requestParsing.requestParsing(request3);
         Assert.assertEquals(RequestParsingImplTest.getMessage(newResponse3, response3), newResponse3,
@@ -133,7 +134,7 @@ public class RequestParsingImplTest2 {
         UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance().userMapToJSonString(userMap));
         Message mess = new Message(user1.getUsername(), User.getCurrentUser().getUsername(), "text",
             LocalDateTime.now());
-        String request = requestGenerating.createRequestForNewMessage(mess);
+        String request = new MessageRequestGeneratingImpl().createRequestForNewMessage(mess);
         String sender = mess.getSender();
         File messageFile = new File(User.getUrlMessageDirectory() + "/" + sender + ".xml");
         MessageMapImpl messageMap = (MessageMapImpl) XmlParser.INSTANCE.read(messageFile);

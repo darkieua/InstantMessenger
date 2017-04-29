@@ -2,33 +2,69 @@ package ua.sumdu.java.lab2.messenger.handler.test;
 
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
 
-import com.tngtech.java.junit.dataprovider.DataProvider;
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
-import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import com.tngtech.java.junit.dataprovider.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Date;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.entities.*;
 import ua.sumdu.java.lab2.messenger.handler.processing.ResponseGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
+import ua.sumdu.java.lab2.messenger.processing.SettingsImpl;
+import ua.sumdu.java.lab2.messenger.processing.SettingsParserImpl;
 
 @RunWith(DataProviderRunner.class)
 public class ResponseGeneratingImplTest {
 
     ResponseGeneratingImpl responseGenerating;
     private static String testUser = "test_user";
+    private boolean isWrite = false;
 
     @Before
-    public void init() {
+    public void init() throws IOException {
         responseGenerating = new ResponseGeneratingImpl();
+        File file = new File(User.getUserConfigPath());
+        if (!file.exists()) {
+            isWrite = true;
+            file.createNewFile();
+            SettingsImpl settings = new SettingsImpl();
+            try {
+                String ipAddress = InetAddress.getLocalHost()
+                        .getHostAddress();
+                settings.putSetting("ipAddress", ipAddress);
+            } catch (UnknownHostException e) {
+                settings.putSetting("ipAddress", "");
+            }
+            settings.putSetting("port", String.valueOf(9696));
+            settings.putSetting("downloadPath", "");
+            settings.putSetting("username", "testUser");
+            settings.putSetting("email", "test@ex.co");
+            Date out = Date.from(LocalDateTime.now()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant());
+            settings.putSetting("lastLoginTime",
+                    String.valueOf(out.getTime()));
+            SettingsParserImpl settingsParser = new SettingsParserImpl();
+            String result = settingsParser.settingsToJson(settings);
+            FileWriter writer = new FileWriter(file, false);
+            writer.write(result);
+            writer.flush();
+            writer.close();
+        }
+    }
+
+    @After
+    public void after() {
+        if (isWrite) {
+            new File(User.getUserConfigPath()).delete();
+        }
     }
 
     @DataProvider
@@ -56,22 +92,6 @@ public class ResponseGeneratingImplTest {
     public void nonProcessingShortResponses(String request){
         String result = responseGenerating.responseGenerate(request);
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, request), result, request);
-    }
-
-    @Test
-    public void declinedRequest() {
-        String request = String.valueOf(REQUEST_HAS_BEEN_DECLINED.getResponseNumber());
-        String result = responseGenerating.responseGenerate(request);
-        String correctResult = request + "=" + User.getCurrentUser().getUsername() + "(" + User.getCurrentUser().getIpAddress() + ")";
-        Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
-    }
-
-    @Test
-    public void addedToFriend() {
-        String request = String.valueOf(ADDED_TO_FRIENDS.getResponseNumber());
-        String result = responseGenerating.responseGenerate(request);
-        String correctResult = request + "=" + User.getCurrentUser().setCategory(CategoryUsers.FRIEND).toJSonString();
-        Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
     }
 
     @Test
@@ -120,16 +140,5 @@ public class ResponseGeneratingImplTest {
                 .writeMessageToDocument(newMap, null));
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
         testFile.delete();
-    }
-
-    @Test
-    public void addedToGroup() {
-        String request = ADDED_TO_GROUP.getResponseNumber() + "=test_chat";
-        String result = responseGenerating.responseGenerate(request);
-        GroupMapImpl thisUser = new GroupMapImpl();
-        thisUser.addUser("test_chat", User.getCurrentUser().setCategory(CategoryUsers.VISITOR));
-        String correctResult = ADDED_TO_GROUP.getResponseNumber() + "=" + GroupMapParserImpl.getInstance().groupMapToJSonString(thisUser);
-        Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctResult), result, correctResult);
-
     }
 }

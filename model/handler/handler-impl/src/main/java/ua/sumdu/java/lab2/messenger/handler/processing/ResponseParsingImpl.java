@@ -1,13 +1,16 @@
 package ua.sumdu.java.lab2.messenger.handler.processing;
 
 import static ua.sumdu.java.lab2.messenger.handler.entities.ResponseType.*;
+import static ua.sumdu.java.lab2.messenger.handler.processing.AddingRequestParsing.addNewFriend;
+import static ua.sumdu.java.lab2.messenger.handler.processing.UpdateRequestParsing.updateGroup;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Objects;
-
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.w3c.dom.Document;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
@@ -61,8 +64,7 @@ public class ResponseParsingImpl implements ResponseParsing {
 
     private String responsesUpdates(int responseType, String context) {
         if (responseType == UPDATED_GROUP_LIST.getResponseNumber()) {
-            RequestParsingImpl requestParsing = new RequestParsingImpl();
-            requestParsing.updateGroup(context);
+            updateGroup(context);
         } else if (responseType == REQUESTED_MESSAGES.getResponseNumber()
                 || responseType == REQUESTED_GROUP_MESSAGES.getResponseNumber()) {
             Document doc = XmlParser.loadXmlFromString(context);
@@ -99,8 +101,7 @@ public class ResponseParsingImpl implements ResponseParsing {
 
     private String addResponses(int responseType, String context) {
         if (ADDED_TO_FRIENDS.getResponseNumber() == responseType) {
-            RequestParsingImpl requestParsing = new RequestParsingImpl();
-            String name = requestParsing.addNewFriend(context);
+            String name = addNewFriend(context);
             notificationOfSuccessfulAdditionToFriends(name);
             return "";
         } else if (responseType == ADDED_TO_GROUP.getResponseNumber()) {
@@ -123,33 +124,44 @@ public class ResponseParsingImpl implements ResponseParsing {
     }
 
     private String notificationThatUserIsOffline(String userIp) {
-        File system = User.getSystemMessageFile();
-        MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-        Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
-                "User(" + userIp + ") is offline", LocalDateTime.now());
-        messages.addMessage(newMessage);
-        XmlParser.INSTANCE.write(messages, system);
+        Platform.runLater(() ->{
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("User(" + userIp + ") is offline")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showError();
+        });
         return "";
     }
 
     private String notificationOfDeclinedRequest(String userName) {
-        File system = User.getSystemMessageFile();
-        MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-        Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
-                "User " + userName + "    declined your request", LocalDateTime.now());
-        messages.addMessage(newMessage);
-        XmlParser.INSTANCE.write(messages, system);
+        Platform.runLater(() -> {
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("User " + userName + " declined your request")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showConfirm();
+        });
         return "";
     }
 
-    private String notificationOfSuccessfulAdditionToFriends(String name) {
-        File system = User.getSystemMessageFile();
-        MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-        Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
-                "User " + name + " confirmed your request to friends", LocalDateTime.now());
-        messages.addMessage(newMessage);
-        XmlParser.INSTANCE.write(messages, system);
-        return "";
+    private void notificationOfSuccessfulAdditionToFriends(String name) {
+        Platform.runLater(() -> {
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("User " + name + " confirmed your request to friends")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showConfirm();
+        });
     }
 
 }

@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="350.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.transferring.impl.ReceivingFilesController">
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="178.0" layoutY="31.0" text="Receiving files" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
-      <font>
-         <Font name="System Italic" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="message" layoutX="32.0" layoutY="54.0" text="User user1  sent you a request for data transfer." AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0">
-      <font>
-         <Font name="System Italic" size="14.0" />
-      </font>
-      <padding>
-         <Insets left="20.0" />
-      </padding>
-   </Label>
-   <Button cancelButton="true" layoutX="39.0" layoutY="188.0" mnemonicParsing="false" onAction="#buttonCancel" prefHeight="25.0" prefWidth="58.0" text="Cancel" AnchorPane.leftAnchor="50.0" />
-   <Button fx:id="remote" layoutX="39.0" layoutY="228.0" mnemonicParsing="false" onAction="#buttonRemote" text="Remote" visible="false" AnchorPane.leftAnchor="50.0" />
-   <Label layoutX="32.0" layoutY="74.0" text="Select the files you want to accept:" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
-      <font>
-         <Font name="System Italic" size="14.0" />
-      </font>
-      <padding>
-         <Insets left="10.0" />
-      </padding>
-   </Label>
-   <Button defaultButton="true" layoutX="39.0" layoutY="148.0" mnemonicParsing="false" onAction="#buttonOk" prefHeight="25.0" prefWidth="58.0" text="OK" AnchorPane.leftAnchor="50.0" />
-   <TableView fx:id="files" layoutX="127.0" layoutY="128.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="130.0">
-      <columns>
-         <TableColumn fx:id="fileName" editable="false" prefWidth="75.0" text="Name" />
-         <TableColumn fx:id="fileSize" prefWidth="75.0" text="Size" />
-      </columns>
-      <columnResizePolicy>
-         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-      </columnResizePolicy>
-   </TableView>
-</AnchorPane>
+<HBox prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.transferring.impl.ReceivingFilesController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="184.0" style="-fx-background-color: #26c6da;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="189.0" style="-fx-background-color: #0095a8;" text="Receiving files" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+               <font>
+                  <Font name="System Italic" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <JFXTextArea fx:id="message" focusColor="#26c6da" prefHeight="69.0" prefWidth="157.0" unFocusColor="#26c6da">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXTextArea>
+            <JFXButton fx:id="remote" buttonType="RAISED" onAction="#buttonRemote" prefHeight="25.0" prefWidth="180.0" ripplerFill="#1b06dd" style="-fx-background-color: #6ff9ff;" text="Remote">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </JFXButton>
+            <JFXButton buttonType="RAISED" onAction="#buttonOk" prefHeight="25.0" prefWidth="175.0" ripplerFill="#1b06dd" style="-fx-background-color: #6ff9ff;" text="OK">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </VBox.margin>
+            </JFXButton>
+            <JFXButton buttonType="RAISED" onAction="#buttonCancel" prefHeight="25.0" prefWidth="164.0" ripplerFill="#1b06dd" style="-fx-background-color: #6ff9ff;" text="Cancel">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+               </VBox.margin>
+            </JFXButton>
+         </children>
+      </VBox>
+      <TableView fx:id="files" prefHeight="400.0" prefWidth="330.0" style="-fx-background-color: #e0f7fa;" HBox.hgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="fileName" editable="false" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="fileSize" prefWidth="75.0" text="Size" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</HBox>

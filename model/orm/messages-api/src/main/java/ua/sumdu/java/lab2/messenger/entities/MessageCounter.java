@@ -8,18 +8,18 @@ import javafx.collections.ObservableList;
 
 public class MessageCounter {
 
-    private Map<String, Integer> map = new TreeMap<>();
+    private final Map<String, Integer> map;
 
-    private transient ObservableList<String> userList;
-
+    public MessageCounter() {
+        map = new TreeMap<>();
+    }
 
     public Map<String, Integer> getMap() {
         return map;
     }
 
     public ObservableList<String> getUserList() {
-        userList = FXCollections.observableArrayList(map.keySet());
-        return userList;
+        return FXCollections.observableArrayList(map.keySet());
     }
 
     public void add(String username, int countMessages) {

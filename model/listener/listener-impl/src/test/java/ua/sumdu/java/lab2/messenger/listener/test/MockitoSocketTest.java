@@ -1,11 +1,7 @@
 package ua.sumdu.java.lab2.messenger.listener.test;
 
 import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.when;
 
-import java.net.*;
-import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.Test;
@@ -13,15 +9,12 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ua.sumdu.java.lab2.messenger.listener.impl.*;
-import ua.sumdu.java.lab2.messenger.entities.*;
-import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
-import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ClientImpl.class, MultiThreadedServerImpl.class})
 public class MockitoSocketTest {
 
-    @Test
+/*    @Test
     public void userIsOfflineTest() throws UnknownHostException {
         RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
         String request = requestGenerating.creatingFriendsRequest();
@@ -40,7 +33,7 @@ public class MockitoSocketTest {
             }
         }
         assertTrue(isFind);
-    }
+    }*/
 
     /*@Test
     public void correctWork() throws IOException {

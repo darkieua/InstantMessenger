@@ -1,8 +1,15 @@
 package ua.sumdu.java.lab2.messenger.transferring.impl;
 
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
+
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
@@ -14,6 +21,7 @@ public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
 
     @Override
     public void listenPort(int port, SentFiles files) {
+        File currentFile = null;
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             Socket socket = serverSocket.accept();
@@ -22,6 +30,7 @@ public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
                 long size = file.getSize();
                 String name = file.getName();
                 File newFile = new File(User.getDirectoryForDownloadFiles() + File.separator + name);
+                currentFile = newFile;
                 newFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 byte[] buffer = new byte[1024];
@@ -43,7 +52,42 @@ public class SendingAndReceivingFilesImpl implements SendingAndReceivingFiles {
                 fos.close();
             }
              socket.close();
+            Platform.runLater(() -> {
+                Notifications notification = Notifications.create()
+                        .title("Download complete")
+                        .darkStyle()
+                        .graphic(null)
+                        .text("Files successfully uploaded")
+                        .hideAfter(Duration.seconds(5))
+                        .onAction((event) -> {
+                            Desktop desktop = null;
+                            if (Desktop.isDesktopSupported()) {
+                                desktop = Desktop.getDesktop();
+                            }
+                            try {
+                                desktop.open(new File(User.getDirectoryForDownloadFiles()));
+                            } catch (IOException e1) {
+                                LOG.error(e1.getMessage(), e1);
+                            }
+                        })
+                        .position(Pos.BOTTOM_RIGHT);
+                notification.showConfirm();
+            });
         } catch (IOException e) {
+            Notifications notification = Notifications.create()
+                    .title("Error")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("Disconnection. Files were not uploaded")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showError();
+            if (Objects.nonNull(currentFile)) {
+                boolean result = currentFile.delete();
+                if (!result) {
+                    LOG.error("File " + currentFile.getName() + " was not deleted.");
+                }
+            }
             LOG.error(e.getMessage(), e);
         }
     }

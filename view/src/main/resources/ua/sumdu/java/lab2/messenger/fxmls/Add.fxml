@@ -4,61 +4,54 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane cacheShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.AddController">
-    <VBox layoutX="-1.0" prefHeight="400.0" prefWidth="442.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="604.0" text="Adding a new user">
+<AnchorPane cacheShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="450.0" style="-fx-background-color: #0095a8;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.AddController">
+     <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-21.0" layoutY="30.0" prefHeight="50.0" prefWidth="450.0" style="-fx-background-color: #26c6da;" text="Adding a new user" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+     </Label>
+     <AnchorPane layoutY="60.0" prefHeight="192.0" prefWidth="450.0" style="-fx-background-color: #e0f7fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+         <Label fx:id="selectGroupLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="307.0" text="Select group" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+         </Label>
+         <JFXRadioButton layoutX="7.0" layoutY="59.0" onAction="#showGroupsDetails" selected="true" text="Add to group" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="45.0">
+             <font>
+                 <Font size="14.0" />
+             </font>
+             <toggleGroup>
+                 <ToggleGroup fx:id="addUser" />
+             </toggleGroup>
+         </JFXRadioButton>
+         <JFXRadioButton fx:id="addToFriends" layoutX="14.0" layoutY="22.0" onAction="#showFriendsDetails" text="Add to friends" toggleGroup="$addUser" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+             <font>
+                 <Font size="14.0" />
+             </font>
+         </JFXRadioButton>
+         <JFXComboBox fx:id="groupChoiceBox" focusColor="#6ff9ff" layoutX="208.0" layoutY="38.0" prefHeight="25.0" prefWidth="192.0" unFocusColor="#26c6da" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0" />
+        <AnchorPane layoutX="-6.0" layoutY="86.0" prefHeight="106.0" prefWidth="450.0" style="-fx-background-color: #e0f7fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
+             <Label layoutX="7.0" layoutY="24.0" text="Enter the IP-address of the user:" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="24.0">
             <font>
-                <Font name="System Italic" size="14.0" />
+               <Font size="14.0" />
             </font>
-            <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </VBox.margin>
-        </Label>
-        <AnchorPane prefHeight="85.0" prefWidth="450.0">
-            <Label fx:id="selectGroupLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="307.0" text="Select group" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-                <font>
-                    <Font name="System Italic" size="14.0" />
-                </font>
-            </Label>
-            <JFXRadioButton layoutX="7.0" layoutY="59.0" onAction="#showGroupsDetails" selected="true" text="Add to group" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0">
-                <font>
-                    <Font name="System Italic" size="14.0" />
-                </font>
-                <toggleGroup>
-                    <ToggleGroup fx:id="addUser" />
-                </toggleGroup>
-            </JFXRadioButton>
-            <JFXRadioButton fx:id="addToFriends" layoutX="14.0" layoutY="22.0" onAction="#showFriendsDetails" text="Add to friends" toggleGroup="$addUser" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
-                <font>
-                    <Font name="System Italic" size="14.0" />
-                </font>
-            </JFXRadioButton>
-            <JFXComboBox fx:id="groupChoiceBox" focusColor="#28da72" layoutX="208.0" layoutY="38.0" prefHeight="25.0" prefWidth="192.0" unFocusColor="#103c16" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="50.0" />
-        </AnchorPane>
-        <AnchorPane prefHeight="126.0" prefWidth="450.0">
-             <Label text="Enter the IP-address of the user:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
-                 <font>
-                     <Font name="System Italic" size="14.0" />
-                 </font>
              </Label>
          <Label fx:id="error" layoutX="23.0" layoutY="74.0">
             <font>
                <Font name="System Italic" size="14.0" />
             </font>
          </Label>
-         <JFXButton defaultButton="true" layoutX="348.0" layoutY="72.0" onAction="#createRequest" prefHeight="30.0" prefWidth="70.0" ripplerFill="#06e8ab" text="OK" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="50.0" />
-         <JFXTextField fx:id="ipAddress" focusColor="#eb2704" layoutX="280.0" layoutY="28.0" promptText="192.168.1.1" unFocusColor="#460e0e" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <JFXButton buttonType="RAISED" defaultButton="true" layoutX="348.0" layoutY="72.0" onAction="#createRequest" prefHeight="30.0" prefWidth="70.0" ripplerFill="#2107e5" style="-fx-background-color: #26c6da;" text="OK" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="60.0" />
+         <JFXTextField fx:id="ipAddress" focusColor="#6ff9ff" layoutX="280.0" layoutY="28.0" promptText="192.168.1.1" unFocusColor="#26c6da" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <font>
                <Font name="System Italic" size="14.0" />
             </font>
          </JFXTextField>
         </AnchorPane>
-    </VBox>
+     </AnchorPane>
 </AnchorPane>

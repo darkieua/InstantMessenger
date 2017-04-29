@@ -26,7 +26,7 @@
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <versioneye-maven-plugin.version>3.11.2</versioneye-maven-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
-        <javafx-maven-plugin.version>8.7.0</javafx-maven-plugin.version>
+        <javafx-maven-plugin.version>8.8.3</javafx-maven-plugin.version>
         <!--Logging-->
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -44,7 +44,7 @@
         <findbugs.version>3.0.4</findbugs.version>
         <!--Testing-->
         <junit.version>4.12</junit.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
         <junit-dataprovider.version>1.12.0</junit-dataprovider.version>
@@ -52,10 +52,16 @@
         <powermock.version>1.6.6</powermock.version>
         <!--design-->
         <jfoenix.version>1.3.0</jfoenix.version>
+        <controlsfx.version>8.40.12</controlsfx.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.controlsfx</groupId>
+                <artifactId>controlsfx</artifactId>
+                <version>${controlsfx.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.jfoenix</groupId>
                 <artifactId>jfoenix</artifactId>
@@ -176,7 +182,7 @@
                         <target>${java.version}</target>
                     </configuration>
                 </plugin>
-                <!--<plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${pmd.version}</version>
@@ -195,10 +201,10 @@
                             <goals><goal>check</goal></goals>
                         </execution>
                     </executions>
-                </plugin>-->
+                </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>3.0.2</version>
                     <executions>
                         <execution>
                             <id>copy-resources</id>

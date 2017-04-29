@@ -1,7 +1,5 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
@@ -10,9 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
@@ -26,7 +27,6 @@ import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 public class AddController {
     private static final Logger LOG = LoggerFactory
             .getLogger(AddController.class);
-    public ToggleGroup addUser;
 
     @FXML
     private RadioButton addToFriends;
@@ -45,6 +45,7 @@ public class AddController {
 
     private static final String IP_REG_EXP
             = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$";
+    private static final int NOTIFICATION_TIME = 5;
 
     @FXML
     public final void initialize() {
@@ -60,31 +61,33 @@ public class AddController {
             return;
         }
         error.setText("");
-        try {
-            workWithClient(InetAddress.getByName(stringIP));
-        } catch (UnknownHostException e) {
-            LOG.error(e.getMessage(), e);
-        }
+        Platform.runLater(() -> {
+            try {
+                workWithClient(InetAddress.getByName(stringIP));
+            } catch (UnknownHostException e) {
+                LOG.error(e.getMessage(), e);
+            }
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("Your request was sent.")
+                    .hideAfter(Duration.seconds(NOTIFICATION_TIME))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showConfirm();
+        });
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source
                 .getScene()
                 .getWindow();
         stage.close();
-        Platform.runLater(() -> {
-            Alert alert = new Alert(INFORMATION);
-            alert.setTitle("Information");
-            alert.setHeaderText("Successful");
-            alert.setContentText("Your request was successfully sent.");
-            alert.show();
-        });
     }
 
     private void workWithClient(final InetAddress inetAddress) {
         RequestGeneratingImpl requestGenerating = new RequestGeneratingImpl();
         if (addToFriends.isSelected()) {
             new ClientImpl(inetAddress,
-                    User.getCurrentUser()
-                            .getPort(),
+                    User.getCurrentUser().getPort(),
                     requestGenerating.creatingFriendsRequest())
                     .start();
         } else {

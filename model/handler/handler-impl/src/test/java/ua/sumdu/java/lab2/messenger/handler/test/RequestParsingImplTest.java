@@ -1,8 +1,5 @@
 package ua.sumdu.java.lab2.messenger.handler.test;
 
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.spy;
 import static ua.sumdu.java.lab2.messenger.handler.entities.RequestType.*;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
@@ -17,9 +14,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import ua.sumdu.java.lab2.messenger.api.GroupMap;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.*;
+import ua.sumdu.java.lab2.messenger.handler.processing.AddingRequestParsing;
+import ua.sumdu.java.lab2.messenger.handler.processing.MessageRequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestParsingImpl;
 import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
@@ -27,10 +27,11 @@ import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 
 @RunWith(DataProviderRunner.class)
+@PrepareForTest({AddingRequestParsing.class})
 public class RequestParsingImplTest {
 
     private RequestGeneratingImpl requestGenerating;
-    private RequestParsingImpl requestParsing;
+    private final RequestParsingImpl requestParsing = new RequestParsingImpl();
     private static final User TEST_USER = new User(CategoryUsers.BLACKLIST, "test_user", "test_user@ex.so",
     8080, User.getCurrentUser().getIpAddress());
 
@@ -69,9 +70,8 @@ public class RequestParsingImplTest {
      */
     @Before
     public void init() throws UnknownHostException {
-        requestParsing = spy(new RequestParsingImpl());
+        AddingRequestParsing.test = true;
         requestGenerating = new RequestGeneratingImpl();
-        doReturn(true).when(requestParsing).getReaction(anyString(), anyString());
         UserMapImpl userMap = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
         userMap.addUser(TEST_USER);
         UserMapParserImpl.getInstance().writeUserMapToFile(UserMapParserImpl.getInstance()
@@ -102,6 +102,7 @@ public class RequestParsingImplTest {
 
     @UseDataProvider("groupForTest")
     @Test
+    @PrepareForTest({AddingRequestParsing.class})
     public void addGroup(String chatName, UserMap userMap) {
         GroupMapParserImpl groupMapParser = GroupMapParserImpl.getInstance();
         GroupMap groupMap = groupMapParser.getGroupMap();
@@ -125,7 +126,7 @@ public class RequestParsingImplTest {
     public void newMessage(Message mess) {
         UserMapImpl friends = (UserMapImpl) UserMapParserImpl.getInstance().getFriends();
         User user = User.getCurrentUser();
-        String request = requestGenerating.createRequestForNewMessage(mess);
+        String request = new MessageRequestGeneratingImpl().createRequestForNewMessage(mess);
         String sender = mess.getSender();
         user = user.setCategory(CategoryUsers.FRIEND).setUsername(sender);
         friends.addUser(user);

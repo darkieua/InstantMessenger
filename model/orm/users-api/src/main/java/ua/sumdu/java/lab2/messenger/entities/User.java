@@ -23,10 +23,10 @@ public class User implements Cloneable, Serializable {
     private int port = -1;
     private InetAddress ipAddress;
 
+
     /**
      * Create a new user.
      */
-
     public User(CategoryUsers category, String username, String email, int port,
                             InetAddress ipAddress) {
         LOG.debug("Creating a new user");

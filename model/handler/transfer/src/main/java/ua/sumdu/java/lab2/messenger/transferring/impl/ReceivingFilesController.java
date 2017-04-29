@@ -1,19 +1,20 @@
 package ua.sumdu.java.lab2.messenger.transferring.impl;
 
+import com.jfoenix.controls.JFXTextArea;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 
 public class ReceivingFilesController {
     @FXML
-    private Label message;
+    private JFXTextArea message;
 
     @FXML
     private TableView<SentFiles.FileCharacteristics> files;
@@ -34,6 +35,10 @@ public class ReceivingFilesController {
     private String name;
 
     public final void initAfterAddParametrs() {
+        Text text = new Text("User " + name + " sent you a request for data transfer.");
+        text.wrappingWidthProperty().bind(message.widthProperty());
+        message.setText(text.getText());
+        message.setFocusTraversable(false);
         fileName.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
         fileSize.setCellValueFactory(
@@ -74,7 +79,7 @@ public class ReceivingFilesController {
         this.name = name;
     }
         
-    public void closeStage(ActionEvent actionEvent) {
+    private void closeStage(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

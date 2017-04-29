@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class Main extends Application {
     public final void start(final Stage primaryStage) {
         LOG.info("Start working");
         Stage stage = new Stage();
+        Image icon = new Image("/ua/sumdu/java/lab2/messenger/images/"
+                + "bubbles.png");
         File userConfig = new File(User.getUserConfigPath());
         if (!userConfig.exists()) {
             FXMLLoader newUserRegistrationFxmlLoader = new FXMLLoader();
@@ -47,6 +50,7 @@ public class Main extends Application {
             } catch (IOException e) {
                 LOG.error(e.getMessage(), e);
             }
+            stage.getIcons().add(icon);
             stage.setTitle("Registration");
             stage.setScene(new Scene(root, REGISTRATION_WIDTH,
                     REGISTRATION_HEIGHT));
@@ -71,6 +75,7 @@ public class Main extends Application {
             } catch (IOException e) {
                 LOG.error(e.getMessage(), e);
             }
+            primaryStage.getIcons().add(icon);
             primaryStage.setTitle("Instant Messenger");
             primaryStage.setScene(new Scene(root, MAIN_WIDTH, MAIN_HEIGHT));
             primaryStage.setMinHeight(MAIN_HEIGHT);

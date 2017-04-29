@@ -1,18 +1,24 @@
 package ua.sumdu.java.lab2.messenger.controllers;
 
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXRadioButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import ua.sumdu.java.lab2.messenger.api.GroupMap;
 import ua.sumdu.java.lab2.messenger.api.UserMap;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
@@ -24,13 +30,15 @@ import ua.sumdu.java.lab2.messenger.processing.UserMapParserImpl;
 
 public class SendingFilesController {
     @FXML
-    private RadioButton sendFilesToFriend;
+    private JFXRadioButton sendFilesToGroup;
+    @FXML
+    private JFXRadioButton sendFilesToFriend;
 
     @FXML
     private Label choiceLabel;
 
     @FXML
-    private ChoiceBox<String> listChoiceBox;
+    private JFXComboBox<String> listChoiceBox;
 
     @FXML
     private TableView<SentFiles.FileCharacteristics> fileTable;
@@ -42,9 +50,9 @@ public class SendingFilesController {
     private TableColumn fileSize;
 
     @FXML
-    private Button remote;
+    private JFXButton remote;
 
-    private SentFiles fileList = new SentFiles();
+    private final SentFiles fileList = new SentFiles();
 
     public void setUsernameOrGroupname(String usernameOrGroupname) {
         this.usernameOrGroupname = usernameOrGroupname;
@@ -60,11 +68,13 @@ public class SendingFilesController {
         for (User user : friends.getAllUsers()) {
             if (usernameOrGroupname.equals(user.getUsername())) {
                 set = true;
+                sendFilesToFriend.setSelected(true);
                 selectFriend();
 
             }
         }
         if (!set) {
+            sendFilesToGroup.setSelected(true);
             selectGroup();
         }
         listChoiceBox.getSelectionModel().select(usernameOrGroupname);
@@ -88,25 +98,30 @@ public class SendingFilesController {
         fileChooser.setTitle("Sending files");
         List<File> files = fileChooser.showOpenMultipleDialog(stage);
         StringBuilder message = new StringBuilder();
-        for (File file : files) {
-            if (file.getName().endsWith(".exe")) {
-                message.append(file.getName())
-                        .append(" (")
-                        .append(file.length())
-                        .append(")\n");
-            } else {
-                fileList.addFile(file);
+        if (Objects.nonNull(files)) {
+            for (File file : files) {
+                if (file.getName().endsWith(".exe")) {
+                    message.append(file.getName())
+                            .append(" (")
+                            .append(file.length())
+                            .append(")\n");
+                } else {
+                    fileList.addFile(file);
+                }
             }
-        }
-        fileList.updateObs();
-        fileTable.setItems(fileList.getObs());
-        if (!"".equals(message.toString())) {
-            Alert alert = new Alert(INFORMATION);
-            alert.setTitle("Information");
-            alert.setHeaderText("Successful");
-            alert.setContentText("The following files can not be downloaded:\n"
-                    + message.toString());
-            alert.show();
+            fileList.updateObs();
+            fileTable.setItems(fileList.getObs());
+            if (!"".equals(message.toString())) {
+                Notifications notification = Notifications.create()
+                        .title("Information")
+                        .darkStyle()
+                        .graphic(null)
+                        .text("The following files can not be downloaded:\n"
+                                + message.toString())
+                        .hideAfter(Duration.seconds(5))
+                        .position(Pos.BOTTOM_RIGHT);
+                notification.showConfirm();
+            }
         }
     }
 
@@ -124,11 +139,14 @@ public class SendingFilesController {
                 if (userName.equals(friend.getUsername())) {
                     workWithClient(friend);
                     stage.close();
-                    Alert alert = new Alert(INFORMATION);
-                    alert.setTitle("Information");
-                    alert.setHeaderText("Successful");
-                    alert.setContentText("Request was successfully sent");
-                    alert.show();
+                    Notifications notification = Notifications.create()
+                            .title("Information")
+                            .darkStyle()
+                            .graphic(null)
+                            .text("Request was successfully sent")
+                            .hideAfter(Duration.seconds(5))
+                            .position(Pos.BOTTOM_RIGHT);
+                    notification.showConfirm();
                     break;
                 }
             }
@@ -146,11 +164,14 @@ public class SendingFilesController {
                 }
             }
             stage.close();
-            Alert alert = new Alert(INFORMATION);
-            alert.setTitle("Information");
-            alert.setHeaderText("Successful");
-            alert.setContentText("Requests were successfully sent");
-            alert.show();
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("Request was successfully sent")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showConfirm();
         }
     }
 
@@ -181,8 +202,7 @@ public class SendingFilesController {
             friendsName.add(user.getUsername());
         }
         listChoiceBox.setItems(friendsName);
-        listChoiceBox.getSelectionModel()
-                .selectFirst();
+        listChoiceBox.getSelectionModel().select(usernameOrGroupname);
     }
 
     public final void selectGroup() {
@@ -194,7 +214,6 @@ public class SendingFilesController {
         friendsName.addAll(groups.getMap()
                 .keySet());
         listChoiceBox.setItems(friendsName);
-        listChoiceBox.getSelectionModel()
-                .selectFirst();
+        listChoiceBox.getSelectionModel().select(usernameOrGroupname);
     }
 }

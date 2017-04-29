@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.entities.*;
+import ua.sumdu.java.lab2.messenger.handler.processing.MessageRequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
 
@@ -79,7 +80,7 @@ public class RequestGeneratingImplTest {
     @UseDataProvider("messages")
     @Test
     public void newMessage(Message message) {
-        String result = requestGenerating.createRequestForNewMessage(message);
+        String result = new MessageRequestGeneratingImpl().createRequestForNewMessage(message);
         String mess = requestGenerating.createMessage(message);
         String correctRequest = NEW_MESSAGE.getRequestNumber() + "=" + mess;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);
@@ -90,7 +91,7 @@ public class RequestGeneratingImplTest {
     public void newMessageToGroup(Message message) {
         String chatName = "main";
         message.setReceiver(chatName);
-        String result = requestGenerating.createRequestForNewGroupMessage(message);
+        String result = new MessageRequestGeneratingImpl().createRequestForNewGroupMessage(message);
         String mess = requestGenerating.createMessage(message);
         String correctRequest = NEW_MESSAGE_TO_GROUP.getRequestNumber() + "=" + mess;
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);

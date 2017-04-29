@@ -1,22 +1,20 @@
 package ua.sumdu.java.lab2.messenger.transferring.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.time.LocalDateTime;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.sumdu.java.lab2.messenger.entities.Message;
-import ua.sumdu.java.lab2.messenger.entities.MessageMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.SentFiles;
 import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.parsers.XmlParser;
 import ua.sumdu.java.lab2.messenger.transferring.api.DataTransfer;
 
 public class DataTransferImpl implements DataTransfer {
@@ -64,12 +62,16 @@ public class DataTransferImpl implements DataTransfer {
 
     @Override
     public String parsingDataSendingRejectedResponse(String context) {
-        File system = User.getSystemMessageFile();
-        MessageMapImpl messages = (MessageMapImpl) XmlParser.INSTANCE.read(system);
-        Message newMessage = new Message("system", User.getCurrentUser().getUsername(),
-                "User " + context + " declined to receive files", LocalDateTime.now());
-        messages.addMessage(newMessage);
-        XmlParser.INSTANCE.write(messages, system);
+        Platform.runLater(() -> {
+            Notifications notification = Notifications.create()
+                    .title("Information")
+                    .darkStyle()
+                    .graphic(null)
+                    .text("User " + context + " declined to receive files")
+                    .hideAfter(Duration.seconds(5))
+                    .position(Pos.BOTTOM_RIGHT);
+            notification.showConfirm();
+        });
         return "";
     }
 
@@ -96,7 +98,7 @@ public class DataTransferImpl implements DataTransfer {
         Platform.runLater(() -> {
             Stage stage = new Stage();
             FXMLLoader receivingFilesFxmlLoader = new FXMLLoader();
-            receivingFilesFxmlLoader.setLocation(getClass().getResource("../ReceivingFiles.fxml"));
+            receivingFilesFxmlLoader.setLocation(getClass().getResource("/ua/sumdu/java/lab2/messenger/transferring/ReceivingFiles.fxml"));
             Parent root = null;
             try {
                 root = receivingFilesFxmlLoader.load();
@@ -108,8 +110,7 @@ public class DataTransferImpl implements DataTransfer {
             receivingFilesController.setName(name);
             receivingFilesController.initAfterAddParametrs();
             stage.setTitle("Receiving Files");
-            stage.setScene(new Scene(root, 400, 350));
-            stage.setResizable(false);
+            stage.setScene(new Scene(root, 500, 400));
             stage.showAndWait();
             sentFiles[0] = receivingFilesController.getNewFileList();
             work[0] = false;

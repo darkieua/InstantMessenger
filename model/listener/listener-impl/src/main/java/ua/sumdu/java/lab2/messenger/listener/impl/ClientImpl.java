@@ -23,16 +23,17 @@ public class ClientImpl extends Thread implements Client {
     private Socket socket;
     private final String request;
     private final InetAddress adr;
-    private final boolean isConnect;
+    private final int port;
 
     public ClientImpl(InetAddress adr, int port, String request) {
-        isConnect = socketInit(adr, port);
+        this.port = port;
         this.request = request;
         this.adr = adr;
     }
 
     @Override
     public void run() {
+        boolean isConnect = socketInit(adr, port);
         if (isConnect) {
             String response = interactionWithServer();
             if (response == null) {

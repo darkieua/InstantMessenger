@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXRadioButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -13,54 +13,74 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="350.0" minWidth="500.0" prefHeight="350.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.SendingFilesController">
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
-            <Label alignment="CENTER" layoutX="241.0" layoutY="34.0" text="Sending files" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-                <font>
-                    <Font name="System Italic" size="14.0" />
-                </font>
-            </Label>
-            <HBox layoutY="50.0" prefHeight="65.0" prefWidth="478.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                <AnchorPane prefHeight="65.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
-                    <RadioButton fx:id="sendFilesToFriend" mnemonicParsing="false" onAction="#selectFriend" selected="true" text="friend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
-                        <toggleGroup>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="350.0" minWidth="450.0" prefHeight="350.0" prefWidth="450.0" style="-fx-background-color: #26c6da;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.java.lab2.messenger.controllers.SendingFilesController">
+   <HBox prefHeight="350.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <VBox prefHeight="350.0" prefWidth="150.0">
+            <children>
+                  <Label alignment="CENTER" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #009faf;" text="Sending files">
+                  <font>
+                     <Font size="18.0" />
+                  </font>
+                  </Label>
+               <JFXRadioButton fx:id="sendFilesToFriend" onAction="#selectFriend" prefHeight="20.0" prefWidth="147.0" selected="true" text="friend">
+                  <toggleGroup>
                             <ToggleGroup fx:id="groupOrFriend" />
-                        </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="sendFilesToGroup" layoutX="52.0" mnemonicParsing="false" onAction="#selectGroup" text="group" toggleGroup="$groupOrFriend" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="20.0" />
-                    <Label fx:id="choiceLabel" layoutX="106.0" text="Select friend" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="20.0">
+                  </toggleGroup>
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="15.0" />
+                  </VBox.margin>
+               </JFXRadioButton>
+               <JFXRadioButton fx:id="sendFilesToGroup" onAction="#selectGroup" prefHeight="17.0" prefWidth="157.0" text="group" toggleGroup="$groupOrFriend">
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </JFXRadioButton>
+                    <Label fx:id="choiceLabel" alignment="CENTER" prefHeight="20.0" prefWidth="135.0" text="Select friend">
                         <font>
-                            <Font name="System Italic" size="14.0" />
+                            <Font size="14.0" />
                         </font>
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="10.0" right="10.0" top="15.0" />
+                  </VBox.margin>
                     </Label>
-                    <ChoiceBox fx:id="listChoiceBox" layoutX="134.0" prefWidth="150.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0" />
-                </AnchorPane>
-            </HBox>
-            <HBox layoutX="20.0" layoutY="115.0" prefHeight="187.0" prefWidth="464.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                <AnchorPane prefHeight="187.0" prefWidth="484.0" HBox.hgrow="ALWAYS">
-                    <Label text="Select files:" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="80.0">
-                        <font>
-                            <Font name="System Italic" size="14.0" />
-                        </font>
-                    </Label>
-                    <Button layoutX="28.0" mnemonicParsing="false" onAction="#selectFiles" text="Select" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="80.0" />
-                    <TableView fx:id="fileTable" layoutX="252.0" layoutY="-1.0" prefHeight="187.0" prefWidth="260.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <columns>
-                            <TableColumn fx:id="fileName" prefWidth="75.0" text="Name" />
-                            <TableColumn fx:id="fileSize" prefWidth="75.0" text="Size" />
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
-                </AnchorPane>
-            </HBox>
-            <Button layoutX="40.0" layoutY="310.0" mnemonicParsing="false" onAction="#sentFiles" prefHeight="25.0" prefWidth="48.0" text="Sent" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" />
-            <Button fx:id="remote" layoutX="386.0" layoutY="310.0" mnemonicParsing="false" onAction="#remoteFile" text="Remote" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="15.0" />
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-        </AnchorPane>
-    </VBox>
+               <JFXComboBox fx:id="listChoiceBox" focusColor="#4dd0e1" prefHeight="25.0" prefWidth="168.0" unFocusColor="#2106d3">
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="15.0" />
+                  </VBox.margin>
+               </JFXComboBox>
+               <JFXButton buttonType="RAISED" onAction="#selectFiles" prefHeight="25.0" prefWidth="146.0" ripplerFill="#0f14e2" style="-fx-background-color: #6ff9ff;" text="Select files">
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="10.0" right="10.0" top="35.0" />
+                  </VBox.margin>
+               </JFXButton>
+               <JFXButton fx:id="remote" buttonType="RAISED" onAction="#remoteFile" prefHeight="25.0" prefWidth="135.0" ripplerFill="#0f14e2" style="-fx-background-color: #6ff9ff;" text="Remote files">
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                  </VBox.margin>
+               </JFXButton>
+               <JFXButton buttonType="RAISED" onAction="#sentFiles" prefHeight="25.0" prefWidth="133.0" ripplerFill="#0f14e2" style="-fx-background-color: #6ff9ff;" text="Send files">
+                  <VBox.margin>
+                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                  </VBox.margin>
+               </JFXButton>
+            </children>
+         </VBox>
+              <TableView fx:id="fileTable" prefHeight="187.0" prefWidth="300.0" style="-fx-background-color: #e5ffff;" HBox.hgrow="ALWAYS">
+                  <columns>
+                      <TableColumn fx:id="fileName" prefWidth="75.0" text="Name" />
+                      <TableColumn fx:id="fileSize" prefWidth="75.0" text="Size" />
+                  </columns>
+                  <columnResizePolicy>
+                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
+              </TableView>
+      </children>
+   </HBox>
 </AnchorPane>
