@@ -112,10 +112,11 @@ public class ResponseGeneratingImplTest {
 
     @DataProvider
     public static Object[][] messages() throws UnknownHostException {
-        Message[] messages =    {new Message(testUser, User.getCurrentUser().getUsername(), "text1", LocalDateTime.now()),
-            new Message(testUser, User.getCurrentUser().getUsername(), "text2", LocalDateTime.now().minusDays(1)),
-            new Message(testUser, User.getCurrentUser().getUsername(), "text3", LocalDateTime.now().minusDays(2)),
-            new Message(testUser, User.getCurrentUser().getUsername(), "text4", LocalDateTime.now().minusDays(3))};
+        String username = "this_user";
+        Message[] messages =    {new Message(testUser, username, "text1", LocalDateTime.now()),
+            new Message(testUser, username, "text2", LocalDateTime.now().minusDays(1)),
+            new Message(testUser, username, "text3", LocalDateTime.now().minusDays(2)),
+            new Message(testUser, username, "text4", LocalDateTime.now().minusDays(3))};
         return new Object[][]{{messages}};
     }
 

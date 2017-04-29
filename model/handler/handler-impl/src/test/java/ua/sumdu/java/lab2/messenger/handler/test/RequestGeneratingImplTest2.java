@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import ua.sumdu.java.lab2.messenger.entities.GroupMapImpl;
 import ua.sumdu.java.lab2.messenger.entities.User;
-import ua.sumdu.java.lab2.messenger.entities.UserMapImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.MessageRequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.handler.processing.RequestGeneratingImpl;
 import ua.sumdu.java.lab2.messenger.processing.GroupMapParserImpl;
@@ -27,16 +26,13 @@ public class RequestGeneratingImplTest2 {
     @Test
     public void updateGroupList() {
         GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
-        UserMapImpl userMap = new UserMapImpl();
-        userMap.addUser(User.getEmptyUser());
-        userMap.addUser(User.getCurrentUser());
         String chatName = "testGroup";
-        groups.getMap().put(chatName, userMap);
+        groups.addUser(chatName, User.getEmptyUser());
         GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()
             .groupMapToJSonString(groups));
         String result = requestGenerating.updateGroupList(chatName);
         GroupMapImpl groupMap = new GroupMapImpl();
-        groupMap.getMap().put(chatName, userMap);
+        groupMap.addUser(chatName, User.getEmptyUser());
         String correctRequest = UPDATE_GROUP_LIST.getRequestNumber() + "=" + GroupMapParserImpl
             .getInstance().groupMapToJSonString(groupMap);
         Assert.assertEquals(RequestParsingImplTest.getMessage(result, correctRequest), correctRequest, result);

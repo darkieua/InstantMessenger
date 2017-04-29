@@ -58,7 +58,6 @@ public class RequestGeneratingImplTest {
         GroupMapImpl groups = (GroupMapImpl) GroupMapParserImpl.getInstance().getGroupMap();
         UserMapImpl userMap = new UserMapImpl();
         userMap.addUser(User.getEmptyUser());
-        userMap.addUser(User.getCurrentUser());
         String chatName = "testGroup";
         groups.getMap().put(chatName, userMap);
         GroupMapParserImpl.getInstance().writeGroupMapToFile(GroupMapParserImpl.getInstance()

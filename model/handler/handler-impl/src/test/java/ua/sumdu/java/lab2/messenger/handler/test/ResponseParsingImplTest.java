@@ -50,7 +50,9 @@ public class ResponseParsingImplTest {
             + groupMapParser.groupMapToJSonString(groupForRequest);
         responseParsing.responseParsing(request);
         GroupMapImpl newGroups = (GroupMapImpl) groupMapParser.getGroupMap();
-        groupMap.getMap().put(chatName, userMap);
+        for (User user : userMap.getMap().values()) {
+            groupMap.addUser(chatName, user);
+        }
         Assert.assertEquals(RequestParsingImplTest.getMessage(newGroups.toString(),
             groupMap.toString()), newGroups, groupMap);
         groupMap.getMap().remove(chatName);
